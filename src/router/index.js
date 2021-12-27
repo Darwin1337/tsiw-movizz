@@ -1,24 +1,51 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Authentication from "../views/Authentication.vue";
 import Home from "../views/Home.vue";
+import Catalog from "../views/Catalog.vue";
+import Quizzes from "../views/Quizzes.vue";
+import Prizes from "../views/Prizes.vue";
+import Admin from "../views/Admin.vue";
+import Profile from "../views/Profile.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Authentication",
+    component: Authentication
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/home",
+    name: "Home",
+    component: Home
   },
+  {
+    path: "/catalog",
+    name: "Catalog",
+    component: Catalog
+  },
+  {
+    path: "/quizzes",
+    name: "Quizzes",
+    component: Quizzes
+  },
+  {
+    path: "/prizes",
+    name: "Prizes",
+    component: Prizes
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: Admin
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile
+  }
 ];
 
 const router = new VueRouter({
