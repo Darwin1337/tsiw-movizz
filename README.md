@@ -7,3 +7,27 @@ Desenvolvido por:
 - [@DiogoBorges](https://github.com/Darwin1337)
 - [@GonçaloGama](https://github.com/Gama10Tech)
 - [@DiogoOliveira](https://github.com/Diogoliveira119)
+
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
