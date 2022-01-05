@@ -1,78 +1,192 @@
 <template>
-  <div >
-    <div class="navbar-bg">
-      <b-navbar toggleable="lg" class="container">
-        <b-navbar-brand href="#"><img src="../assets/logo.svg"></b-navbar-brand>
-
+  <div v-if="currentWidth >= 992" id="desktop">
+    <b-navbar toggleable="lg">
+      <b-container>
+        <b-navbar-brand :to="{ name: 'Authentication' }">
+          <img src="../assets/images/logo.svg" alt="Logo" width="80%" />
+        </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-            <b-nav-item href="#">
-              <router-link :to="{ name: 'Home' }">Home</router-link>
-            </b-nav-item>
-            <b-nav-item href="#">
-             <router-link :to="{ name: 'Catalog' }">Catalog</router-link>
-            </b-nav-item>
-            <b-nav-item href="#">
-              <router-link :to="{ name: 'Quizzes' }">Quizzes</router-link>
-            </b-nav-item>
-            <b-nav-item href="#">
-              <router-link :to="{ name: 'Prizes' }">Prizes</router-link>
-            </b-nav-item>
+            <b-nav-item :to="{ name: 'Home' }">Home</b-nav-item>
+            <b-nav-item :to="{ name: 'Catalog' }">Catalog</b-nav-item>
+            <b-nav-item :to="{ name: 'Quizzes' }">Quizzes</b-nav-item>
+            <b-nav-item :to="{ name: 'Prizes' }">Prizes</b-nav-item>
           </b-navbar-nav>
-
-          <!-- Right aligned nav items -->
-          <b-navbar-nav right>
-
-            <!-- parte pesquisa na navbar -->
-            <b-nav-form>
-              <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-              <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-            </b-nav-form>
-
-            <!-- parte de perfil do utilizador -->
+          <b-nav-form class="w-100 d-flex justify-content-end">
+            <b-input-group size="md" class="mr-sm-5">
+              <b-form-input size="md" placeholder="Search your favourite movies"></b-form-input>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <i class="fas fa-search"></i>
+                </div>
+              </div>
+            </b-input-group>
+          </b-nav-form>
+          <b-navbar-nav class="ml-auto">
             <div class="d-flex align-items-center">
-              <b-nav-item href="#"><img src="../assets/avatar.png"></b-nav-item>
-              <b-nav-item href="#">
-                <router-link :to="{ name: 'Profile' }">António</router-link>
-              </b-nav-item>
+              <img src="../assets/images/avatar.png" alt="Avatar" width="40px" height="40px" />
+              <div id="level">
+                <span>32</span>
+              </div>
             </div>
-
+            <div class="d-flex flex-column justify-content-center align-items-end">
+              <b-nav-item :to="{ name: 'Profile' }" id="username">António</b-nav-item>
+              <div id="badge-legend" class="d-flex">
+                <img src="../assets/images/badges/11_cinema_god.svg" alt="Badge" width="15px" height="15px" />
+                <span> Extra</span>
+              </div>
+            </div>
           </b-navbar-nav>
         </b-collapse>
-      </b-navbar>
-    </div>
+      </b-container>
+    </b-navbar>
+  </div>
+  <div v-else id="mobile">
+    <b-navbar toggleable>
+      <b-navbar-brand :to="{ name: 'Authentication' }">
+        <img src="../assets/images/logo.svg" alt="Logo" width="80%" />
+      </b-navbar-brand>
+
+      <b-navbar-toggle target="navbar-toggle-collapse">
+        <template #default="{ expanded }">
+          <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
+          <b-icon v-else icon="chevron-bar-down"></b-icon>
+        </template>
+      </b-navbar-toggle>
+
+      <b-collapse id="navbar-toggle-collapse" is-nav>
+        <b-navbar-nav class="ml-auto">
+          <b-input-group size="md">
+            <b-form-input size="md" placeholder="Search your favourite movies"></b-form-input>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <i class="fas fa-search"></i>
+              </div>
+            </div>
+          </b-input-group>
+          <div class="d-flex mb-3">
+            <img src="../assets/images/avatar.png" alt="Avatar" width="40px" height="40px" />
+            <div id="level">
+              <span>32</span>
+            </div>
+            <div class="d-flex flex-column align-items-end">
+              <b-nav-item :to="{ name: 'Profile' }" id="username">
+                António
+                <img src="../assets/images/badges/11_cinema_god.svg" alt="Badge" width="15px" height="15px" />
+                <span> Extra</span>
+              </b-nav-item>
+                
+            </div>
+          </div>
+          <b-nav-item :to="{ name: 'Home' }">Home</b-nav-item>
+          <b-nav-item :to="{ name: 'Catalog' }">Catalog</b-nav-item>
+          <b-nav-item :to="{ name: 'Quizzes' }">Quizzes</b-nav-item>
+          <b-nav-item :to="{ name: 'Prizes' }">Prizes</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      currentWidth: window.innerWidth,
+    };
+  },
+  mounted() {
+    window.addEventListener("resize", this.onResize);
+  },
+  methods: {
+    onResize() {
+      this.currentWidth = window.innerWidth;
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .navbar-bg {
+  #desktop nav {
+    background-color: #182131;
+    height: 80px;
+  }
+
+  #mobile nav {
     background-color: #182131;
   }
 
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
+  #mobile .navbar-toggler {
+    background-color: white;
+    border: none;
   }
 
-  #nav {
-    padding: 30px;
+  #mobile .navbar-toggler svg {
+    color: #182131;
   }
 
-  #nav a {
+  #desktop a,
+  #mobile a {
+    color: white !important;
     font-weight: bold;
-    color: #2c3e50;
   }
 
-  #nav a.router-link-exact-active {
-    color: #42b983;
+  input {
+    border: none;
+    outline: none;
+    background-color: #2b3342;
+    border-radius: 35px;
+    color: white !important;
+    width: 250px !important;
+  }
+
+  input:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: #2b3342;
+  }
+
+  span {
+    color: #5b6371;
+    font-size: 0.75em;
+  }
+
+  #desktop #username a {
+    margin: 0;
+    padding: 0;
+  }
+    
+  #mobile #badge-legend {
+    position: relative;
+    top: -15px;
+  }
+  
+  #level {
+    position: relative;
+    top: 20px;
+    right: 10px;
+  }
+
+  #level span {
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    padding: 2px;
+    border-radius: 50%;
+    font-weight: bold;
+  }
+
+  .input-group-text {
+    border: none !important;
+    background: #2b3342;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  #mobile .input-group {
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 </style>

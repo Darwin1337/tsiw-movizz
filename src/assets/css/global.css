@@ -1,0 +1,24 @@
+/* Tipografias */
+
+@import url("sf-pro-display.css");
+
+/* Cores */
+
+:root {
+    --bg: #020916; /* Background */
+    --azul-claro: #bbe1fa; /* Subtítulos & Highlights */
+	--verde: #84e296; /* Títulos & Highlights */
+	--laranja: #d49c03; /* Botões, Âncoras ativas & Logótipo */
+	--azul-escuro: #182131; /* Background Navbar / Footer */
+	--cinza1: #182131; /* Inputs */
+	--cinza-claro: #AFB3B7; /* Texto Inputs */
+	--azul-escuro2: #151F2E; /* Contraste background */
+	--cinza2: #5B6371; /* Texto contraste background */
+	--cinza3: #2b3342; /* Contraste do contraste do background */
+	--vermelho: #ec5252; /* Textos negativos */
+}
+
+* {
+    font-family: 'SF Pro Display', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI";
+    font-weight: normal;
+}

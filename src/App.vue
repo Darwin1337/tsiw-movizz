@@ -1,24 +1,28 @@
 <template>
-  <div>
-    <Navbar />
+  <div id="app">
+    <Navbar v-if="$route.name != 'Authentication'" />
     <router-view />
+    <Footer />
   </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Footer
   }
 }
 </script>
 
 <style>
-body {
-  background-color: #020916 !important;
-  color: white !important;
-}
+  #app,
+  html,
+  body {
+    background: #020916;
 
+  }
 </style>
