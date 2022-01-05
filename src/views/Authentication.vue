@@ -1,14 +1,14 @@
 <template>
   <div>
-    <b-jumbotron>
+    <div class="jumbotron">
       <div class="d-flex h-100 flex-column align-items-center justify-content-center">
         <img id="logo" src="../assets/images/logo.svg" alt="Logo" width="35%" />
         <p class="title">we're glad you made it</p>
       </div>
-    </b-jumbotron>
-    <b-container class="bv-example-row">
-      <b-row class="mb-5">
-        <b-col md="7">
+    </div>
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-md-7">
           <p class="seccion-title">Frequently Asked Questions</p>
           <p class="faq-title">What's this about?</p>
           <p class="faq-text">Well, sad to hear you clearly didn't understand the assignment. Good thing we are here to
@@ -33,78 +33,58 @@
           <p class="faq-title">I'm in, where do I sign up?</p>
           <p class="faq-text">Thought you'd never ask.
             Fill out the sign up form and prove you're a legit cinephile and not just some poser.</p>
-        </b-col>
-        <b-col md="5">
+        </div>
+        <div class="col-md-5">
           <p class="seccion-title">No time to waste?</p>
           <p class="login-title">Prove it's really you, <span style="color: #BBE1FA; font-weight: bold;">sign in</span>
           </p>
           <form id="login" class="mb-5">
-            <b-input-group>
-              <b-form-input placeholder="E-mail"></b-form-input>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <i class="fas fa-envelope"></i>
-                </div>
-              </div>
-            </b-input-group>
+            <div class="input-group">
+              <input type="email" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            </div>
             <br>
-            <b-input-group>
-              <b-form-input type="password" placeholder="Password"></b-form-input>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <i class="fas fa-lock"></i>
-                </div>
-              </div>
-            </b-input-group>
+            <div class="input-group">
+              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            </div>
             <div class="text-center">
               <button type="submit" class="mt-4 orange-btn">Sign in</button>
-              </div>
+            </div>
           </form>
           <p class="login-title"><span style="color: #BBE1FA; font-weight: bold;">Sign up</span>, we promise we won't
             sell your data</p>
           <form id="register">
-            <b-row>
-              <b-col sm="6">
-                <b-form-input placeholder="First name"></b-form-input>
-              </b-col>
-              <b-col sm="6">
-                <b-form-input placeholder="Last name"></b-form-input>
-              </b-col>
-            </b-row>
-            <br>
-            <b-input-group>
-              <b-form-input placeholder="E-mail"></b-form-input>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <i class="fas fa-envelope"></i>
-                </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name">
               </div>
-            </b-input-group>
-            <br>
-            <b-input-group>
-              <b-form-input type="password" placeholder="Password"></b-form-input>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <i class="fas fa-lock"></i>
-                </div>
+              <div class="col-sm-6">
+                <input type="text" class="form-control bg-inputs" placeholder="Last name" aria-label="Last name">
               </div>
-            </b-input-group>
+            </div>
             <br>
-            <b-input-group>
-              <b-form-datepicker placeholder="Date of birth" right></b-form-datepicker>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <i class="fas fa-calendar"></i>
-                </div>
-              </div>
-            </b-input-group>
+            <div class="input-group">
+              <input type="email" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            </div>
+            <br>
+            <div class="input-group">
+              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            </div>
+            <br>
+            <div class="input-group">
+              <input type="text" class="form-control bg-inputs" onmouseenter="(this.type='date')" placeholder="Date of birth" aria-label="Date of birth">
+              <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+            </div>
             <div class="text-center">
               <button type="submit" class="mt-4 orange-btn">Sign up</button>
             </div> 
           </form>
-        </b-col>
-      </b-row>
-    </b-container>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -156,36 +136,14 @@
     font-weight: 500;
   }
 
-  input,
-  input:focus,
-  .b-form-datepicker,
-  .b-form-datepicker:focus,
-  .b-form-datepicker:active {
-    outline: none;
-    border: none;
-    box-shadow: none;
-    background-color: #1D232E;
-    color: white;
-  }
-
-  .orange-btn {
-    background-color: orange;
-    border: none;
-    color: #1D232E;
-    padding: 5px;
-    border-radius: 5px;
-    width: 150px;
-    font-weight: bold;
-  }
-
-
+  
   .input-group-text .fas {
-    color: #AFB3B7;
+      color: #AFB3B7;
   }
 
   .input-group-text {
-    border: none !important;
-    background: #1D232E;
+      border: none !important;
+      background: #1D232E;
   }
 
   ::placeholder {

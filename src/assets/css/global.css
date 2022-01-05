@@ -10,7 +10,7 @@
 	--verde: #84e296; /* Títulos & Highlights */
 	--laranja: #d49c03; /* Botões, Âncoras ativas & Logótipo */
 	--azul-escuro: #182131; /* Background Navbar / Footer */
-	--cinza1: #182131; /* Inputs */
+	--cinza1: #1d232e; /* Inputs */
 	--cinza-claro: #AFB3B7; /* Texto Inputs */
 	--azul-escuro2: #151F2E; /* Contraste background */
 	--cinza2: #5B6371; /* Texto contraste background */
@@ -18,7 +18,34 @@
 	--vermelho: #ec5252; /* Textos negativos */
 }
 
+/* Geral */
+
 * {
     font-family: 'SF Pro Display', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI";
     font-weight: normal;
+}
+
+.orange-btn {
+    background-color: orange;
+    border: none;
+    color: #1D232E;
+    padding: 5px;
+    border-radius: 5px;
+    width: 150px;
+    font-weight: bold;
+}
+
+.bg-inputs,
+.bg-inputs:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+    background-color: #1D232E;
+    color: white;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
 }

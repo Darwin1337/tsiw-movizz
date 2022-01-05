@@ -1,29 +1,36 @@
 <template>
   <div v-if="currentWidth >= 992" id="desktop">
-    <b-navbar toggleable="lg">
-      <b-container>
-        <b-navbar-brand :to="{ name: 'Authentication' }">
-          <img src="../assets/images/logo.svg" alt="Logo" width="80%" />
-        </b-navbar-brand>
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav>
-            <b-nav-item :to="{ name: 'Home' }">Home</b-nav-item>
-            <b-nav-item :to="{ name: 'Catalog' }">Catalog</b-nav-item>
-            <b-nav-item :to="{ name: 'Quizzes' }">Quizzes</b-nav-item>
-            <b-nav-item :to="{ name: 'Prizes' }">Prizes</b-nav-item>
-          </b-navbar-nav>
-          <b-nav-form class="w-100 d-flex justify-content-end">
-            <b-input-group size="md" class="mr-sm-5">
-              <b-form-input size="md" placeholder="Search your favourite movies"></b-form-input>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <i class="fas fa-search"></i>
-                </div>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" :to="{ name: 'Authentication' }">
+          <img src="../assets/images/logo.svg" alt="Logo" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <router-link class="nav-link active" :to="{ name: 'Home' }">Home</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Catalog' }">Catalog</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Quizzes' }">Quizzes</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
+            </li>
+          </ul>
+          <div class="d-flex">
+            <form class="d-flex me-4">
+              <div class="input-group">
+                <input type="search" placeholder="Find your favourite movie" aria-label="Search">
+                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
               </div>
-            </b-input-group>
-          </b-nav-form>
-          <b-navbar-nav class="ml-auto">
+            </form>
             <div class="d-flex align-items-center">
               <img src="../assets/images/avatar.png" alt="Avatar" width="40px" height="40px" />
               <div id="level">
@@ -31,61 +38,64 @@
               </div>
             </div>
             <div class="d-flex flex-column justify-content-center align-items-end">
-              <b-nav-item :to="{ name: 'Profile' }" id="username">António</b-nav-item>
-              <div id="badge-legend" class="d-flex">
+              <router-link :to="{ name: 'Profile' }" id="username">António</router-link>
+              <div id="badge-legend" class="d-flex" style="gap: 5px;">
                 <img src="../assets/images/badges/11_cinema_god.svg" alt="Badge" width="15px" height="15px" />
                 <span> Extra</span>
               </div>
             </div>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-container>
-    </b-navbar>
+          </div>
+        </div>
+      </div>
+    </nav>
   </div>
+
   <div v-else id="mobile">
-    <b-navbar toggleable>
-      <b-navbar-brand :to="{ name: 'Authentication' }">
-        <img src="../assets/images/logo.svg" alt="Logo" width="80%" />
-      </b-navbar-brand>
-
-      <b-navbar-toggle target="navbar-toggle-collapse">
-        <template #default="{ expanded }">
-          <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
-          <b-icon v-else icon="chevron-bar-down"></b-icon>
-        </template>
-      </b-navbar-toggle>
-
-      <b-collapse id="navbar-toggle-collapse" is-nav>
-        <b-navbar-nav class="ml-auto">
-          <b-input-group size="md">
-            <b-form-input size="md" placeholder="Search your favourite movies"></b-form-input>
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <i class="fas fa-search"></i>
-              </div>
-            </div>
-          </b-input-group>
-          <div class="d-flex mb-3">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" :to="{ name: 'Authentication' }">
+          <img src="../assets/images/logo.svg" alt="Logo" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="user-card mt-3 d-flex m-0 align-items-center">
             <img src="../assets/images/avatar.png" alt="Avatar" width="40px" height="40px" />
             <div id="level">
               <span>32</span>
             </div>
             <div class="d-flex flex-column align-items-end">
-              <b-nav-item :to="{ name: 'Profile' }" id="username">
+              <router-link :to="{ name: 'Profile' }" id="username">
                 António
                 <img src="../assets/images/badges/11_cinema_god.svg" alt="Badge" width="15px" height="15px" />
                 <span> Extra</span>
-              </b-nav-item>
-                
+              </router-link>
             </div>
           </div>
-          <b-nav-item :to="{ name: 'Home' }">Home</b-nav-item>
-          <b-nav-item :to="{ name: 'Catalog' }">Catalog</b-nav-item>
-          <b-nav-item :to="{ name: 'Quizzes' }">Quizzes</b-nav-item>
-          <b-nav-item :to="{ name: 'Prizes' }">Prizes</b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+          <form class="d-flex">
+            <div class="input-group mb-3">
+              <input type="search" class="form-control" placeholder="Find your favourite movie" aria-label="Search">
+              <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+            </div>
+          </form>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <router-link class="nav-link active" :to="{ name: 'Home' }">Home</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Catalog' }">Catalog</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Quizzes' }">Quizzes</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
 </template>
 
@@ -109,61 +119,82 @@ export default {
 
 <style scoped>
   #desktop nav {
-    background-color: #182131;
+    background-color: var(--azul-escuro);
     height: 80px;
-  }
-
-  #mobile nav {
-    background-color: #182131;
-  }
-
-  #mobile .navbar-toggler {
-    background-color: white;
-    border: none;
-  }
-
-  #mobile .navbar-toggler svg {
-    color: #182131;
   }
 
   #desktop a,
   #mobile a {
     color: white !important;
     font-weight: bold;
-  }
-
-  input {
-    border: none;
-    outline: none;
-    background-color: #2b3342;
-    border-radius: 35px;
-    color: white !important;
-    width: 250px !important;
-  }
-
-  input:focus {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    background-color: #2b3342;
+    text-decoration: none;
   }
 
   span {
-    color: #5b6371;
+    color: var(--cinza2);
     font-size: 0.75em;
+  }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance:none;
+  }
+
+  form ::placeholder {
+    color: var(--cinza2);
+    opacity: 1;
+  }
+
+  form :-ms-input-placeholder {
+    color: var(--cinza2);
+  }
+
+  form ::-ms-input-placeholder {
+    color: var(--cinza2);
+  }
+
+  form input {
+    border: none;
+    outline: none;
+    background-color: var(--cinza3);
+    border-radius: 35px;
+    color: white;
+    padding: 10px 15px 10px 15px;
+  }
+
+  form button {
+    border: none !important;
+    background: var(--cinza3);
+    border-top-right-radius: 35px;
+    border-bottom-right-radius: 35px;
+    padding: 0 15px 0 15px;
+  }
+
+  #mobile form input,
+  #mobile form input:focus {
+    color: white;
+    outline: none !important;
+    box-shadow: none;
+    background-color: var(--cinza3);
+  }
+
+  form i {
+    color: var(--cinza2);
+  }
+
+  #username {
+    color: white;
+    font-weight: bold;
   }
 
   #desktop #username a {
     margin: 0;
     padding: 0;
   }
-    
-  #mobile #badge-legend {
-    position: relative;
-    top: -15px;
-  }
   
-  #level {
+  #desktop #level {
     position: relative;
     top: 20px;
     right: 10px;
@@ -178,15 +209,38 @@ export default {
     font-weight: bold;
   }
 
-  .input-group-text {
-    border: none !important;
-    background: #2b3342;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+  #mobile nav {
+    background-color: var(--azul-escuro);
+  }
+
+  #mobile .navbar-toggler {
+    background-color: white;
+    border: none;
+  }
+
+  #mobile .navbar-toggler:focus {
+    outline: none !important;
+    box-shadow: none;
+  }
+
+  #mobile .navbar-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(24, 33, 49)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
   }
 
   #mobile .input-group {
     margin-top: 20px;
     margin-bottom: 20px;
+  }
+
+  #mobile .user-card  {
+    background: var(--cinza3);
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  #mobile #level {
+    position: relative;
+    top: 15px;
+    right: 10px;
   }
 </style>
