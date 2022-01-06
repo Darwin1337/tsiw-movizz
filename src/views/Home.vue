@@ -71,17 +71,17 @@
 
                   <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                     <div class="card">
-                      <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                      <img class="img-fluid" src="../assets/lacasa.png">
                     </div>
                   </div>
                   <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                     <div class="card">
-                      <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                      <img class="img-fluid" src="../assets/lacasa.png">
                     </div>
                   </div>
                   <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                     <div class="card">
-                      <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                      <img class="img-fluid" src="../assets/lacasa.png">
                     </div>
                   </div>
                 </div>
@@ -92,17 +92,17 @@
 
                       <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                           <div class="card">
-                              <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                              <img class="img-fluid" src="../assets/lacasa.png">
                           </div>
                       </div>
                       <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                           <div class="card">
-                              <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                              <img class="img-fluid" src="../assets/lacasa.png">
                           </div>
                       </div>
                       <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                           <div class="card">
-                              <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                              <img class="img-fluid" src="../assets/lacasa.png">
                           </div>
                       </div>
                   </div>
@@ -125,17 +125,17 @@
                 <div class="row">
                   <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                     <div class="card">
-                      <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                      <img class="img-fluid" src="../assets/lacasa.png">
                     </div>
                   </div>
                   <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                     <div class="card">
-                      <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                      <img class="img-fluid" src="../assets/lacasa.png">
                     </div>
                   </div>
                   <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                     <div class="card">
-                      <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                      <img class="img-fluid" src="../assets/lacasa.png">
                     </div>
                   </div>
                 </div>
@@ -146,17 +146,17 @@
 
                       <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                           <div class="card">
-                              <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                              <img class="img-fluid" src="../assets/lacasa.png">
                           </div>
                       </div>
                       <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                           <div class="card">
-                              <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                              <img class="img-fluid" src="../assets/lacasa.png">
                           </div>
                       </div>
                       <div class="col-md-4 col-lg-2 col-6 col-sm-6 mb-3">
                           <div class="card">
-                              <img class="img-fluid" alt="100%x280" src="../assets/lacasa.png">
+                              <img class="img-fluid" src="../assets/lacasa.png">
                           </div>
                       </div>
                   </div>
