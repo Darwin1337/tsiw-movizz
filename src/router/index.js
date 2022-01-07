@@ -7,6 +7,7 @@ import Quizzes from "../views/Quizzes.vue";
 import Prizes from "../views/Prizes.vue";
 import Admin from "../views/Admin.vue";
 import Profile from "../views/Profile.vue";
+import Quiz from "../views/Quiz.vue";
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile
+  },
+  {
+    path: "/quiz/:id",
+    name: "Quiz",
+    component: Quiz
   }
 ];
 

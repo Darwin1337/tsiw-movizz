@@ -25,6 +25,10 @@
     font-weight: normal;
 }
 
+.backgroundBlur{
+    backdrop-filter: blur(10px);
+}
+
 .orange-btn {
     background-color: orange;
     border: none;
@@ -34,7 +38,22 @@
     width: 150px;
     font-weight: bold;
 }
-
+.green-btn {
+    background-color: var(--verde);
+    border: none;
+    color: #1D232E;
+    padding: 5px;
+    padding: 5px 30px;
+    font-weight: bold;
+}
+.red-btn {
+    background-color: var(--vermelho);
+    border: none;
+    color: #ffffff;
+    padding: 5px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+}
 .bg-inputs,
 .bg-inputs:focus {
     outline: none;

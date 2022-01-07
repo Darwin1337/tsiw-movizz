@@ -78,7 +78,8 @@
           <h4 class="mt-5">Top Quizzes</h4>
           <div class="row" id="topQuizzes">
             <div class="col-md-2 col-sm-4 mt-3">
-              <img class="w-100" id="aa" @mouseover="hover=true" @mouseleave="hover=false" src="../assets/lacasa.png" >
+              <router-link :to="{ name: 'Quiz', params: { id: '1'}}"><img class="w-100" id="aa" @mouseover="hover=true" @mouseleave="hover=false" src="../assets/lacasa.png" ></router-link>
+              
             </div>
             <div class="col-md-2 col-sm-4 mt-3">
               <img class="w-100" id="aa" @mouseover="hover=true" @mouseleave="hover=false" src="../assets/lacasa.png" >
@@ -144,7 +145,7 @@
   }
 
 </script>
-<style>
+<style scoped>
 .leaderboardPlayersBG{
   background-color: #101622;padding: 7px;width: 95%;border-radius: 12px;
 }
