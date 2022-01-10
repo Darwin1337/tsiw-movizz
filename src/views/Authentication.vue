@@ -7,6 +7,7 @@
       </div>
     </div>
     <div class="container">
+      <div class="bg w-100 h-100">
       <div class="row mb-5">
         <div class="col-md-7">
           <p class="seccion-title">Frequently Asked Questions</p>
@@ -55,7 +56,7 @@
           <p class="login-title"><span style="color: #BBE1FA; font-weight: bold;">Sign up</span>, we promise we won't
             sell your data</p>
           <form id="register">
-            <div class="row">
+            <div class="row g-4">
               <div class="col-sm-6">
                 <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name">
               </div>
@@ -85,17 +86,39 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
 
 <style scoped>  
   .jumbotron {
-    background-image: url("../assets/images/teste.png");
+    background-image: url("../assets/images/authentication_banner.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     height: 650px;
+  }
+
+  .bg {
+    position: relative;
+    display: block;
+    z-index: 0;
+  }
+
+  .bg::after {
+    content: "";
+    background: url("../assets/images/twd_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
   }
 
   .title {
@@ -144,18 +167,5 @@
   .input-group-text {
       border: none !important;
       background: #1D232E;
-  }
-
-  ::placeholder {
-    color: #AFB3B7 !important;
-    opacity: 1;
-  }
-
-  :-ms-input-placeholder {
-    color: #AFB3B7 !important;
-  }
-
-  ::-ms-input-placeholder {
-    color: #AFB3B7 !important;
   }
 </style>

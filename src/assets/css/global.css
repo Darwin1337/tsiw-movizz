@@ -5,17 +5,28 @@
 /* Cores */
 
 :root {
-    --bg: #020916; /* Background */
-    --azul-claro: #bbe1fa; /* Subtítulos & Highlights */
-	--verde: #84e296; /* Títulos & Highlights */
-	--laranja: #d49c03; /* Botões, Âncoras ativas & Logótipo */
-	--azul-escuro: #182131; /* Background Navbar / Footer */
-	--cinza1: #1d232e; /* Inputs */
-	--cinza-claro: #AFB3B7; /* Texto Inputs */
-	--azul-escuro2: #151F2E; /* Contraste background */
-	--cinza2: #5B6371; /* Texto contraste background */
-	--cinza3: #2b3342; /* Contraste do contraste do background */
-	--vermelho: #ec5252; /* Textos negativos */
+    --bg: #020916;
+    /* Background */
+    --azul-claro: #bbe1fa;
+    /* Subtítulos & Highlights */
+    --verde: #84e296;
+    /* Títulos & Highlights */
+    --laranja: #d49c03;
+    /* Botões, Âncoras ativas & Logótipo */
+    --azul-escuro: #182131;
+    /* Background Navbar / Footer */
+    --cinza1: #1d232e;
+    /* Inputs */
+    --cinza-claro: #AFB3B7;
+    /* Texto Inputs */
+    --azul-escuro2: #151F2E;
+    /* Contraste background */
+    --cinza2: #5B6371;
+    /* Texto contraste background */
+    --cinza3: #2b3342;
+    /* Contraste do contraste do background */
+    --vermelho: #ec5252;
+    /* Textos negativos */
 }
 
 /* Geral */
@@ -29,6 +40,14 @@
     backdrop-filter: blur(10px);
 }
 
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Botões */
+
 .orange-btn {
     background-color: orange;
     border: none;
@@ -38,6 +57,18 @@
     width: 150px;
     font-weight: bold;
 }
+
+.blur-btn {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    backdrop-filter: blur(10px);
+    padding: 5px;
+    border-radius: 5px;
+    width: 150px;
+    font-weight: bold;
+}
+
 .green-btn {
     background-color: var(--verde);
     border: none;
@@ -46,6 +77,7 @@
     padding: 5px 30px;
     font-weight: bold;
 }
+
 .red-btn {
     background-color: var(--vermelho);
     border: none;
@@ -54,6 +86,34 @@
     border-radius: 5px;
     font-weight: bold;
 }
+
+.rounded-btn {
+    padding: 10px;
+    background-color: var(--cinza3);
+    width: 100%;
+    max-width: 150px;
+    text-align: center;
+    border-radius: 30px;
+    cursor: pointer;
+    color: white;
+    border: none;
+}
+
+.gray-btn {
+    width: 100%;
+    max-width: 150px;
+    padding: 10px;
+    background-color: var(--cinza-claro);
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--bg);
+    border: none;
+}
+
+/* Inputs */
+
 .bg-inputs,
 .bg-inputs:focus {
     outline: none;
@@ -67,4 +127,83 @@ input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
+}
+
+/* Checkboxs */
+
+.cbox {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+}
+
+input[type=checkbox] {
+    visibility: hidden;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: var(--cinza1);
+    border-radius: 5px;
+}
+
+.cbox:hover input~.checkmark {
+    background-color: var(--cinza1);
+}
+
+.cbox input:checked~.checkmark {
+    background-color: var(--cinza1);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.cbox input:checked~.checkmark:after {
+    display: block;
+}
+
+.cbox .checkmark:after {
+    left: 7px;
+    bottom: 4px;
+    width: 6px;
+    height: 12px;
+    border: solid var(--laranja);
+    border-width: 0 4px 4px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Placeholders */
+
+::placeholder {
+    color: #AFB3B7 !important;
+    opacity: 1;
+}
+
+:-ms-input-placeholder {
+    color: #AFB3B7 !important;
+}
+
+::-ms-input-placeholder {
+    color: #AFB3B7 !important;
+}
+
+.disable-scrollbars::-webkit-scrollbar {
+    background: transparent;
+    width: 0px;
+    height: 0;
+}
+      
+.disable-scrollbars {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }

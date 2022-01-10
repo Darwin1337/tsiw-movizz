@@ -1,5 +1,5 @@
 <template>
-  <div id="footer" class="d-flex align-items-center flex-column">
+  <div id="footer" class="d-flex align-items-center flex-column mt-5">
     <svg xmlns="http://www.w3.org/2000/svg" width="100" viewBox="0 0 166.038 26.415">
       <g id="Movizz_logo" data-name="Movizz logo" transform="translate(0 0.01)">
         <g id="Camada_1" data-name="Camada 1" transform="translate(0 -0.01)">

@@ -32,7 +32,7 @@
               </div>
             </form>
             <div class="d-flex align-items-center">
-              <img src="../assets/images/avatar.png" alt="Avatar" width="40px" height="40px" />
+              <img src="https://thispersondoesnotexist.com/image" style="border-radius: 50%;" alt="Avatar" width="40px" height="40px" />
               <div id="level">
                 <span>32</span>
               </div>
@@ -61,7 +61,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="user-card mt-3 d-flex m-0 align-items-center">
-            <img src="../assets/images/avatar.png" alt="Avatar" width="40px" height="40px" />
+            <img src="https://thispersondoesnotexist.com/image" alt="Avatar" style="border-radius: 50%;" width="40px" height="40px" />
             <div id="level">
               <span>32</span>
             </div>
@@ -196,7 +196,7 @@ export default {
   
   #desktop #level {
     position: relative;
-    top: 20px;
+    top: 15px;
     right: 10px;
   }
 

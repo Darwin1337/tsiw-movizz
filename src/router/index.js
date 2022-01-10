@@ -7,7 +7,9 @@ import Quizzes from "../views/Quizzes.vue";
 import Prizes from "../views/Prizes.vue";
 import Admin from "../views/Admin.vue";
 import Profile from "../views/Profile.vue";
+import Title from "../views/Title.vue";
 import Quiz from "../views/Quiz.vue";
+import Error from "../views/Error.vue";
 
 Vue.use(VueRouter);
 
@@ -48,9 +50,19 @@ const routes = [
     component: Profile
   },
   {
+    path: "/title/:imdbid",
+    name: "Title",
+    component: Title
+  },
+  {
     path: "/quiz/:id",
     name: "Quiz",
     component: Quiz
+  },
+  {
+    path: "*",
+    name: "Error",
+    component: Error
   }
 ];
 
