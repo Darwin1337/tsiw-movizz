@@ -20,7 +20,7 @@
       </div>
     </div>
     <!-- Seletor filme/serie -->
-    <div class="d-flex justify-content-center mt-3">
+    <div class="d-flex justify-content-center mt-3" style="gap: 15px;">
       <div :class="selectedType == 1 ? 'active-type' : 'default-type'" @click="selectedType = 1">
         <span style="font-size: 1.25em;">Movies</span>
       </div>
@@ -196,7 +196,8 @@
     cursor: pointer;
     padding: 10px 20px;
     border-bottom: 2px solid;
-    margin-right: 30px;
+    display: flex;
+    justify-content: center;
   }
 
   .default-type {

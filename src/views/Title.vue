@@ -67,8 +67,8 @@
                   Mark as seen <i class="fas fa-eye"></i>
                 </button>
                 <div class="wrapper-stars position-relative d-flex justify-content-center">
-                  <div v-if="showStars" class="p-2 show-stars" style="position: absolute; top: -45px; background-color: var(--cinza2); border-radius: 5px;">
-                    <div class="stars d-flex" style="gap: 5px; font-size: 1.25em; cursor: pointer; color: white;">
+                  <div v-show="showStars" class="p-2 show-stars" style="position: absolute; top: -45px; background-color: var(--cinza2); border-radius: 5px;">
+                    <div class="stars d-flex" style="gap: 5px; font-size: 1.25em; cursor: pointer;">
                       <i class="fas fa-star" @click="fillStars(1, 'a')" @mouseover="fillStars(1, 'b')" @mouseleave="fillStars(0, 'c')"></i>
                       <i class="fas fa-star" @click="fillStars(2, 'a')" @mouseover="fillStars(2, 'b')" @mouseleave="fillStars(0, 'c')"></i>
                       <i class="fas fa-star" @click="fillStars(3, 'a')" @mouseover="fillStars(3, 'b')" @mouseleave="fillStars(0, 'c')"></i>
@@ -76,7 +76,7 @@
                       <i class="fas fa-star" @click="fillStars(5, 'a')" @mouseover="fillStars(5, 'b')" @mouseleave="fillStars(0, 'c')"></i>
                     </div>
                   </div>
-                  <button class="blur-btn" style="font-weight: 500" @click="showStars = !showStars">
+                  <button class="blur-btn" style="font-weight: 500" @click="showStars = !showStars;">
                     Rate <i class="fas fa-star"></i>
                   </button>
                 </div>
@@ -354,7 +354,7 @@ export default {
     return {
       showFullCast: false,
       selectedSeason: 1,
-      showStars: true,
+      showStars: false,
       savedStars: 0 
     };
   },
@@ -373,7 +373,6 @@ export default {
       }
     }, fillStars(n, event_type) {
         if (event_type == "a") {
-            console.log("a")
             document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
             if (n > 0 && n != this.savedStars) {
                 for (let i = 0; i < n; i++) {
@@ -382,7 +381,6 @@ export default {
             }
             this.savedStars = n != this.savedStars ? n : 0;
         } else if (event_type == "b") {
-            console.log("b")
             document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
             if (n > 0) {
                 for (let i = 0; i < n; i++) {
@@ -390,7 +388,6 @@ export default {
                 }
             }
         } else {
-            console.log("c")
             document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
             for (let i = 0; i < this.savedStars; i++) {
                 document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";

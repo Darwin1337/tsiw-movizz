@@ -121,7 +121,6 @@
         methods: {
             fillStars(n, event_type) {
                 if (event_type == "a") {
-                    console.log("a")
                     document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
                     if (n > 0 && n != this.savedStars) {
                         for (let i = 0; i < n; i++) {
@@ -130,7 +129,6 @@
                     }
                     this.savedStars = n != this.savedStars ? n : 0;
                 } else if (event_type == "b") {
-                    console.log("b")
                     document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
                     if (n > 0) {
                         for (let i = 0; i < n; i++) {
@@ -138,7 +136,6 @@
                         }
                     }
                 } else {
-                    console.log("c")
                     document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
                     for (let i = 0; i < this.savedStars; i++) {
                         document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
