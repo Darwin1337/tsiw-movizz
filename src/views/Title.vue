@@ -5,49 +5,40 @@
         <div class="row h-100 w-100 pt-5 pb-5 m-0">
           <div class="poster col-lg-4 m-auto">
             <div class="w-100 poster-wrapper">
-              <img id="title-poster" src="https://image.tmdb.org/t/p/original/dmnwJGVergOFWCiLbPsQTyyzePw.jpg"
+              <img id="title-poster" :src="info[0][0].poster"
                 alt="Title cover" />
             </div>
           </div>
           <div class="main-info col-lg-8">
             <div class="d-flex align-items-center" style="gap: 20px">
-              <p id="title-name">La Casa de Papel</p>
+              <p id="title-name">{{info[0][0].titulo}}</p>
               <p id="title-content-rating" class="d-flex align-items-center justify-content-center">
-                TV-MA
+                {{info[0][0].class_etaria}}
               </p>
             </div>
-            <p id="title-date">2017-2021</p>
-            <p id="title-genres">Action, Crime and Drama</p>
+            <p id="title-date"><b>Year: </b>{{info[0][0].ano}}</p>
+            <p id="title-genres">{{getGenreDescription(info[2])}}</p>
             <div>
               <div class="d-flex align-items-center mb-2" style="gap: 20px">
                 <p class="m-0" style="font-size: 1.25em">
                   <strong>Synopsis</strong>
                 </p>
                 <a class="m-0 d-flex align-items-center" style="gap: 15px"
-                  href="https://www.imdb.com/video/imdb/vi2646786841" target="_blank">
+                  :href="info[0][0].trailer" target="_blank">
                   <img src="../assets/images/youtube.svg" alt="YouTube icon" width="40px" />
                   Watch the trailer
                 </a>
               </div>
               <p id="title-synopsis">
-                Set in Madrid, a mysterious man known as the "Professor"
-                recruits a group of eight people, who choose city names as their
-                aliases, to carry out an ambitious plan that involves entering
-                the Royal Mint of Spain, and escaping with €984 million. After
-                taking 67 people hostage inside the Mint, the team plans to
-                remain inside for 11 days to print the money as they deal with
-                elite police forces. In the events following the initial heist,
-                the group's members are forced out of hiding and prepare for a
-                second heist, this time on the Bank of Spain, as they again deal
-                with hostages and police forces.
+                {{info[0][0].sinopse}}
               </p>
             </div>
             <div class="mb-3">
               <img src="https://flagcdn.com/16x12/es.png" />
               &nbsp;
-              <span id="title-language">Spanish</span>
+              <span id="title-language">{{info[0][0].pais}}</span>
             </div>
-            <p id="title-running-time">42-77 minutes per episode</p>
+            <p id="title-running-time">{{info[0][0].duracao}} minutes</p>
             <p id="title-availability">Available on <strong>Netflix</strong></p>
             <div class="
                 title-actions-wrapper
@@ -56,7 +47,7 @@
                 flex-wrap
               ">
               <div>
-                <p class="orange-btn text-center mb-3">IMDb 8.2</p>
+                <p class="orange-btn text-center mb-3">IMDb {{parseFloat(info[0][0].pontuacao_imdb).toFixed(1)}}</p>
                 <p class="blur-btn text-center">Movizz 4.1/5</p>
               </div>
               <div class="title-actions d-flex align-items-center flex-wrap" style="gap: 15px; flex-grow: 0">
@@ -348,6 +339,7 @@
 
 
 <script>
+ import { mapGetters } from "vuex";
 export default {
   // $route.params.imdbid
   data() {
@@ -355,8 +347,19 @@ export default {
       showFullCast: false,
       selectedSeason: 1,
       showStars: false,
-      savedStars: 0 
+      savedStars: 0,
+      info:[],
     };
+  },
+  computed: {
+      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast"]),
+  },
+  mounted () {
+    document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
+    
+  },
+  created () {
+    this.info = this.getTitleInfo(this.$route.params.imdbid);
   },
   methods: {
     simulateScroll(dir) {
@@ -400,11 +403,10 @@ export default {
 
 <style scoped>
 .jumbotron {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
-    url("https://m.media-amazon.com/images/M/MV5BZTY5YzBiMWYtZWJkNS00ODg1LWI2N2MtZTYxOGFmOTk1YTg2XkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_Ratio1.7800_AL_.jpg");
+
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: top center;
   min-height: 600px;
   height: 100%;
 }
