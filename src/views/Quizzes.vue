@@ -21,10 +21,12 @@
         <h5 class="text-center">Top 10 Leaderboard</h5>
         <div style="overflow-y: scroll; overflow-x: hidden; max-height: 300px;" id="leaderboardBar">
           <div class="row leaderboard-card m-0 mt-2 me-2 pt-2 pb-2 pe-1 ps-1" v-for="i in 10" :key="i">
-            <div :class="{'position-relative': i <= 3}" class="col-2 d-flex justify-content-center align-items-center">
-              <img :src="crowns[i - 1]" width="25px"
-                style="position: absolute; top: -11px; left: 6px; transform: rotate(-30deg);">
-              <img class="avatar" src="https://thispersondoesnotexist.com/image">
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="position-relative">
+                <img v-if="i <= 3" :src="crowns[i - 1]" width="25px"
+                  style="position: absolute; top: -11px; left: -7px; transform: rotate(-30deg);">
+                <img class="avatar" src="https://thispersondoesnotexist.com/image">
+              </div>
             </div>
             <div class="col-4 d-flex justify-content-center align-items-center">Albertino</div>
             <div class="col-4 d-flex justify-content-center align-items-center"><strong>4500 points</strong></div>

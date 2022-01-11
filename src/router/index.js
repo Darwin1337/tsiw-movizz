@@ -10,6 +10,7 @@ import Profile from "../views/Profile.vue";
 import Title from "../views/Title.vue";
 import Quiz from "../views/Quiz.vue";
 import Error from "../views/Error.vue";
+import store from "../store/index.js";
 
 Vue.use(VueRouter);
 
@@ -17,47 +18,74 @@ const routes = [
   {
     path: "/",
     name: "Authentication",
-    component: Authentication
+    component: Authentication,
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/home",
     name: "Home",
-    component: Home
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/catalog",
     name: "Catalog",
-    component: Catalog
+    component: Catalog,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/quizzes",
     name: "Quizzes",
-    component: Quizzes
+    component: Quizzes,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/prizes",
     name: "Prizes",
-    component: Prizes
+    component: Prizes,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/admin",
     name: "Admin",
-    component: Admin
+    component: Admin,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
-    path: "/profile",
+    path: "/profile/:id",
     name: "Profile",
-    component: Profile
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/title/:imdbid",
     name: "Title",
-    component: Title
+    component: Title,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/quiz/:id",
     name: "Quiz",
-    component: Quiz
+    component: Quiz,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "*",
@@ -70,6 +98,19 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+  scrollBehavior () {
+    return { x: 0, y: 0 }
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !store.getters.getLoggedUser) {
+    next({ name: "Authentication" });
+  } else if (!to.meta.requiresAuth && store.getters.getLoggedUser) {
+    next({ name: "Home" });
+  } else {
+    next();
+  }
 });
 
 export default router;

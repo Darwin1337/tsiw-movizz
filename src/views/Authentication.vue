@@ -39,14 +39,14 @@
           <p class="seccion-title">No time to waste?</p>
           <p class="login-title">Prove it's really you, <span style="color: #BBE1FA; font-weight: bold;">sign in</span>
           </p>
-          <form id="login" class="mb-5">
+          <form id="login" class="mb-5" @submit.prevent="loginUser()">
             <div class="input-group">
-              <input type="email" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail">
+              <input type="text" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required v-model="old_user.email">
               <span class="input-group-text"><i class="fas fa-envelope"></i></span>
             </div>
             <br>
             <div class="input-group">
-              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password">
+              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password" required v-model="old_user.password">
               <span class="input-group-text"><i class="fas fa-lock"></i></span>
             </div>
             <div class="text-center">
@@ -55,28 +55,28 @@
           </form>
           <p class="login-title"><span style="color: #BBE1FA; font-weight: bold;">Sign up</span>, we promise we won't
             sell your data</p>
-          <form id="register">
+          <form id="register" @submit.prevent="registerUser()">
             <div class="row g-4">
               <div class="col-sm-6">
-                <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name">
+                <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name" required v-model="new_user.primeiro_nome">
               </div>
               <div class="col-sm-6">
-                <input type="text" class="form-control bg-inputs" placeholder="Last name" aria-label="Last name">
+                <input type="text" class="form-control bg-inputs" placeholder="Last name" aria-label="Last name" required v-model="new_user.ultimo_nome">
               </div>
             </div>
             <br>
             <div class="input-group">
-              <input type="email" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail">
+              <input type="email" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required v-model="new_user.email">
               <span class="input-group-text"><i class="fas fa-envelope"></i></span>
             </div>
             <br>
             <div class="input-group">
-              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password">
+              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password" required v-model="new_user.password">
               <span class="input-group-text"><i class="fas fa-lock"></i></span>
             </div>
             <br>
             <div class="input-group">
-              <input type="text" class="form-control bg-inputs" onmouseenter="(this.type='date')" placeholder="Date of birth" aria-label="Date of birth">
+              <input type="text" class="form-control bg-inputs" onmouseenter="(this.type='date')" onfocus="(this.type='date')" placeholder="Date of birth" aria-label="Date of birth" required v-model="new_user.data_nascimento">
               <span class="input-group-text"><i class="fas fa-calendar"></i></span>
             </div>
             <div class="text-center">
@@ -90,6 +90,63 @@
   </div>
 </template>
 
+<script>
+import { mapGetters, mapMutations } from "vuex";
+
+export default {
+  data() {
+    return {
+      old_user: {
+        email: '',
+        password: ''
+      },
+      new_user: {
+        primeiro_nome: '',
+        ultimo_nome: '',
+        email: '',
+        password: '',
+        data_nascimento: '',
+        avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        id_badge: 0,
+        pontos: 0,
+        xp: 0,
+        nivel: 0,
+        num_quizzes: 0,
+        num_certas: 0,
+        num_erradas: 0,
+        num_ajudas: 0
+      }
+    }
+  },
+  methods: {
+    ...mapMutations(["SET_LOGGED_USER"]),
+    ...mapMutations(["SET_NEW_USER"]),
+    loginUser() {
+      if (this.isUser(this.old_user.email, this.old_user.password)) {
+        this.SET_LOGGED_USER(this.old_user.email);
+        this.$router.push({ name: "Home" });
+      } else {
+        this.$swal('Error!', 'The data entered is not in our system.', 'error');
+      }
+    },
+    registerUser() {
+      if (this.isEmailAvailable(this.new_user.email)) {
+        this.new_user.id = this.getNextAvailableID;
+        this.new_user.data_registo = new Date();
+        this.SET_NEW_USER(this.new_user);
+        this.$swal('Success!', 'The sign in was successful.', 'success');
+      } else {
+        this.$swal('Error!', 'The e-mail entered is already being used.', 'error');
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(["isEmailAvailable"]),
+    ...mapGetters(["isUser"]),
+    ...mapGetters(["getNextAvailableID"])
+  }
+}
+</script>
 
 <style scoped>  
   .jumbotron {
@@ -159,7 +216,6 @@
     font-weight: 500;
   }
 
-  
   .input-group-text .fas {
       color: #AFB3B7;
   }
