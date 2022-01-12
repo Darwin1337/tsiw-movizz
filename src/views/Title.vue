@@ -51,10 +51,10 @@
                 <p class="blur-btn text-center">Movizz 4.1/5</p>
               </div>
               <div class="title-actions d-flex align-items-center flex-wrap" style="gap: 15px; flex-grow: 0">
-                <button class="blur-btn" style="font-weight: 500">
+                <button class="blur-btn" style="font-weight: 500" id="like" @click="addNewLike()" >
                   Add to favourites <i class="fas fa-heart"></i>
                 </button>
-                <button class="blur-btn" style="font-weight: 500">
+                <button class="blur-btn" style="font-weight: 500" id="seen" @click="addNewSeen()">
                   Mark as seen <i class="fas fa-eye"></i>
                 </button>
                 <div class="wrapper-stars position-relative d-flex justify-content-center">
@@ -89,10 +89,9 @@
       <section id="cast" class="mt-5 mb-3">
         <p class="subtitle">Cast</p>
         <div class="cast-members row">
-          <div class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" v-for="i in showFullCast ? 24 : 6" :key="i">
+          <div class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" v-for="(member, i) in (showFullCast ? info[1].length : 6)" :key="i" :set="idx = getAllCast.findIndex(pessoa => pessoa.id_pessoa == info[1][i].id_pessoa)">
             <div style="background-color: var(--azul-escuro2); border-radius: 10px; w-100">
-              <div class="cast-photo" style="
-                  background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/58/Premios_Goya_2018_-_%C3%9Arsula_Corber%C3%B3.jpg');
+              <div class="cast-photo" :style="{ backgroundImage: 'url(' + getAllCast[idx].foto + ')' }" style="
                   background-repeat: no-repeat;
                   background-size: cover;
                   background-position: top;
@@ -101,10 +100,8 @@
                   border-top-right-radius: 10px;
                   border-top-left-radius: 10px;
                 "></div>
-              <p class="text-center pt-3 m-0">Úrsula Corberó</p>
-              <p class="text-center pb-3 m-0" style="color: var(--cinza2)">
-                Tokio
-              </p>
+              <p class="text-center pt-3 pb-3 m-0">{{ getAllCast[idx].nome }}</p>
+              
             </div>
           </div>
         </div>
@@ -123,21 +120,19 @@
         <p class="subtitle">Crew</p>
         <p>
           Writers:
-          <span style="color: var(--cinza2)">David Pelegrín, Luis Miguel González Bedmar, Verónica Callón, Raúl
-            Mora, Regino Hernández, Raquel Marraco and Patricia Rubio</span>
+          <span style="color: var(--cinza2)">{{getCrewDescription(info[3])}}</span>
         </p>
         <p>
           Producers:
-          <span style="color: var(--cinza2)">Álex Pina, Sonia Martínez, Jesús Colmenar, Esther Martínez Lobato
-            and Nacho Manubens</span>
+          <span style="color: var(--cinza2)">{{getCrewDescription(info[5])}}</span>
         </p>
         <p>
           Directors:
-          <span style="color: var(--cinza2)">Jesús Colmenar, Koldo Serra, Álex Rodrigo and Javier Quintas</span>
+          <span style="color: var(--cinza2)">{{getCrewDescription(info[4])}}</span>
         </p>
       </section>
       <hr />
-      <section id="seasons">
+      <!-- <section id="seasons">
         <p class="subtitle">Seasons</p>
         <div class="d-flex num-seasons" style="gap: 25px">
           <p class="
@@ -256,7 +251,7 @@
         </div>
         </div>
         </section>
-        <hr>
+        <hr> -->
         <div class="row">
           <div class="col-md-8">
             <section id="comments">
@@ -339,7 +334,7 @@
 
 
 <script>
- import { mapGetters } from "vuex";
+ import { mapGetters, mapMutations } from "vuex";
 export default {
   // $route.params.imdbid
   data() {
@@ -349,19 +344,77 @@ export default {
       showStars: false,
       savedStars: 0,
       info:[],
+      userLikes: [],
+      userSeen: [],
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast"]),
+      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
-    
+    this.verifyLike();
+    this.verifySeen();
   },
   created () {
     this.info = this.getTitleInfo(this.$route.params.imdbid);
+    this.userLikes=this.getTitleLikes(this.getLoggedUser.id);
+    this.userSeen=this.getHasSeen(this.getLoggedUser.id);
   },
   methods: {
+    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE"]),
+    verifyLike(){
+      let wasfound=false;
+      for(let i=0;i<this.userLikes.length;i++){
+        if(this.$route.params.imdbid==this.userLikes[i]){
+          wasfound=true;
+          document.querySelector("#like").style.backgroundColor = "var(--vermelho)"
+          break;
+        }
+      }
+      if(!wasfound){
+        document.querySelector("#like").style.backgroundColor = "rgba(255, 255, 255, 0.15)";
+      }
+    },
+    verifySeen(){
+      let wasfound=false;
+      for(let i=0;i<this.userSeen.length;i++){
+        if(this.$route.params.imdbid==this.userSeen[i]){
+          wasfound=true;
+          document.querySelector("#seen").style.backgroundColor = "var(--verde)";
+          break;
+        }
+      }
+      if(!wasfound){
+        document.querySelector("#seen").style.backgroundColor = "rgba(255, 255, 255, 0.15)";
+      }
+    },
+    addNewSeen(){
+      let aux={id_imdb:this.$route.params.imdbid, id_utilizador:this.getLoggedUser.id}
+      if(!this.userSeen.some(filme=>filme==this.$route.params.imdbid)){
+        this.SET_HAS_SEEN(aux);
+        this.userSeen.push(this.$route.params.imdbid);
+        this.verifySeen();
+      }
+      else{
+        this.REMOVE_HAS_SEEN(this.$route.params.imdbid);
+        this.userSeen= this.userSeen.filter(filme=>!filme==this.$route.params.imdbid);
+        this.verifySeen();
+      }
+    },
+    addNewLike(){
+      let aux={id_imdb:this.$route.params.imdbid, id_utilizador:this.getLoggedUser.id}
+      if(!this.userLikes.some(filme=>filme==this.$route.params.imdbid)){
+        this.SET_NEW_LIKE(aux);
+        this.userLikes.push(this.$route.params.imdbid);
+        this.verifyLike();
+      }
+      else{
+        this.REMOVE_LIKE(this.$route.params.imdbid);
+        this.userLikes= this.userLikes.filter(filme=>!filme==this.$route.params.imdbid);
+        this.verifyLike();
+      }
+    },
     simulateScroll(dir) {
       if (dir == "right") {
         document.querySelector('.row-carousel').scrollLeft += 260;
@@ -374,7 +427,8 @@ export default {
           document.querySelector('.row-carousel').scrollLeft = 0;
         }
       }
-    }, fillStars(n, event_type) {
+    }, 
+    fillStars(n, event_type) {
         if (event_type == "a") {
             document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
             if (n > 0 && n != this.savedStars) {

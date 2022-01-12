@@ -41,15 +41,15 @@
         <div class="carousel-wrapper" style="position: relative;">
           <div class="row-carousel disable-scrollbars">
             <div class="row__inner p-0">
-              <div class="tile" v-for="(tile, i) in getAllMovies" :key="i"
-               @click="$router.push({ name: 'Title', params: { imdbid: tile.id_imdb} })">
+              <div class="tile" v-for="(tile, i) in 10" :key="i"
+               @click="$router.push({ name: 'Title', params: { imdbid: getAllMovies[i].id_imdb} })">
                 <div class="tile__media">
-                  <img class="tile__img" :src="tile.poster"
+                  <img class="tile__img" :src="getAllMovies[i].poster"
                     alt="" />
                 </div>
                 <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-                  <p class="quiz-card-title">{{tile.titulo}}</p>
-                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(tile.pontuacao_imdb).toFixed(1)}}</button>
+                  <p class="quiz-card-title">{{getAllMovies[i].titulo}}</p>
+                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(getAllMovies[i].pontuacao_imdb).toFixed(1)}}</button>
                 </div>
               </div>
             </div>
@@ -136,16 +136,17 @@
     <!-- mostrar todos os filmes -->
     <div>
       <div class="row g-3">
-        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar" :key="index">
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(tile,i) in mostrar" :key="i"
+                @click="$router.push({ name: 'Title', params: { imdbid: getAllMovies[i].id_imdb} })">
           <div class="tile-custom">
             <div class="tile__media-custom">
               <img class="tile__img"
-                :src="selectedType == 1 ? 'https://imagens.publicocdn.com/imagens.aspx/232467?tp=KM' : 'https://m.media-amazon.com/images/I/71g3CCSgwCL._SL1284_.jpg'"
+                :src="selectedType == 1 ? getAllMovies[tile].poster : 'https://m.media-amazon.com/images/I/71g3CCSgwCL._SL1284_.jpg'"
                 alt="" />
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">{{ selectedType == 1 ? 'O Crime do Padre Amaro' : 'Arrested Development' }}</p>
-              <button class="orange-btn w-100" style="font-size: .85em; max-width: 150px;">IMDb 10.0</button>
+              <p class="quiz-card-title">{{ selectedType == 1 ? getAllMovies[tile].titulo : 'Arrested Development' }}</p>
+              <button class="orange-btn w-100" style="font-size: .85em; max-width: 150px;">IMDb {{parseFloat(getAllMovies[tile].pontuacao_imdb).toFixed(1)}}</button>
             </div>
           </div>
         </div>

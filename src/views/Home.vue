@@ -204,112 +204,16 @@
     <div class="carousel-wrapper" style="position: relative;">
       <div class="row-carousel disable-scrollbars">
         <div class="row__inner p-0">
-          <div class="tile">
+          <div class="tile" v-for="(tile, i) in 10" :key="i"
+               @click="$router.push({ name: 'Title', params: { imdbid: getAllMovies[i].id_imdb} })">
             <div class="tile__media">
               <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
+                :src="getAllMovies[i].poster"
                 alt="" />
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img" src="http://ae01.alicdn.com/kf/H82dbacf2a86942828898af5d5c75704dM.jpg" alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://upload.wikimedia.org/wikipedia/pt/e/e1/Breaking_bad_5_temporada_%28parte_1%29_poster.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">Prison Break</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb 8.2</button>
+              <p class="quiz-card-title">{{getAllMovies[i].titulo}}</p>
+              <button class="orange-btn" style="font-size: .85em;">{{parseFloat(getAllMovies[i].pontuacao_imdb).toFixed(1)}}</button>
             </div>
           </div>
         </div>
@@ -445,8 +349,21 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
   export default {
+    mounted () {
+      this.loadMovies().catch((err) =>
+        alert(`Problem handling something: ${err}.`)
+      );
+      
+    },
+    computed: {
+      ...mapGetters(["getAllMovies"]),
+    },
     methods: {
+      ...mapActions([
+        "loadMovies",
+      ]),
       simulateScroll(dir, target) {
         if (dir == "right") {
           document.querySelector(target + " .nav-left").style.color = "white";

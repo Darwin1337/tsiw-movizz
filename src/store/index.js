@@ -5,15 +5,20 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    elenco_obra:localStorage.elenco_obra ? JSON.parse(localStorage.elenco_obra) : [],
-    equipa:localStorage.equipa ? JSON.parse(localStorage.equipa) : [],
-    genero_obra:localStorage.genero_obra ? JSON.parse(localStorage.genero_obra) : [],
-    obra:localStorage.obra ? JSON.parse(localStorage.obra) : [],
-    produtor_obra: localStorage.produtor_obra ? JSON.parse(localStorage.produtor_obra):[],
-    diretor_obra: localStorage.diretor_obra ? JSON.parse(localStorage.diretor_obra):[],
-    escritor_obra: localStorage.escritor_obra ? JSON.parse(localStorage.escritor_obra):[],
-
-    genero: localStorage.genero ? JSON.parse(localStorage.genero) :
+   obras_gosto:localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [
+      {id_imdb:'tt0111161', id_utilizador:1}
+   ],
+   vistos:localStorage.vistos ? JSON.parse(localStorage.vistos) : [
+      {id_imdb:'tt0111161', id_utilizador:1}
+   ],
+   elenco_obra:localStorage.elenco_obra ? JSON.parse(localStorage.elenco_obra) : [],
+   equipa:localStorage.equipa ? JSON.parse(localStorage.equipa) : [],
+   genero_obra:localStorage.genero_obra ? JSON.parse(localStorage.genero_obra) : [],
+   obra:localStorage.obra ? JSON.parse(localStorage.obra) : [],
+   produtor_obra: localStorage.produtor_obra ? JSON.parse(localStorage.produtor_obra):[],
+   diretor_obra: localStorage.diretor_obra ? JSON.parse(localStorage.diretor_obra):[],
+   escritor_obra: localStorage.escritor_obra ? JSON.parse(localStorage.escritor_obra):[],
+   genero: localStorage.genero ? JSON.parse(localStorage.genero) :
       [
         {
           id_genero: 0,
@@ -119,8 +124,8 @@ export default new Vuex.Store({
           id_genero: 25,
           descricao: 'Western'
         }
-    ],
-    movies: localStorage.movies? JSON.parse(localStorage.movies):
+   ],
+   movies: localStorage.movies? JSON.parse(localStorage.movies):
     [
         {
           "id":"tt0111161",
@@ -2872,8 +2877,8 @@ export default new Vuex.Store({
           "imDbRating":"8.0",
           "imDbRatingCount":"44411"
        }
-    ],
-    users: localStorage.users ? JSON.parse(localStorage.users) :
+   ],
+   users: localStorage.users ? JSON.parse(localStorage.users) :
       [
         {
           "id": 0,
@@ -2911,9 +2916,9 @@ export default new Vuex.Store({
           "num_ajudas": 0,
           "data_registo": new Date()
         }
-      ],
-    loggedUser: localStorage.loggedUser ? JSON.parse(localStorage.loggedUser) : null,
-    badges: localStorage.badges ? JSON.parse(localStorage.badges) :
+   ],
+   loggedUser: localStorage.loggedUser ? JSON.parse(localStorage.loggedUser) : null,
+   badges: localStorage.badges ? JSON.parse(localStorage.badges) :
       [
         {
           "icon": require("../assets/images/badges/0.svg"),
@@ -2992,7 +2997,7 @@ export default new Vuex.Store({
           "xp_max": 999999999,
           "level": 50
         }
-      ]
+   ]
   },
   getters: {
     isEmailAvailable: (state) => (email) => state.users.every((user) => user.email !== email),
@@ -3010,6 +3015,30 @@ export default new Vuex.Store({
       state.diretor_obra.filter(diretor=>diretor.id_imdb==id),
       state.produtor_obra.filter(produtor=>produtor.id_imdb==id)
     ],
+    getCrewDescription:(state)=>(ids)=>{
+      let result="";
+      for (let i = 0; i < ids.length; i++) {
+        for (let j = 0; j < state.equipa.length; j++) {
+          if (ids[i].id_pessoa==state.equipa[j].id_pessoa) {
+            if (i==ids.length-1 && ids.length>1) {
+              result=result.slice(0,-2)
+              result+=" and "+state.equipa[j].nome;
+            }
+            else
+            {
+              if (ids.length>1) {
+                result+=state.equipa[j].nome+", ";
+              }
+              else{
+                result+=state.equipa[j].nome;
+              }
+            }
+            break;
+          }
+        }
+      }
+      return result;
+    },
     getGenreDescription:(state)=>(ids)=>{
       let result="";
       for (let i = 0; i < ids.length; i++) {
@@ -3035,6 +3064,24 @@ export default new Vuex.Store({
       return result;
     },
     getAllCast:(state) => state.equipa,
+    getTitleLikes:(state) => (id) => {
+      let result=[];
+      for (let j = 0; j < state.obras_gosto.length; j++) {
+         if (id==state.obras_gosto[j].id_utilizador) {
+            result.push(state.obras_gosto[j].id_imdb);
+         }
+      }
+      return result;
+    },
+    getHasSeen:(state) => (id) => {
+      let result=[];
+      for (let j = 0; j < state.vistos.length; j++) {
+         if (id==state.vistos[j].id_utilizador) {
+            result.push(state.vistos[j].id_imdb);
+         }
+      }
+      return result;
+    },
   },
   actions:{
     async loadMovies(context) {
@@ -3173,7 +3220,6 @@ export default new Vuex.Store({
         }
       }
     },
-
     SET_MOVIES: (state, payload) => {
       state.movies = payload
       localStorage.filmes = JSON.stringify(payload);
@@ -3206,6 +3252,22 @@ export default new Vuex.Store({
     SET_NEW_BADGE(state, payload) {
       state.users[payload.index].id_badge = payload.id_badge;
       localStorage.users = JSON.stringify(state.users);
-    }
+    },
+    SET_NEW_LIKE(state,payload){
+      state.obras_gosto.push(payload);
+      localStorage.obras_gosto = JSON.stringify(state.obras_gosto);
+    },
+    SET_HAS_SEEN(state,payload){
+      state.vistos.push(payload);
+      localStorage.vistos = JSON.stringify(state.vistos);
+    },
+    REMOVE_HAS_SEEN(state,payload){
+      state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
+      localStorage.vistos = JSON.stringify(state.vistos);
+    },
+    REMOVE_LIKE(state,payload){
+      state.obras_gosto= state.obras_gosto.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
+      localStorage.obras_gosto = JSON.stringify(state.obras_gosto);
+    },
   }
 });
