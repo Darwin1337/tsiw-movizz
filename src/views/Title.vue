@@ -256,8 +256,8 @@
           <div class="col-md-8">
             <section id="comments">
               <p class="subtitle">Comments</p>
-              <form>
-                <textarea id="comment-content" required placeholder="Let others know what you think..."></textarea>
+              <form  @submit.prevent="addNewComment()">
+                <textarea id="comment-content" v-model="comentario" required placeholder="Let others know what you think..."></textarea>
                 <div class="mt-1 mb-4">
                   <label class="cbox">Is this comment a spoiler?
                     <input type="checkbox">
@@ -265,25 +265,14 @@
                   </label>
                 </div>
                 <div class="mt-3 mb-3">
-                  <button class="orange-btn" type="submit">Comment</button>
+                  <input class="orange-btn" type="submit" value="Comment">
                 </div>
               </form>
-              <div class="other-comments mt-5">
-                <div class="card-comment d-flex" style="gap: 15px;">
-                  <div class="photo" id="comment-photo1"></div>
-                  <div class="details d-flex flex-column">
-                    <p id="comment-author">Antónia Marques <span>21 de julho de 2019</span></p>
-                    <p id="comment-message">A básica série da Netflix.</p>
-                  </div>
-                </div>
-                <br>
-                <div class="card-comment d-flex" style="gap: 15px;">
-                  <div class="photo" id="comment-photo2"></div>
-                  <div class="details d-flex flex-column">
-                    <p id="comment-author">Carlota Gonçalves <span>10 de julho de 2019</span></p>
-                    <p id="comment-message">Das melhores series a nível de ação, deixou-me agarrada à televisão por dias sem conseguir para de ver.</p>
-                  </div>
-                </div>
+              <div class="other-comments mt-5" id="comment">
+                
+                  
+                
+               
               </div>
             </section>
           </div>
@@ -346,23 +335,49 @@ export default {
       info:[],
       userLikes: [],
       userSeen: [],
+      comments:[],
+      comentario:"",
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen"]),
+      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getUserInfo","getCommentsQuantity"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
     this.verifyLike();
     this.verifySeen();
+    this.listComments();
   },
   created () {
     this.info = this.getTitleInfo(this.$route.params.imdbid);
     this.userLikes=this.getTitleLikes(this.getLoggedUser.id);
     this.userSeen=this.getHasSeen(this.getLoggedUser.id);
+    this.comments=this.getTitleComments(this.$route.params.imdbid);
   },
   methods: {
-    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE"]),
+    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT"]),
+    listComments(){
+      console.log(this.comments.length)
+      for(let i=0;i<this.comments.length;i++){
+        document.querySelector("#comment").innerHTML += `<div class="card-comment d-flex" style="gap: 15px;" >
+        <div style="background-image:url(${this.getUserInfo(this.comments[i].id_utilizador)[0].avatar}); min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
+                  <div class="details d-flex flex-column">
+                    <p id="comment-author">${this.getUserInfo(this.comments[i].id_utilizador)[0].primeiro_nome} ${this.getUserInfo(this.comments[i].id_utilizador)[0].ultimo_nome} <span>${this.comments[i].data}</span></p>
+                    <p id="comment-message">${this.comments[i].comentario}</p>
+                  </div>
+                  </div>
+                <br>`
+        }
+    },
+    addNewComment() {
+      const d = new Date();
+      let aux={id_comentario:this.getCommentsQuantity+1,id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,comentario: this.comentario, data:d.getDay()+"-"+d.getMonth()+"-"+d.getYear()}
+      this.SET_NEW_COMMENT(aux);
+      this.comments.push({comentario: this.comentario, data:d.getDay()+"-"+d.getMonth()+"-"+d.getYear(), id_utilizador:this.getLoggedUser.id});
+      this.listComments();
+
+      
+    },
     verifyLike(){
       let wasfound=false;
       for(let i=0;i<this.userLikes.length;i++){

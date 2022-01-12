@@ -5,12 +5,17 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-   obras_gosto:localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [
-      {id_imdb:'tt0111161', id_utilizador:1}
+   comentarios_obra:localStorage.comentarios_obra?JSON.parse(localStorage.comentarios_obra):[
+      {
+         id_comentario:1,
+         id_imdb:"tt0111161",
+         id_utilizador:1,
+         comentario:"ola",
+         data:"13-11-2012"
+      }
    ],
-   vistos:localStorage.vistos ? JSON.parse(localStorage.vistos) : [
-      {id_imdb:'tt0111161', id_utilizador:1}
-   ],
+   obras_gosto:localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [],
+   vistos:localStorage.vistos ? JSON.parse(localStorage.vistos) : [],
    elenco_obra:localStorage.elenco_obra ? JSON.parse(localStorage.elenco_obra) : [],
    equipa:localStorage.equipa ? JSON.parse(localStorage.equipa) : [],
    genero_obra:localStorage.genero_obra ? JSON.parse(localStorage.genero_obra) : [],
@@ -3007,6 +3012,15 @@ export default new Vuex.Store({
     getNextAvailableID: (state) => state.users ? state.users[state.users.length - 1].id + 1 : 0,
     getAllUsers: (state) => state.users,
     getAllMovies:(state) => state.obra,
+    getUserInfo:(state)=>(id)=>{
+      let result=[];
+      for (let j = 0; j < state.users.length; j++) {
+         if (id==state.users[j].id) {
+            result.push(state.users[j]);
+         }
+      }
+      return result;
+    },
     getTitleInfo:(state)=>(id)=>[
       state.obra.filter(filme=>filme.id_imdb==id),
       state.elenco_obra.filter(ator=>ator.id_imdb==id),
@@ -3082,6 +3096,16 @@ export default new Vuex.Store({
       }
       return result;
     },
+    getTitleComments:(state)=>(id)=>{
+      let result=[];
+      for (let i = 0; i < state.comentarios_obra.length; i++) {
+         if (id==state.comentarios_obra[i].id_imdb) {
+            result.push({id_utilizador:state.comentarios_obra[i].id_utilizador, comentario:state.comentarios_obra[i].comentario, data:state.comentarios_obra[i].data});
+         }
+      }
+      return result;
+    },
+    getCommentsQuantity:(state)=>state.comentarios_obra.length
   },
   actions:{
     async loadMovies(context) {
@@ -3260,6 +3284,10 @@ export default new Vuex.Store({
     SET_HAS_SEEN(state,payload){
       state.vistos.push(payload);
       localStorage.vistos = JSON.stringify(state.vistos);
+    },
+    SET_NEW_COMMENT(state,payload){
+      state.comentarios_obra.push(payload);
+      localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
     },
     REMOVE_HAS_SEEN(state,payload){
       state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
