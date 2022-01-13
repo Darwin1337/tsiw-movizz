@@ -257,7 +257,7 @@
             <section id="comments">
               <p class="subtitle">Comments</p>
               <form  @submit.prevent="addNewComment()">
-                <textarea id="comment-content" v-model="comentario" required placeholder="Let others know what you think..."></textarea>
+                <textarea id="comment-content" v-model.lazy="comentario" required placeholder="Let others know what you think..."></textarea>
                 <div class="mt-1 mb-4">
                   <label class="cbox">Is this comment a spoiler?
                     <input type="checkbox">
