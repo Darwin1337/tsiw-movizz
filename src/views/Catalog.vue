@@ -169,9 +169,9 @@
       }
     },
     mounted () {
-      this.loadMovies().catch((err) =>
-        alert(`Problem handling something: ${err}.`)
-      );
+      // this.loadMovies().catch((err) =>
+      //   alert(`Problem handling something: ${err}.`)
+      // );
       
     },
     computed: {

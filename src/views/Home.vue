@@ -213,7 +213,7 @@
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
               <p class="quiz-card-title">{{getAllMovies[i].titulo}}</p>
-              <button class="orange-btn" style="font-size: .85em;">{{parseFloat(getAllMovies[i].pontuacao_imdb).toFixed(1)}}</button>
+              <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(getAllMovies[i].pontuacao_imdb).toFixed(1)}}</button>
             </div>
           </div>
         </div>
@@ -352,9 +352,9 @@
 import { mapActions, mapGetters } from "vuex";
   export default {
     mounted () {
-      this.loadMovies().catch((err) =>
-        alert(`Problem handling something: ${err}.`)
-      );
+      // this.loadMovies().catch((err) =>
+      //   alert(`Problem handling something: ${err}.`)
+      // );
       
     },
     computed: {

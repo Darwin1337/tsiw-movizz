@@ -33,8 +33,8 @@
                 {{info[0][0].sinopse}}
               </p>
             </div>
-            <div class="mb-3">
-              <img src="https://flagcdn.com/16x12/es.png" />
+            <div class="mb-3 d-flex align-items-center" style="gap: 5px;">
+              <img style="width: 20px; min-width: 20px;" :src="'https://countryflagsapi.com/svg/' + (info[0][0].pais == 'UK' ? 'GB' : info[0][0].pais)" />
               &nbsp;
               <span id="title-language">{{info[0][0].pais}}</span>
             </div>
@@ -269,10 +269,13 @@
                 </div>
               </form>
               <div class="other-comments mt-5" id="comment">
-                
-                  
-                
-               
+                <div class="card-comment d-flex" style="gap: 15px;" v-for="(comment, i) in comments" :key="i" >
+                  <div  :style="'background-image: url(' + getAllUsers[comment.id_utilizador].avatar + ');'" style="min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
+                  <div class="details d-flex flex-column">
+                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ comment.data }}</span></p>
+                    <p id="comment-message">{{ comment.comentario }}</p>
+                  </div>
+                </div>
               </div>
             </section>
           </div>
@@ -340,13 +343,13 @@ export default {
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getUserInfo","getCommentsQuantity"]),
+      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getUserInfo", "getAllUsers", "getCommentsQuantity"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
     this.verifyLike();
     this.verifySeen();
-    this.listComments();
+    // this.listComments();
   },
   created () {
     this.info = this.getTitleInfo(this.$route.params.imdbid);
@@ -356,27 +359,23 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT"]),
-    listComments(){
-      console.log(this.comments.length)
-      for(let i=0;i<this.comments.length;i++){
-        document.querySelector("#comment").innerHTML += `<div class="card-comment d-flex" style="gap: 15px;" >
-        <div style="background-image:url(${this.getUserInfo(this.comments[i].id_utilizador)[0].avatar}); min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
-                  <div class="details d-flex flex-column">
-                    <p id="comment-author">${this.getUserInfo(this.comments[i].id_utilizador)[0].primeiro_nome} ${this.getUserInfo(this.comments[i].id_utilizador)[0].ultimo_nome} <span>${this.comments[i].data}</span></p>
-                    <p id="comment-message">${this.comments[i].comentario}</p>
-                  </div>
-                  </div>
-                <br>`
-        }
-    },
+    // listComments(){
+    //   console.log(this.comments.length)
+    //   for(let i=0;i<this.comments.length;i++){
+    //     document.querySelector("#comment").innerHTML += `<div class="card-comment d-flex" style="gap: 15px;" >
+    //     <div style="background-image:url(${this.getUserInfo(this.comments[i].id_utilizador)[0].avatar}); min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
+    //               <div class="details d-flex flex-column">
+    //                 <p id="comment-author">${this.getUserInfo(this.comments[i].id_utilizador)[0].primeiro_nome} ${this.getUserInfo(this.comments[i].id_utilizador)[0].ultimo_nome} <span>${this.comments[i].data}</span></p>
+    //                 <p id="comment-message">${this.comments[i].comentario}</p>
+    //               </div>
+    //               </div>
+    //             <br>`
+    //     }
+    // },
     addNewComment() {
-      const d = new Date();
-      let aux={id_comentario:this.getCommentsQuantity+1,id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,comentario: this.comentario, data:d.getDay()+"-"+d.getMonth()+"-"+d.getYear()}
-      this.SET_NEW_COMMENT(aux);
-      this.comments.push({comentario: this.comentario, data:d.getDay()+"-"+d.getMonth()+"-"+d.getYear(), id_utilizador:this.getLoggedUser.id});
-      this.listComments();
-
-      
+      const DATA_COMMENT = new Date();
+      this.SET_NEW_COMMENT({id_comentario:this.getCommentsQuantity+1,id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,comentario: this.comentario, data: DATA_COMMENT});
+      this.comments.push({comentario: this.comentario, data: DATA_COMMENT, id_utilizador:this.getLoggedUser.id});
     },
     verifyLike(){
       let wasfound=false;

@@ -129,7 +129,7 @@
         </div>
 
         <div style="background-color: var(--azul-escuro2); border-radius: 10px;" class="p-3">
-          <div id="leaderboardBar" style="max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
+          <div style="leaderboardBar max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
             <div class="row g-3 pe-2">
               <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in getBadges" :key="index">
                 <div class="badge-card d-flex flex-column align-items-center p-2">
@@ -145,6 +145,346 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filtros row gy-5" v-if="selectedTab == 'favorites'">
+      <div>
+        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row m-0 g-3 pb-3">
+          <div class="col-md-12 col-lg-3 col-sm-12">
+            <form class="d-flex">
+              <div class="input-group">
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
+                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-6">
+            <select id="genre" style="height: 40px;">
+              <option disabled selected>Genre</option>
+              <option :value=genero v-for="(genero,index) in generos" :key="index">{{genero}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-6">
+            <select id="year" style="height: 40px;">
+              <option disabled selected>Year</option>
+              <option :value="i + 1979" v-for="i in 43" :key="i">{{ i + 1979 }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-6">
+            <select id="country" style="height: 40px;">
+              <option disabled selected>Country</option>
+              <option :value=pais v-for="(pais,index) in country_list" :key="index">{{pais}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-lg-3 col-sm-6">
+            <select id="order" style="height: 40px;">
+              <option disabled selected>Order by</option>
+              <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
+              <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
+              <option value="Most recent">Most recent</option>
+              <option value="Oldest">Oldest</option>
+              <option value="Best rated">Best rated</option>
+              <option value="Worst rated">Worst rated</option>
+              <option value="Most viewed">Most viewed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row g-3">
+          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar" :key="index">
+            <div class="tile-custom">
+              <div class="tile__media-custom">
+                <img class="tile__img" src="https://upload.wikimedia.org/wikipedia/pt/thumb/9/9b/Carros_p%C3%B4ster.jpg/250px-Carros_p%C3%B4ster.jpg" alt="" />
+              </div>
+              <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
+                <button class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px;"><i class="fas fa-heart"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar+=12">Load More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filtros row gy-5" v-if="selectedTab == 'seen'">
+      <div>
+        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
+          <div class="col-md-12 col-lg-3 col-sm-12">
+            <form class="d-flex">
+              <div class="input-group">
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
+                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-6">
+            <select id="genre" style="height: 40px;">
+              <option disabled selected>Genre</option>
+              <option :value=genero v-for="(genero,index) in generos" :key="index">{{genero}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-6">
+            <select id="year" style="height: 40px;">
+              <option disabled selected>Year</option>
+              <option :value="i + 1979" v-for="i in 43" :key="i">{{ i + 1979 }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-6">
+            <select id="country" style="height: 40px;">
+              <option disabled selected>Country</option>
+              <option :value=pais v-for="(pais,index) in country_list" :key="index">{{pais}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-lg-3 col-sm-6">
+            <select id="order" style="height: 40px;">
+              <option disabled selected>Order by</option>
+              <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
+              <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
+              <option value="Most recent">Most recent</option>
+              <option value="Oldest">Oldest</option>
+              <option value="Best rated">Best rated</option>
+              <option value="Worst rated">Worst rated</option>
+              <option value="Most viewed">Most viewed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row g-3">
+          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar" :key="index">
+            <div class="tile-custom">
+              <div class="tile__media-custom">
+                <img class="tile__img" src="https://br.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg" alt="" />
+              </div>
+              <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
+                <button class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px;"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar+=12">Load More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filtros" v-if="selectedTab == 'history'">
+      <div class="row gy-2">
+        <div class="col-md-12 col-lg-6 col-xl-4">
+          <p style="color: var(--azul-claro); font-weight: 500;">Ratings</p>
+          <div>
+            <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
+              <div class="col-lg-6">
+                <form class="d-flex">
+                  <div class="input-group">
+                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
+                    <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="col-lg-6">
+                <select id="orderby" style="height: 40px;">
+                  <option disabled selected>Order by</option>
+                  <option value="Most recent">Most recent</option>
+                  <option value="Oldest">Oldest</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="i in 10" :key="i">
+              <div class="d-flex flex-wrap" style="gap: 5px;">
+                <p style="color: var(--cinza-claro);">July 21st 2020</p>
+                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>The Wolf of Wall Street</strong></p>
+              </div>
+              <div>
+                <p>O Lobo de Wall Street é imperdível para os cinéfilos.</p>
+              </div>
+              <div class="d-flex" style="gap: 10px;">
+                <button class="edit-btn">See comment</button>
+                <button class="custom-logout-btn">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-6 col-xl-4">
+          <p style="color: var(--azul-claro); font-weight: 500;">Comments</p>
+          <div>
+            <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
+              <div class="col-lg-6">
+                <form class="d-flex">
+                  <div class="input-group">
+                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
+                    <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="col-lg-6">
+                <select id="orderby" style="height: 40px;">
+                  <option disabled selected>Order by</option>
+                  <option value="Most recent">Most recent</option>
+                  <option value="Oldest">Oldest</option>
+                  <option value="Best">Best</option>
+                  <option value="Worst">Worst</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="i in 10" :key="i">
+              <div class="d-flex flex-wrap w-100" style="gap: 15px;">
+                <div>
+                  <div style="width: 85px; height: 125px; min-width: 85px; min-height: 125px;">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" src="https://upload.wikimedia.org/wikipedia/pt/8/8b/Superbad_Poster.png">
+                  </div>
+                </div>
+                <div class="d-flex flex-column">
+                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>The Wolf of Wall Street</strong></p>
+                  <p style="color: var(--cinza-claro);">July 21st 2020</p>
+                  <div class="stars d-flex" style="gap: 5px; cursor: pointer; color: var(--laranja);">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <div class="d-flex mt-auto" style="gap: 10px;">
+                    <button class="edit-btn">Edit</button>
+                    <button class="custom-logout-btn">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-6 col-xl-4">
+          <p style="color: var(--azul-claro); font-weight: 500;">Prizes</p>
+          <div>
+            <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
+              <div class="col-lg-6">
+                <form class="d-flex">
+                  <div class="input-group">
+                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
+                    <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="col-lg-6">
+                <select id="orderby" style="height: 40px;">
+                  <option disabled selected>Order by</option>
+                  <option value="Most recent">Most recent</option>
+                  <option value="Oldest">Oldest</option>
+                  <option value="Most expensive">Most expensive</option>
+                  <option value="Cheapest">Cheapest</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="i in 10" :key="i">
+              <div class="d-flex flex-wrap w-100" style="gap: 15px;">
+                <div>
+                  <div style="width: 125px; height: 125px; min-width: 125px; min-height: 125px;">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" src="https://cinemas.nos.pt/noticias/PublishingImages/Imagem%20Institucional.jpg">
+                  </div>
+                </div>
+                <div class="d-flex flex-column">
+                  <p style="color: var(--laranja);" class="m-0"><strong>Cinemas NOS ticket</strong></p>
+                  <p style="color: var(--cinza-claro);">July 21st 2020</p>
+                  <p style="color: var(--cinza-claro);"><strong>3000</strong> points</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
+      <div class="card-profile p-3 w-100" style="max-width: 600px;">
+        <div class="img-profile row g-3">
+          <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
+            <div class="d-flex align-items-center position-relative">
+              <img :src="this.getAllUsers[$route.params.id].avatar"
+                style="border-radius: 50%; min-width: 50px; min-height: 50px; object-fit: cover; object-position: center top;" alt="Avatar" width="80px"
+                height="80px" />
+            </div>
+          </div>
+          <div class="col-md-10 col-lg-9">
+            <div class="p-info d-flex align-items-center flex-wrap" style="gap: 5px;">
+              <img :src="this.getBadges[this.getAllUsers[$route.params.id].id_badge].icon" alt="Badge" width="15px"
+                height="15px" />
+              <p class="m-0">
+                {{ this.getAllUsers[$route.params.id].primeiro_nome + ' ' + this.getAllUsers[$route.params.id].ultimo_nome }}
+              </p>
+              <p class="m-0" style="color: var(--cinza-claro); font-size: .85em;">
+                {{ this.getBadges[this.getAllUsers[$route.params.id].id_badge].name }}</p>
+            </div>
+            <p style="color: var(--cinza-claro)" class="m-0"><strong>Member since:</strong>
+              {{ new Date(this.getAllUsers[$route.params.id].data_registo).getDate() + "/" + (parseInt(new Date(this.getAllUsers[$route.params.id].data_registo).getMonth()) + 1) + "/" + new Date(this.getAllUsers[$route.params.id].data_registo).getFullYear() }}
+            </p>
+            <div class="level-info d-flex align-items-center mt-4" style="gap: 15px;">
+              <p class="m-0 d-flex justify-content-center align-items-center"
+                style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
+                {{ Math.floor(this.getAllUsers[$route.params.id].xp / 150) }}</p>
+              <div class="d-flex flex-column w-100" style="gap: 10px;">
+                <div
+                  style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
+                  <div
+                    :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp * 100) / ((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150)).toFixed(2) + '%' }"
+                    style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;">
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p class="m-0">Current XP <strong>{{ this.getAllUsers[$route.params.id].xp }}</strong></p>
+                  <p class="m-0">Next level
+                    <strong>{{ (Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150 }}</strong></p>
+                </div>
+              </div>
+              <p class="m-0 d-flex justify-content-center align-items-center"
+                style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
+                {{ Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1 }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats w-100 mt-5" style="max-width: 600px;">
+        <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
+          <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-globe" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Quizzes completed</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">38</p>
+        </div>
+        <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
+          <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-question-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Questions answered</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">321</p>
+        </div>
+        <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
+          <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-check-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Correct answers</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">54</p>
+        </div>
+        <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
+          <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-times-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Incorrect answers</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">567</p>
+        </div>
+        <div class="card-stats d-flex w-100 p-2" style="background-color: var(--azul-escuro); border-radius: 5px;">
+          <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-hands-helping" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Times help was needed</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">212</p>
         </div>
       </div>
     </div>
@@ -177,6 +517,9 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      country_list: ["Portugal", "Spain"],
+      generos: ["Action", "Comedy"],
+      mostrar: 12,
       selectedTab: "profile",
       edit_user: {
         primeiro_nome: '',
@@ -189,10 +532,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGOUT"]),
-    ...mapMutations(["SET_LOGGED_USER"]),
-    ...mapMutations(["SET_EDITED_USER"]),
-    ...mapMutations(["SET_NEW_BADGE"]),
+    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE"]),
     editUser(event, isAvatar) {
       console.log("lol");
       if (!isAvatar) {
@@ -277,10 +617,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUser"]),
-    ...mapGetters(["getBadges"]),
-    ...mapGetters(["getAllUsers"]),
-    ...mapGetters(["isEmailAvailable"])
+    ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable"]),
   },
   mounted () {
     this.edit_user.primeiro_nome = this.getLoggedUser.primeiro_nome;
@@ -301,6 +638,7 @@ export default {
 
   .navigation {
     font-size: 1.25em;
+    gap: 0 5em;
   }
 
   .input-group-text .fas {
@@ -323,10 +661,6 @@ export default {
     border-bottom: 1px solid var(--laranja);
   }
 
-  .navigation {
-    gap: 0 5em;
-  }
-
   .navigation p {
     cursor: pointer;  
   }
@@ -336,17 +670,17 @@ export default {
     border-radius: 10px;
   }
 
-  #leaderboardBar::-webkit-scrollbar {
+  .leaderboardBar::-webkit-scrollbar {
     width: 5px;
   }
 
-  #leaderboardBar::-webkit-scrollbar-thumb {
+  .leaderboardBar::-webkit-scrollbar-thumb {
     background: #464646;
     -webkit-border-radius: 10px;
     border-radius: 10px;
   }
 
-  #leaderboardBar::-webkit-scrollbar-thumb:hover {
+  .leaderboardBar::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
 
@@ -403,6 +737,89 @@ export default {
 
   select:focus {
     outline: none;
+  }
+
+  .tile {
+    position: relative;
+    display: inline-block;
+    max-width: 200px;
+    width: 100%;
+    margin-right: 10px;
+    font-size: 20px;
+  }
+
+  .tile-custom {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+  }
+
+  .tile__media img {
+    max-width: 200px;
+    width: 100%;
+    height: 296.28px;
+  }
+
+  .tile__img {
+    width: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .tile:hover .tile__details {
+    opacity: 1;
+  }
+
+  .tile-custom:hover .tile__details {
+    opacity: 1;
+  }
+
+  .tile__details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    opacity: 1 ;
+    transition: 450ms opacity;
+    border-radius: 5px;
+  }
+
+  .tile__details .quiz-card-rating {
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    width: 35px;
+    height: 35px;
+    border: 2px solid var(--verde);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: .85em;
+    color: var(--verde);
+  }
+
+  .tile__details .quiz-card-title {
+    white-space: normal;
+  }
+
+  .tile__details .quiz-card-play {
+    position: absolute;
+    top: 130px;
+    left: 82px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+    border-radius: 50%;
+  }
+
+  .tile__details .quiz-card-play:hover {
+    cursor: pointer;
   }
 
   select::-ms-expand {
@@ -475,6 +892,19 @@ export default {
       margin: 0 auto;
       margin-top: 5px;
       margin-bottom: 15px;
+    }
+
+    .tile {
+      max-width: 150px;
+    }
+
+    .tile__media img {
+      height: 222.22px;
+    }
+
+    .tile__details .quiz-card-play {
+      top: 96px;
+      left: 58px;
     }
   }
 </style>

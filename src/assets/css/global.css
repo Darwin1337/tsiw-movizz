@@ -48,7 +48,8 @@
 
 /* Botões */
 
-.orange-btn {
+.orange-btn,
+form button.orange-btn {
     background-color: orange;
     border: none;
     color: #1D232E;
@@ -78,7 +79,8 @@
     font-weight: bold;
 }
 
-.red-btn {
+.red-btn,
+form button.red-btn {
     background-color: var(--vermelho);
     border: none;
     color: #ffffff;
@@ -86,6 +88,7 @@
     border-radius: 5px;
     font-weight: bold;
 }
+
 
 .rounded-btn {
     padding: 10px;
@@ -136,6 +139,32 @@
     border-radius: 5px;
     font-weight: 500;
     font-size: .8em;
+}
+
+.custom-logout-btn {
+    color: white;
+    background-color: var(--vermelho);
+    border: none;
+    backdrop-filter: blur(10px);
+    padding: 5px;
+    min-width: 65px;
+    width: 100px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: .8em;
+}
+
+.close-btn {
+    color: white;
+    background-color: var(--vermelho);
+    border: none;
+    backdrop-filter: blur(10px);
+    padding: 5px;
+    min-width: 65px;
+    width: 100px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 1rem;
 }
 
 /* Inputs */
