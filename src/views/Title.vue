@@ -59,12 +59,12 @@
                 </button>
                 <div class="wrapper-stars position-relative d-flex justify-content-center">
                   <div v-show="showStars" class="p-2 show-stars" style="position: absolute; top: -45px; background-color: var(--cinza2); border-radius: 5px;">
-                    <div class="stars d-flex" style="gap: 5px; font-size: 1.25em; cursor: pointer;">
-                      <i class="fas fa-star" @click="fillStars(1, 'a')" @mouseover="fillStars(1, 'b')" @mouseleave="fillStars(0, 'c')"></i>
-                      <i class="fas fa-star" @click="fillStars(2, 'a')" @mouseover="fillStars(2, 'b')" @mouseleave="fillStars(0, 'c')"></i>
-                      <i class="fas fa-star" @click="fillStars(3, 'a')" @mouseover="fillStars(3, 'b')" @mouseleave="fillStars(0, 'c')"></i>
-                      <i class="fas fa-star" @click="fillStars(4, 'a')" @mouseover="fillStars(4, 'b')" @mouseleave="fillStars(0, 'c')"></i>
-                      <i class="fas fa-star" @click="fillStars(5, 'a')" @mouseover="fillStars(5, 'b')" @mouseleave="fillStars(0, 'c')"></i>
+                    <div class="stars d-flex" style="gap: 5px; font-size: 1.25em; cursor: pointer;" id="pontuacao">
+                      <i class="fas fa-star" @click="changeRating(1,'a')" @mouseover="fillStars(1, 'b')" @mouseleave="fillStars(0, 'c')"></i>
+                      <i class="fas fa-star" @click=" changeRating(2, 'a')" @mouseover="fillStars(2, 'b')" @mouseleave="fillStars(0, 'c')"></i>
+                      <i class="fas fa-star" @click=" changeRating(3, 'a')" @mouseover="fillStars(3, 'b')" @mouseleave="fillStars(0, 'c')"></i>
+                      <i class="fas fa-star" @click=" changeRating(4, 'a')" @mouseover="fillStars(4, 'b')" @mouseleave="fillStars(0, 'c')"></i>
+                      <i class="fas fa-star" @click=" changeRating(5, 'a')" @mouseover="fillStars(5, 'b')" @mouseleave="fillStars(0, 'c')"></i>
                     </div>
                   </div>
                   <button class="blur-btn" style="font-weight: 500" @click="showStars = !showStars;">
@@ -341,32 +341,53 @@ export default {
       comments:[],
       titleCast: [],
       comentario:"",
+      userRatings:[],
     };
   },
   computed: {
-    ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getUserInfo", "getAllUsers", "getCommentsQuantity"]),
+      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getAllUsers","getUserInfo","getCommentsQuantity","getUserRating"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
     this.verifyLike();
     this.verifySeen();
+    this.verifyRating();
   },
   created () {
     this.info = this.getTitleInfo(this.$route.params.imdbid);
     this.userLikes=this.getTitleLikes(this.getLoggedUser.id);
     this.userSeen=this.getHasSeen(this.getLoggedUser.id);
     this.comments=this.getTitleComments(this.$route.params.imdbid);
+    this.userRatings=this.getUserRating(this.getLoggedUser.id,this.$route.params.imdbid)
     // Meter o cast do filme/série todo num objeto
     this.info[1].map(cast => {
       this.titleCast.push(this.getAllCast.find(member => member.id_pessoa == cast.id_pessoa));
     });
   },
   methods: {
-    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT"]),
+     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE"]),
     addNewComment() {
       const DATA_COMMENT = new Date();
       this.SET_NEW_COMMENT({id_comentario:this.getCommentsQuantity+1,id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,comentario: this.comentario, data: DATA_COMMENT});
       this.comments.push({comentario: this.comentario, data: DATA_COMMENT, id_utilizador:this.getLoggedUser.id});
+    },
+    verifyRating(){
+      for(let i=0;i<this.userRatings.length;i++){
+        for (let j = 0; j < this.userRatings[0].pontuacao; j++) {
+          this.fillStars(j+1,'a')
+        }
+      }
+    },
+    changeRating(n, event_type){
+      this.fillStars(n,event_type)
+      if(this.savedStars>0){
+        let aux={id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,pontuacao:this.savedStars}
+        this.SET_NEW_RATE(aux);
+      }
+      else{
+        this.REMOVE_RATE(this.$route.params.imdbid);
+      }
+      this.userRatings[0]={pontuacao:this.savedStars};
     },
     verifyLike(){
       let wasfound=false;
@@ -441,7 +462,7 @@ export default {
                     document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
                 }
             }
-            this.savedStars = n != this.savedStars ? n : 0;
+            this.savedStars = n != this.savedStars ? n : 0;           
         } else if (event_type == "b") {
             document.querySelectorAll(".stars .fas").forEach(a => a.style.color = "white");
             if (n > 0) {
@@ -455,6 +476,7 @@ export default {
                 document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
             }
         }
+        
     }
   }
 };

@@ -16,6 +16,13 @@ export default new Vuex.Store({
   state: {
     obras_gosto:localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [],
     vistos:localStorage.vistos ? JSON.parse(localStorage.vistos) : [],
+    classificacao_obra:localStorage.classificacao_obra?JSON.parse(localStorage.classificacao_obra):[
+      {
+         id_imdb:"tt0111161",
+         id_utilizador:1,
+         pontuacao:4,
+      }
+   ],
     comentarios_obra:localStorage.comentarios_obra?JSON.parse(localStorage.comentarios_obra):
     [
       {
@@ -357,7 +364,16 @@ export default new Vuex.Store({
       }
       return result;
     },
-    getCommentsQuantity:(state)=>state.comentarios_obra.length
+    getCommentsQuantity:(state)=>state.comentarios_obra.length,
+    getUserRating:(state)=>(id, imdb)=>{
+      let result=[];
+      for (let i = 0; i < state.classificacao_obra.length; i++) {
+         if (id==state.classificacao_obra[i].id_utilizador && imdb==state.classificacao_obra[i].id_imdb) {
+            result.push({pontuacao:state.classificacao_obra[i].pontuacao});
+         }
+      }
+      return result;
+    }
   },
   actions:{
     async loadMovies(context) {
@@ -535,6 +551,23 @@ export default new Vuex.Store({
       state.vistos.push(payload);
       localStorage.vistos = JSON.stringify(state.vistos);
     },
+    SET_NEW_COMMENT(state,payload){
+      state.comentarios_obra.push(payload);
+      localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
+    },
+    SET_NEW_RATE(state,payload){
+      const idx=state.classificacao_obra.findIndex(rate=>rate.id_utilizador==payload.id_utilizador && rate.id_imdb==payload.id_imdb)
+      if(idx==-1){
+         state.classificacao_obra.push(payload);
+      }
+      else{
+         state.classificacao_obra[idx].id_imdb=payload.id_imdb;
+         state.classificacao_obra[idx].id_utilizador=payload.id_utilizador;
+         state.classificacao_obra[idx].pontuacao=payload.pontuacao;
+      }
+      localStorage.classificacao_obra = JSON.stringify(state.classificacao_obra);
+      
+    },
     REMOVE_HAS_SEEN(state,payload){
       state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
       localStorage.vistos = JSON.stringify(state.vistos);
@@ -543,9 +576,9 @@ export default new Vuex.Store({
       state.obras_gosto= state.obras_gosto.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
       localStorage.obras_gosto = JSON.stringify(state.obras_gosto);
     },
-    SET_NEW_COMMENT(state,payload){
-      state.comentarios_obra.push(payload);
-      localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
-    }
+    REMOVE_RATE(state,payload){
+      state.classificacao_obra= state.classificacao_obra.filter(rate=>(rate.id_imdb!=payload && rate.id_utilizador==state.loggedUser.id) || rate.id_utilizador!=state.loggedUser.id);
+      localStorage.classificacao_obra = JSON.stringify(state.classificacao_obra);
+    },
   }
 });
