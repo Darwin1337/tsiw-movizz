@@ -89,9 +89,9 @@
       <section id="cast" class="mt-5 mb-3">
         <p class="subtitle">Cast</p>
         <div class="cast-members row">
-          <div class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" v-for="(member, i) in (showFullCast ? info[1].length : 6)" :key="i" :set="idx = getAllCast.findIndex(pessoa => pessoa.id_pessoa == info[1][i].id_pessoa)">
+          <div class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" v-for="(member, i) in (showFullCast ? titleCast.length : 6)" :key="i">
             <div style="background-color: var(--azul-escuro2); border-radius: 10px; w-100">
-              <div class="cast-photo" :style="{ backgroundImage: 'url(' + getAllCast[idx].foto + ')' }" style="
+              <div class="cast-photo" :style="{ backgroundImage: 'url(' + titleCast[i].foto + ')' }" style="
                   background-repeat: no-repeat;
                   background-size: cover;
                   background-position: top;
@@ -100,7 +100,7 @@
                   border-top-right-radius: 10px;
                   border-top-left-radius: 10px;
                 "></div>
-              <p class="text-center pt-3 pb-3 m-0">{{ getAllCast[idx].nome }}</p>
+              <p class="text-center pt-3 pb-3 m-0">{{ titleCast[i].nome }}</p>
               
             </div>
           </div>
@@ -339,39 +339,30 @@ export default {
       userLikes: [],
       userSeen: [],
       comments:[],
+      titleCast: [],
       comentario:"",
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getUserInfo", "getAllUsers", "getCommentsQuantity"]),
+    ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getUserInfo", "getAllUsers", "getCommentsQuantity"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
     this.verifyLike();
     this.verifySeen();
-    // this.listComments();
   },
   created () {
     this.info = this.getTitleInfo(this.$route.params.imdbid);
     this.userLikes=this.getTitleLikes(this.getLoggedUser.id);
     this.userSeen=this.getHasSeen(this.getLoggedUser.id);
     this.comments=this.getTitleComments(this.$route.params.imdbid);
+    // Meter o cast do filme/série todo num objeto
+    this.info[1].map(cast => {
+      this.titleCast.push(this.getAllCast.find(member => member.id_pessoa == cast.id_pessoa));
+    });
   },
   methods: {
     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT"]),
-    // listComments(){
-    //   console.log(this.comments.length)
-    //   for(let i=0;i<this.comments.length;i++){
-    //     document.querySelector("#comment").innerHTML += `<div class="card-comment d-flex" style="gap: 15px;" >
-    //     <div style="background-image:url(${this.getUserInfo(this.comments[i].id_utilizador)[0].avatar}); min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
-    //               <div class="details d-flex flex-column">
-    //                 <p id="comment-author">${this.getUserInfo(this.comments[i].id_utilizador)[0].primeiro_nome} ${this.getUserInfo(this.comments[i].id_utilizador)[0].ultimo_nome} <span>${this.comments[i].data}</span></p>
-    //                 <p id="comment-message">${this.comments[i].comentario}</p>
-    //               </div>
-    //               </div>
-    //             <br>`
-    //     }
-    // },
     addNewComment() {
       const DATA_COMMENT = new Date();
       this.SET_NEW_COMMENT({id_comentario:this.getCommentsQuantity+1,id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,comentario: this.comentario, data: DATA_COMMENT});
