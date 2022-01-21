@@ -39,7 +39,7 @@
               <span id="title-language">{{ title.pais }}</span>
             </div>
             <p id="title-running-time">{{ title.duracao == "Running time not available" ? "Running time not available" : title.duracao + " minutes" }}</p>
-            <p id="title-availability">Available on <strong>Netflix</strong></p>
+            <p id="title-availability">{{title.plataformas[0].nome == "Currently in cinemas" ? "" : "Available on "}}<strong>{{ extenseWriting(title.plataformas.map(plat => plat.nome)) }}</strong></p>
             <div class="
                 title-actions-wrapper
                 d-flex
@@ -48,7 +48,7 @@
               ">
               <div>
                 <p class="orange-btn text-center mb-3">IMDb {{parseFloat(title.pontuacao_imdb).toFixed(1)}}</p>
-                <p class="blur-btn text-center">Movizz 4.1/5</p>
+                <p class="blur-btn text-center">Movizz {{ movizzRating }}</p>
               </div>
               <div class="title-actions d-flex align-items-center flex-wrap" style="gap: 15px; flex-grow: 0">
                 <button class="blur-btn" style="font-weight: 500" id="like" @click="addNewLike()">
@@ -95,7 +95,7 @@
                 <div class="cast-photo" :style="{ backgroundImage: 'url(' + title.elenco[i - 1].image + ')' }" style="
                     background-repeat: no-repeat;
                     background-size: cover;
-                    background-position: center;
+                    background-position: center center;
                     width: 100%;
                     height: 150px;
                     border-top-right-radius: 10px;
@@ -120,15 +120,15 @@
         <p class="subtitle">Crew</p>
         <p>
           Writers:
-          <span style="color: var(--cinza2)">{{ extenseWriting(title.escritores) }}</span>
+          <span style="color: var(--cinza2)">{{ title.escritores ? extenseWriting(title.escritores) : "Information not available" }}</span>
         </p>
         <p>
           Producers:
-          <span style="color: var(--cinza2)">{{ extenseWriting(title.produtores) }}</span>
+          <span style="color: var(--cinza2)">{{ title.produtores ? extenseWriting(title.produtores) : "Information not available" }}</span>
         </p>
         <p>
           Directors:
-          <span style="color: var(--cinza2)">{{ extenseWriting(title.diretores) }}</span>
+          <span style="color: var(--cinza2)">{{ title.diretores ? extenseWriting(title.diretores) : "Information not available" }}</span>
         </p>
       </section>
       <hr class="mt-5 mb-5">
@@ -183,19 +183,17 @@
                 </div>
               </form>
               <div class="other-comments mt-5" id="comment">
-                <div class="card-comment d-flex" style="gap: 15px;" v-for="(comment, i) in comments" :key="i" >
+                <div class="card-comment d-flex mb-3" style="gap: 15px;" v-for="(comment, i) in comments" :key="i" >
                   <div  :style="'background-image: url(' + getAllUsers[comment.id_utilizador].avatar + ');'" style="min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
                   <div class="details d-flex flex-column">
-                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ comment.data }}</span></p>
-                    <p v-if="comment.spoiler" class="comment-message" style="color: var(--vermelho);">Spoiler!!! <span @click="mostrarSpoiler(comment.comentario, i)">Do you want see?</span></p>
+                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ new Date(comment.data).getDate() + "/" + (parseInt(new Date(comment.data).getMonth()) + 1) + "/" + new Date(comment.data).getFullYear() + " at " + new Date(comment.data).getHours() + ":" + String(new Date(comment.data).getMinutes()).padStart(2, '0') + "h" }}</span></p>
+                    <p v-if="comment.spoiler" class="comment-message" style="color: var(--vermelho);">Spoiler!!! <span @click="mostrarSpoiler(comment.comentario, i)" style="cursor: pointer;">See hidden comment</span></p>
                     <p v-else class="comment-message">{{ comment.comentario }}</p>
                   </div>
                   <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario)" class="unblock-button"><i class="fas fa-trash"></i></span>
                 </div>
                 <div>
-                  <p v-if="comments.length==0">
-                    Be the first to comment on this title
-                  </p>
+                  <p v-if="comments.length==0">Be the first to comment on this title</p>
                 </div>
               </div>
             </section>
@@ -262,11 +260,12 @@ export default {
       comments: [],
       comentario: "",
       userRatings: [],
-      spoiler:false,
+      movizzRating: 0.00,
+      spoiler: false
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableCommentID", "getUserTitleRating"]),
+      ...mapGetters(["getTitleInfo", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableCommentID", "getUserTitleRating", "getTitleMovizzRating"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.title.banner})`;
@@ -279,11 +278,12 @@ export default {
     this.userLikes = this.getTitleLikes(this.getLoggedUser.id);
     this.userSeen = this.getTitlesSeenByUser(this.getLoggedUser.id);
     this.comments = this.getTitleComments(this.$route.params.imdbid);
-    this.userRatings = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) || 0;
+    this.userRatings.pontuacao = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) ? this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid).pontuacao : 0;
+    this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);
   },
   methods: {
-     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE","REMOVE_COMMENT"]),
-    removeComment(id){
+    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE","REMOVE_COMMENT"]),
+    removeComment(id) {
       this.$swal({
         title: 'Warning!',
         text: "Are you sure you want to remove this comment?",
@@ -317,7 +317,6 @@ export default {
         data: DATA_COMMENT,
         spoiler:this.spoiler
       });
-      
     },
     verifyRating(){
       for (let i = 0; i < this.userRatings.pontuacao; i++) {
@@ -337,6 +336,7 @@ export default {
         this.REMOVE_RATE(this.$route.params.imdbid);
       }
       this.userRatings.pontuacao = this.savedStars;
+      this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);
     },
     verifyLike(){
       let wasfound=false;
@@ -458,29 +458,16 @@ export default {
       }
       return result.trim();
     },
-    mostrarSpoiler(comentario,id){
-      const doc=document.querySelectorAll(".comment-message")[id]
-      doc.innerHTML=comentario
-      doc.style.color="#ffffff"
+    mostrarSpoiler(comentario, id){
+      const doc = document.querySelectorAll(".comment-message")[id];
+      doc.innerHTML = comentario;
+      doc.style.color = "#ffffff";
     }
   }
 };
 </script>
 
 <style scoped>
-  .unblock-button {
-    background: var(--vermelho);
-    border-radius: 5px;
-    color: #ffffff;
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    min-height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
 .jumbotron {
 
   background-repeat: no-repeat;
@@ -531,6 +518,20 @@ a {
   height: 30px;
   border: 2px solid var(--cinza2);
   border-radius: 50%;
+}
+
+.unblock-button {
+  background: var(--vermelho);
+  border-radius: 5px;
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .title-season.active {

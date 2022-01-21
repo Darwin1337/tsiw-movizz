@@ -12,6 +12,24 @@
       "class_etaria":"PG-13",
       "duracao":"104",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Crime",
@@ -391,6 +409,24 @@
       "class_etaria":"PG-13",
       "duracao":"137",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -793,6 +829,20 @@
       "class_etaria":"G",
       "duracao":"93",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Biography",
          "Drama",
@@ -1226,6 +1276,24 @@
       "class_etaria":"PG-13",
       "duracao":"143",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":4,
+            "nome":"Disney+"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -1609,6 +1677,24 @@
       "class_etaria":"PG-13",
       "duracao":"162",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":4,
+            "nome":"Disney+"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -1988,6 +2074,12 @@
       "class_etaria":"PG",
       "duracao":"148",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":10,
+            "nome":"Currently in cinemas"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -2395,6 +2487,24 @@
       "class_etaria":"PG-13",
       "duracao":"126",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":4,
+            "nome":"Disney+"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -2802,6 +2912,24 @@
       "class_etaria":"R",
       "duracao":"106",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -3192,6 +3320,28 @@
       "class_etaria":"R",
       "duracao":"100",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -3583,6 +3733,24 @@
       "class_etaria":"R",
       "duracao":"88",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Adventure",
          "Comedy"
@@ -3951,6 +4119,24 @@
       "class_etaria":"R",
       "duracao":"111",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Comedy",
@@ -4328,6 +4514,24 @@
       "class_etaria":"R",
       "duracao":"113",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -4694,6 +4898,24 @@
       "class_etaria":"R",
       "duracao":"109",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Comedy",
@@ -5075,6 +5297,20 @@
       "class_etaria":"PG-13",
       "duracao":"90",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Crime",
@@ -5438,6 +5674,24 @@
       "class_etaria":"PG-13",
       "duracao":"92",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Crime",
@@ -5654,6 +5908,24 @@
       "class_etaria":"R",
       "duracao":"142",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Drama"
       ],
@@ -6010,6 +6282,24 @@
       "class_etaria":"PG",
       "duracao":"80",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":4,
+            "nome":"Disney+"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Animation",
          "Adventure",
@@ -6358,6 +6648,20 @@
       "class_etaria":"R",
       "duracao":"93",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -6808,6 +7112,20 @@
       "class_etaria":"R",
       "duracao":"103",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Horror",
          "Mystery",
@@ -7004,6 +7322,24 @@
       "class_etaria":"R",
       "duracao":"95",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -7385,6 +7721,20 @@
       "class_etaria":"PG-13",
       "duracao":"99",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Sport"
@@ -7705,6 +8055,24 @@
       "class_etaria":"R",
       "duracao":"122",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Crime",
          "Drama",
@@ -8112,6 +8480,24 @@
       "class_etaria":"PG-13",
       "duracao":"144",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -8509,6 +8895,12 @@
       "class_etaria":"TV-MA",
       "duracao":"65",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -8577,6 +8969,24 @@
       "class_etaria":"PG",
       "duracao":"116",
       "total_temporadas":0,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Biography",
          "Drama",
@@ -8978,6 +9388,16 @@
       "class_etaria":"TV-G",
       "duracao":"Running time not available",
       "total_temporadas":1,
+      "plataformas":[
+         {
+            "id_plataforma":9,
+            "nome":"Discovery+"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         }
+      ],
       "genero":[
          "Documentary"
       ],
@@ -9247,6 +9667,24 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":4,
+      "plataformas":[
+         {
+            "id_plataforma":1,
+            "nome":"Hulu"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Animation",
          "Comedy",
@@ -9939,6 +10377,24 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":5,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Crime",
          "Drama",
@@ -10778,6 +11234,16 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":7,
+      "plataformas":[
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":1,
+            "nome":"Hulu"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
@@ -11783,6 +12249,16 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":1,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         }
+      ],
       "genero":[
          "Drama",
          "History",
@@ -12183,6 +12659,20 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":2,
+      "plataformas":[
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":1,
+            "nome":"Hulu"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         }
+      ],
       "genero":[
          "Comedy",
          "Music"
@@ -12727,6 +13217,24 @@
       "class_etaria":"14A",
       "duracao":"Running time not available",
       "total_temporadas":6,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Crime",
          "Drama",
@@ -13783,6 +14291,20 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":4,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Crime",
          "Drama",
@@ -14503,6 +15025,28 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":21,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":1,
+            "nome":"Hulu"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Animation",
          "Comedy"
@@ -17581,6 +18125,20 @@
       "class_etaria":"TV-Y7",
       "duracao":"Running time not available",
       "total_temporadas":3,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         }
+      ],
       "genero":[
          "Animation",
          "Action",
@@ -18420,6 +18978,24 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":5,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Action",
          "Crime",
@@ -19455,6 +20031,12 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":5,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         }
+      ],
       "genero":[
          "Action",
          "Crime",
@@ -20147,6 +20729,20 @@
       "class_etaria":"TV-MA",
       "duracao":"57",
       "total_temporadas":8,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         }
+      ],
       "genero":[
          "Action",
          "Adventure",
@@ -21064,6 +21660,24 @@
       "class_etaria":"TV-MA",
       "duracao":"Running time not available",
       "total_temporadas":6,
+      "plataformas":[
+         {
+            "id_plataforma":3,
+            "nome":"HBO Max"
+         },
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         }
+      ],
       "genero":[
          "Animation",
          "Adventure",
@@ -21833,6 +22447,12 @@
       "class_etaria":"15",
       "duracao":"Running time not available",
       "total_temporadas":6,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         }
+      ],
       "genero":[
          "Crime",
          "Drama",
@@ -22945,6 +23565,16 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":15,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         }
+      ],
       "genero":[
          "Drama",
          "Fantasy",
@@ -25639,6 +26269,20 @@
       "class_etaria":"TV-G",
       "duracao":"Running time not available",
       "total_temporadas":1,
+      "plataformas":[
+         {
+            "id_plataforma":9,
+            "nome":"Discovery+"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         }
+      ],
       "genero":[
          "Documentary"
       ],
@@ -25982,6 +26626,20 @@
       "class_etaria":"TV-Y7",
       "duracao":"Running time not available",
       "total_temporadas":2,
+      "plataformas":[
+         {
+            "id_plataforma":4,
+            "nome":"Disney+"
+         },
+         {
+            "id_plataforma":1,
+            "nome":"Hulu"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         }
+      ],
       "genero":[
          "Animation",
          "Action",
@@ -26667,6 +27325,12 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":1,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         }
+      ],
       "genero":[
          "Animation",
          "Action",
@@ -27042,6 +27706,12 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":4,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         }
+      ],
       "genero":[
          "Crime",
          "Drama",
@@ -27547,6 +28217,12 @@
       "class_etaria":"16",
       "duracao":"Running time not available",
       "total_temporadas":4,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         }
+      ],
       "genero":[
          "Drama",
          "Fantasy",
@@ -28190,6 +28866,12 @@
       "class_etaria":"PG-13",
       "duracao":"Running time not available",
       "total_temporadas":1,
+      "plataformas":[
+         {
+            "id_plataforma":4,
+            "nome":"Disney+"
+         }
+      ],
       "genero":[
          "Documentary",
          "Music"
@@ -28364,6 +29046,20 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":1,
+      "plataformas":[
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         },
+         {
+            "id_plataforma":6,
+            "nome":"YouTube Premium"
+         }
+      ],
       "genero":[
          "Biography",
          "Crime",
@@ -28819,6 +29515,20 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":11,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         }
+      ],
       "genero":[
          "Drama",
          "Horror",
@@ -30463,6 +31173,24 @@
       "class_etaria":"TV-14",
       "duracao":"Running time not available",
       "total_temporadas":5,
+      "plataformas":[
+         {
+            "id_plataforma":0,
+            "nome":"Netflix"
+         },
+         {
+            "id_plataforma":1,
+            "nome":"Hulu"
+         },
+         {
+            "id_plataforma":8,
+            "nome":"Apple TV+"
+         },
+         {
+            "id_plataforma":2,
+            "nome":"Amazon Prime Video"
+         }
+      ],
       "genero":[
          "Comedy"
       ],
