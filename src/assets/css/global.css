@@ -31,6 +31,23 @@
 
 /* Geral */
 
+.swal2-title {
+    color: white !important;
+}
+.swal2-html-container{
+    color: white !important;
+}
+.swal2-confirm{
+    background-color:#84e296 !important;
+    color: #182131 !important;
+}
+.swal2-cancel{
+    background-color:#ec5252 !important;
+}
+.swal2-modal{
+    background: #182131 !important;
+}
+
 * {
     font-family: 'SF Pro Display', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI";
     font-weight: normal;

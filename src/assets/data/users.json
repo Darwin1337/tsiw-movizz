@@ -15,7 +15,8 @@
           "num_certas": 0,
           "num_erradas": 0,
           "num_ajudas": 0,
-          "data_registo": "2022-01-20T18:06:43.231Z"
+          "data_registo": "2022-01-20T18:06:43.231Z",
+          "is_admin":true
         },
         {
           "id": 1,
@@ -33,6 +34,7 @@
           "num_certas": 0,
           "num_erradas": 0,
           "num_ajudas": 0,
-          "data_registo": "2022-01-20T18:06:43.231Z"
+          "data_registo": "2022-01-20T18:06:43.231Z",
+          "is_admin":false
         }
     ]

@@ -32,14 +32,14 @@ export default new Vuex.Store({
     getLoggedUser: (state) => state.loggedUser,
     isUser: (state) => (email, password) => state.users.some((user) => user.email === email && user.password === password),
     getBadges: (state) => state.badges,
-    getNextAvailableUserID: (state) => state.users ? state.users[state.users.length - 1].id + 1 : 0,
+    getNextAvailableUserID: (state) => state.users.length>0 ? state.users[state.users.length - 1].id + 1 : 0,
     getAllUsers: (state) => state.users,
     getAllTitles: (state) => state.obra,
     getTitleInfo: (state) => (id) => state.obra.find(obra => obra.id_imdb == id),
     getTitleLikes: (state) => (id) => state.obras_gosto.filter(titulo => titulo.id_utilizador == id).map(titulo => titulo.id_imdb),
     getTitlesSeenByUser: (state) => (id) => state.vistos.filter(titulo => titulo.id_utilizador == id).map(visto => visto.id_imdb),
     getTitleComments: (state) => (id_imdb) => state.comentarios_obra.filter(comentario => comentario.id_imdb == id_imdb),
-    getNextAvailableCommentID: (state) => state.comentarios ? state.comentarios_obra[state.comentarios.length - 1].id_comentario : 0,
+    getNextAvailableCommentID: (state) => state.comentarios_obra.length>0 ? state.comentarios_obra[state.comentarios_obra.length - 1].id_comentario + 1 : 0,
     getUserTitleRating: (state) => (id, id_imdb) => state.classificacao_obra.find(classificacao => classificacao.id_utilizador == id && classificacao.id_imdb == id_imdb)
   },
   actions:{
@@ -297,6 +297,11 @@ export default new Vuex.Store({
     REMOVE_HAS_SEEN(state,payload){
       state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
       localStorage.vistos = JSON.stringify(state.vistos);
+    },
+    REMOVE_COMMENT(state,payload){
+      console.log(payload);
+      state.comentarios_obra= state.comentarios_obra.filter(comment=>(comment.id_comentario!=payload && comment.id_utilizador==state.loggedUser.id) || comment.id_utilizador!=state.loggedUser.id);
+      localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
     },
     REMOVE_LIKE(state,payload){
       state.obras_gosto= state.obras_gosto.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);

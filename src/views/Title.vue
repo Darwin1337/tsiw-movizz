@@ -174,7 +174,7 @@
                 <textarea id="comment-content" v-model.lazy="comentario" required placeholder="Let others know what you think..."></textarea>
                 <div class="mt-1 mb-4">
                   <label class="cbox">Is this comment a spoiler?
-                    <input type="checkbox">
+                    <input v-model="spoiler" type="checkbox">
                     <span class="checkmark"></span>
                   </label>
                 </div>
@@ -186,9 +186,16 @@
                 <div class="card-comment d-flex" style="gap: 15px;" v-for="(comment, i) in comments" :key="i" >
                   <div  :style="'background-image: url(' + getAllUsers[comment.id_utilizador].avatar + ');'" style="min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
                   <div class="details d-flex flex-column">
-                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ new Date(comment.data).getDate() + "/" + (parseInt(new Date(comment.data).getMonth()) + 1) + "/" + new Date(comment.data).getFullYear() + " at " + new Date(comment.data).getHours() + ":" + String(new Date(comment.data).getMinutes()).padStart(2, '0') + "h" }}</span></p>
-                    <p id="comment-message">{{ comment.comentario }}</p>
+                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ comment.data }}</span></p>
+                    <p v-if="comment.spoiler" class="comment-message" style="color: var(--vermelho);">Spoiler!!! <span @click="mostrarSpoiler(comment.comentario, i)">Do you want see?</span></p>
+                    <p v-else class="comment-message">{{ comment.comentario }}</p>
                   </div>
+                  <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario)" class="unblock-button"><i class="fas fa-trash"></i></span>
+                </div>
+                <div>
+                  <p v-if="comments.length==0">
+                    Be the first to comment on this title
+                  </p>
                 </div>
               </div>
             </section>
@@ -254,7 +261,8 @@ export default {
       userSeen: [],
       comments: [],
       comentario: "",
-      userRatings: []
+      userRatings: [],
+      spoiler:false,
     };
   },
   computed: {
@@ -274,21 +282,42 @@ export default {
     this.userRatings = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) || 0;
   },
   methods: {
-     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE"]),
+     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE","REMOVE_COMMENT"]),
+    removeComment(id){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this comment?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_COMMENT(id);
+          this.comments= this.comments.filter(comment=>comment.id_comentario!=id);
+        }
+      });
+      
+    },
     addNewComment() {
       const DATA_COMMENT = new Date();
+      this.comments.push({
+        id_comentario: this.getNextAvailableCommentID,
+        id_imdb: this.$route.params.imdbid,
+        id_utilizador: this.getLoggedUser.id,
+        comentario: this.comentario,
+        data: DATA_COMMENT,
+        spoiler:this.spoiler
+      });
       this.SET_NEW_COMMENT({
         id_comentario: this.getNextAvailableCommentID,
         id_imdb: this.$route.params.imdbid,
         id_utilizador: this.getLoggedUser.id,
         comentario: this.comentario,
-        data: DATA_COMMENT
-      });
-      this.comments.push({
-        comentario: this.comentario,
         data: DATA_COMMENT,
-        id_utilizador: this.getLoggedUser.id
-        });
+        spoiler:this.spoiler
+      });
+      
     },
     verifyRating(){
       for (let i = 0; i < this.userRatings.pontuacao; i++) {
@@ -428,12 +457,30 @@ export default {
         }
       }
       return result.trim();
+    },
+    mostrarSpoiler(comentario,id){
+      const doc=document.querySelectorAll(".comment-message")[id]
+      doc.innerHTML=comentario
+      doc.style.color="#ffffff"
     }
   }
 };
 </script>
 
 <style scoped>
+  .unblock-button {
+    background: var(--vermelho);
+    border-radius: 5px;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
 .jumbotron {
 
   background-repeat: no-repeat;

@@ -129,7 +129,7 @@
         </div>
 
         <div style="background-color: var(--azul-escuro2); border-radius: 10px;" class="p-3">
-          <div style="leaderboardBar max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
+          <div class="leaderboardBar" style="max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
             <div class="row g-3 pe-2">
               <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in getBadges" :key="index">
                 <div class="badge-card d-flex flex-column align-items-center p-2">
@@ -196,22 +196,28 @@
           </div>
         </div>
       </div>
-      <div>
+      <div id="likesSection">
         <div class="row g-3">
-          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar" :key="index">
-            <div class="tile-custom">
+          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in infoLikes" :key="index">
+            <div class="tile-custom" >
               <div class="tile__media-custom">
-                <img class="tile__img" src="https://upload.wikimedia.org/wikipedia/pt/thumb/9/9b/Carros_p%C3%B4ster.jpg/250px-Carros_p%C3%B4ster.jpg" alt="" />
+                <img class="tile__img" :src=infoLikes[index].poster alt="" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;" @click="$router.push({ name: 'Title', params: { imdbid: infoLikes[index].id_imdb}})">{{infoLikes[index].titulo}}</p>
               </div>
-              <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
-                <button class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px;"><i class="fas fa-heart"></i></button>
+              <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
+                <button @click="removeLike(infoLikes[index].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
               </div>
             </div>
+            
+          </div>
+          <div v-if="infoLikes.length==0">
+            <p>You haven't added any movies or series to your favorites.</p> 
           </div>
         </div>
-        <div class="w-100 d-flex justify-content-center mt-4">
-          <button class="rounded-btn" @click="mostrar+=12">Load More</button>
+        <div v-if="mostrar < infoLikes.length" class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar = mostrar + 12 <= infoLikes.length ? mostrar + 12 : infoLikes.length">Load More</button>
         </div>
+
       </div>
     </div>
 
@@ -264,21 +270,26 @@
       </div>
       <div>
         <div class="row g-3">
-          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar" :key="index">
+          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in infoViwed" :key="index" >
             <div class="tile-custom">
-              <div class="tile__media-custom">
-                <img class="tile__img" src="https://br.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg" alt="" />
+              <div class="tile__media-custom" @click="$router.push({ name: 'Title', params: { imdbid: infoViwed[index].id_imdb}})">
+                <img class="tile__img" :src=infoViwed[index].poster alt="" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;" @click="$router.push({ name: 'Title', params: { imdbid: infoViwed[index].id_imdb}})">{{infoViwed[index].titulo}}</p>
               </div>
               <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
-                <button class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px;"><i class="fas fa-eye"></i></button>
+                <button @click="removeSeen(infoViwed[index].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
               </div>
             </div>
           </div>
+          <div v-if="infoViwed.length==0">
+            <p>You haven't seen any movies nor series.</p> 
+          </div>
         </div>
-        <div class="w-100 d-flex justify-content-center mt-4">
-          <button class="rounded-btn" @click="mostrar+=12">Load More</button>
+        <div v-if="mostrar < infoViwed.length" class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar = mostrar + 12 <= infoViwed.length ? mostrar + 12 : infoViwed.length">Load More</button>
         </div>
       </div>
+      
     </div>
 
     <div class="filtros" v-if="selectedTab == 'history'">
@@ -528,11 +539,50 @@ export default {
         password: '',
         data_nascimento: '',
         avatar: '',
-      }
+      },
+      infoLikes:[],
+      infoViwed:[],
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE"]),
+    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE","REMOVE_LIKE","REMOVE_HAS_SEEN"]),
+    removeLike(id){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this movie from favourites?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_LIKE(id);
+          this.infoLikes=[];
+          for (let i = 0; i < this.getTitleLikes(this.getLoggedUser.id).length; i++) {
+            this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.getLoggedUser.id)[i]))
+          }
+        }
+      });
+    },
+    removeSeen(id){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this movie from viewed?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_HAS_SEEN(id);
+          this.infoViwed=[];
+          for (let i = 0; i < this.getTitlesSeenByUser(this.getLoggedUser.id).length; i++) {
+            this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.getLoggedUser.id)[i]))
+          }
+        }
+      });
+    },
     editUser(event, isAvatar) {
       console.log("lol");
       if (!isAvatar) {
@@ -617,7 +667,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable"]),
+    ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser"]),
   },
   mounted () {
     this.edit_user.primeiro_nome = this.getLoggedUser.primeiro_nome;
@@ -626,10 +676,17 @@ export default {
     this.edit_user.password = this.getLoggedUser.password;
     this.edit_user.data_nascimento = this.getLoggedUser.data_nascimento;
     this.edit_user.avatar = this.getLoggedUser.avatar;
+    for (let i = 0; i < this.getTitleLikes(this.getLoggedUser.id).length; i++) {
+      this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.getLoggedUser.id)[i]))
+    }
+    for (let i = 0; i < this.getTitlesSeenByUser(this.getLoggedUser.id).length; i++) {
+      this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.getLoggedUser.id)[i]))
+    }
   }
 }
 </script>
 <style scoped>
+
   .title {
     font-size: 1.25em;
     font-weight: bold;
