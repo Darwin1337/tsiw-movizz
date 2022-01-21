@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <h3 class="mt-4">Rewards</h3>
-
     <span
       class="p-2 mt-2 mb-2"
       style="background-color: var(--azul-escuro); border-radius: 5px; display: inline-block;">
@@ -65,17 +64,22 @@
   </div>
 </template>
 <script>
+import { mapActions } from "vuex";
 
-// import { Modal } from 'bootstrap'
 export default ({
   data() {
     return {
       // modal: null
     }
   },
-  mounted () {
-    // this.modal = new Modal(this.$refs.exampleModal)
-  },
+  methods: {
+    ...mapActions([
+      "loadMovies",
+    ]),
+    callAction() {
+      this.loadMovies();
+    },
+  }
 })
 </script>
 

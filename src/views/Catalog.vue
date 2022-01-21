@@ -13,18 +13,18 @@
           <p>Duration 2h 17min</p>
           <br>
           <div class="d-flex" style="gap: 15px;">
-            <button class="orange-btn">IMDb 6.5</button>
-            <button class="blur-btn">Movizz 3.6/5</button>
+            <button class="orange-btn" @click="$router.push({ name: 'Title', params: { imdbid: 'tt6806448'} })">IMDb 6.5</button>
+            <button class="blur-btn" @click="$router.push({ name: 'Title', params: { imdbid: 'tt6806448'} })">Movizz 3.6/5</button>
           </div>
         </div>
       </div>
     </div>
     <!-- Seletor filme/serie -->
     <div class="d-flex justify-content-center mt-3" style="gap: 15px;">
-      <div :class="selectedType == 1 ? 'active-type' : 'default-type'" @click="selectedType = 1">
+      <div :class="selectedType == 1 ? 'active-type' : 'default-type'" @click="selectedType = 1; mostrar = 12">
         <span style="font-size: 1.25em;">Movies</span>
       </div>
-      <div :class="selectedType == 2 ? 'active-type' : 'default-type'" @click="selectedType = 2">
+      <div :class="selectedType == 2 ? 'active-type' : 'default-type'" @click="selectedType = 2; mostrar = 12">
         <span style="font-size: 1.25em;">Series</span>
       </div>
     </div>
@@ -41,15 +41,14 @@
         <div class="carousel-wrapper" style="position: relative;">
           <div class="row-carousel disable-scrollbars">
             <div class="row__inner p-0">
-              <div class="tile" v-for="(tile, i) in 10" :key="i"
-               @click="$router.push({ name: 'Title', params: { imdbid: getAllMovies[i].id_imdb} })">
+              <div class="tile" v-for="i in 10" :key="i" :set="topMovies = shuffleTop" @click="$router.push({ name: 'Title', params: { imdbid: topMovies[i].id_imdb} })">
                 <div class="tile__media">
-                  <img class="tile__img" :src="getAllMovies[i].poster"
+                  <img class="tile__img" :src="topMovies[i].poster"
                     alt="" />
                 </div>
                 <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-                  <p class="quiz-card-title">{{getAllMovies[i].titulo}}</p>
-                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(getAllMovies[i].pontuacao_imdb).toFixed(1)}}</button>
+                  <p class="quiz-card-title">{{topMovies[i].titulo}}</p>
+                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(topMovies[i].pontuacao_imdb).toFixed(1)}}</button>
                 </div>
               </div>
             </div>
@@ -70,15 +69,14 @@
         <div class="carousel-wrapper" style="position: relative;">
           <div class="row-carousel disable-scrollbars">
             <div class="row__inner p-0">
-              <div class="tile" v-for=" i in 10" :key="i"
-                @click="$router.push({ name: 'Title', params: { imdbid: '2'} })">
+              <div class="tile" v-for=" i in 10" :key="i" :set="topSeries = shuffleTop" @click="$router.push({ name: 'Title', params: { imdbid: topSeries[i].id_imdb} })">
                 <div class="tile__media">
-                  <img class="tile__img" src="https://upload.wikimedia.org/wikipedia/pt/f/fc/Family_Guy_Temporada_1.png"
+                  <img class="tile__img" :src="topSeries[i].poster"
                     alt="" />
                 </div>
                 <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-                  <p class="quiz-card-title">Family Guy</p>
-                  <button class="orange-btn" style="font-size: .85em;">IMDb 7.2</button>
+                  <p class="quiz-card-title">{{topSeries[i].titulo}}</p>
+                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(topSeries[i].pontuacao_imdb).toFixed(1)}}</button>
                 </div>
               </div>
             </div>
@@ -133,26 +131,27 @@
       </div>
     </div>
 
-    <!-- mostrar todos os filmes -->
+    <!-- mostrar todos -->
     <div>
       <div class="row g-3">
-        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(tile,i) in mostrar" :key="i"
-                @click="$router.push({ name: 'Title', params: { imdbid: getAllMovies[i].id_imdb} })">
-          <div class="tile-custom">
-            <div class="tile__media-custom">
-              <img class="tile__img"
-                :src="selectedType == 1 ? getAllMovies[tile].poster : 'https://m.media-amazon.com/images/I/71g3CCSgwCL._SL1284_.jpg'"
-                alt="" />
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in mostrar" :key="i" :set="titles = selectedType == 1 ? getAllTitles.filter(title => title.total_temporadas == 0) : getAllTitles.filter(title => title.total_temporadas > 0)">
+          <router-link :to="{ name: 'Title', params: { imdbid: titles[i - 1].id_imdb }} ">
+            <div class="tile-custom">
+              <div class="tile__media-custom">
+                <img class="tile__img"
+                  :src="titles[i - 1].poster"
+                  alt="" />
+              </div>
+              <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
+                <p class="quiz-card-title">{{titles[i - 1].titulo}}</p>
+                <button class="orange-btn w-100" style="font-size: .85em; max-width: 150px;">IMDb {{parseFloat(titles[i - 1].pontuacao_imdb).toFixed(1)}}</button>
+              </div>
             </div>
-            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">{{ selectedType == 1 ? getAllMovies[tile].titulo : 'Arrested Development' }}</p>
-              <button class="orange-btn w-100" style="font-size: .85em; max-width: 150px;">IMDb {{parseFloat(getAllMovies[tile].pontuacao_imdb).toFixed(1)}}</button>
-            </div>
-          </div>
+          </router-link>
         </div>
       </div>
-      <div class="w-100 d-flex justify-content-center mt-4">
-        <button class="rounded-btn" @click="mostrar+=12">Load More</button>
+      <div v-if="mostrar < titles.length" class="w-100 d-flex justify-content-center mt-4">
+        <button class="rounded-btn" @click="mostrar = mostrar + 12 <= titles.length ? mostrar + 12 : titles.length">Load More</button>
       </div>
     </div>
   </div>
@@ -162,25 +161,30 @@
   export default {
     data() {
       return {
-        selectedType:1,
-        country_list : ["Yemen","Zambia","Zimbabwe"],
-        generos:["Ação", "Ficção", "Romance"],
-        mostrar:12,
+        selectedType: 1,
+        country_list: ["Yemen","Zambia","Zimbabwe"],
+        generos: ["Ação", "Ficção", "Romance"],
+        mostrar: 12
       }
     },
     mounted () {
-      // this.loadMovies().catch((err) =>
-      //   alert(`Problem handling something: ${err}.`)
-      // );
-      
+      this.titles = this.getAllTitles;
     },
     computed: {
-      ...mapGetters(["getAllMovies"]),
+      ...mapGetters(["getAllTitles"]),
+      shuffleTop() {
+        let array = this.selectedType == 1 ? this.getAllTitles.filter(title => title.total_temporadas == 0) : this.getAllTitles.filter(title => title.total_temporadas > 0);
+        let currentIndex = array.length,  randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
     },
     methods: {
-      ...mapActions([
-        "loadMovies",
-      ]),
       simulateScroll(dir, target) {
         if (dir == "right") {
           document.querySelector(target + " .nav-left").style.color = "white";
@@ -206,6 +210,11 @@
 </script>
 
 <style scoped>
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
   .default-type,
   .active-type {
     cursor: pointer;

@@ -1,0 +1,38 @@
+[
+        {
+          "id": 0,
+          "primeiro_nome": "Admin",
+          "ultimo_nome": "ESMAD",
+          "email": "admin",
+          "password": "esmad2122",
+          "data_nascimento": "1990-01-01",
+          "avatar": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          "id_badge": 0,
+          "pontos": 0,
+          "xp": 0,
+          "nivel": 0,
+          "num_quizzes": 0,
+          "num_certas": 0,
+          "num_erradas": 0,
+          "num_ajudas": 0,
+          "data_registo": "2022-01-20T18:06:43.231Z"
+        },
+        {
+          "id": 1,
+          "primeiro_nome": "User",
+          "ultimo_nome": "ESMAD",
+          "email": "user",
+          "password": "esmad2122",
+          "data_nascimento": "1990-01-01",
+          "avatar": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          "id_badge": 0,
+          "pontos": 0,
+          "xp": 0,
+          "nivel": 0,
+          "num_quizzes": 0,
+          "num_certas": 0,
+          "num_erradas": 0,
+          "num_ajudas": 0,
+          "data_registo": "2022-01-20T18:06:43.231Z"
+        }
+    ]

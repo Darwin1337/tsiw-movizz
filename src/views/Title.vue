@@ -5,40 +5,40 @@
         <div class="row h-100 w-100 pt-5 pb-5 m-0">
           <div class="poster col-lg-4 m-auto">
             <div class="w-100 poster-wrapper">
-              <img id="title-poster" :src="info[0][0].poster"
+              <img id="title-poster" :src="title.poster"
                 alt="Title cover" />
             </div>
           </div>
           <div class="main-info col-lg-8">
             <div class="d-flex align-items-center" style="gap: 20px">
-              <p id="title-name">{{info[0][0].titulo}}</p>
+              <p id="title-name">{{ title.titulo }}</p>
               <p id="title-content-rating" class="d-flex align-items-center justify-content-center">
-                {{info[0][0].class_etaria}}
+                {{ title.class_etaria }}
               </p>
             </div>
-            <p id="title-date"><b>Year: </b>{{info[0][0].ano}}</p>
-            <p id="title-genres">{{getGenreDescription(info[2])}}</p>
+            <p id="title-date">{{ title.ano }}</p>
+            <p id="title-genres">{{ extenseWriting(title.genero) }}</p>
             <div>
               <div class="d-flex align-items-center mb-2" style="gap: 20px">
                 <p class="m-0" style="font-size: 1.25em">
                   <strong>Synopsis</strong>
                 </p>
                 <a class="m-0 d-flex align-items-center" style="gap: 15px"
-                  :href="info[0][0].trailer" target="_blank">
+                  :href="title.trailer" target="_blank">
                   <img src="../assets/images/youtube.svg" alt="YouTube icon" width="40px" />
                   Watch the trailer
                 </a>
               </div>
               <p id="title-synopsis">
-                {{info[0][0].sinopse}}
+                {{ title.sinopse }}
               </p>
             </div>
             <div class="mb-3 d-flex align-items-center" style="gap: 5px;">
-              <img style="width: 20px; min-width: 20px;" :src="'https://countryflagsapi.com/svg/' + (info[0][0].pais == 'UK' ? 'GB' : info[0][0].pais)" />
+              <img style="width: 20px; min-width: 20px;" :src="'https://countryflagsapi.com/svg/' + (title.pais == 'UK' ? 'GB' : title.pais)" />
               &nbsp;
-              <span id="title-language">{{info[0][0].pais}}</span>
+              <span id="title-language">{{ title.pais }}</span>
             </div>
-            <p id="title-running-time">{{info[0][0].duracao}} minutes</p>
+            <p id="title-running-time">{{ title.duracao == "Running time not available" ? "Running time not available" : title.duracao + " minutes" }}</p>
             <p id="title-availability">Available on <strong>Netflix</strong></p>
             <div class="
                 title-actions-wrapper
@@ -47,11 +47,11 @@
                 flex-wrap
               ">
               <div>
-                <p class="orange-btn text-center mb-3">IMDb {{parseFloat(info[0][0].pontuacao_imdb).toFixed(1)}}</p>
+                <p class="orange-btn text-center mb-3">IMDb {{parseFloat(title.pontuacao_imdb).toFixed(1)}}</p>
                 <p class="blur-btn text-center">Movizz 4.1/5</p>
               </div>
               <div class="title-actions d-flex align-items-center flex-wrap" style="gap: 15px; flex-grow: 0">
-                <button class="blur-btn" style="font-weight: 500" id="like" @click="addNewLike()" >
+                <button class="blur-btn" style="font-weight: 500" id="like" @click="addNewLike()">
                   Add to favourites <i class="fas fa-heart"></i>
                 </button>
                 <button class="blur-btn" style="font-weight: 500" id="seen" @click="addNewSeen()">
@@ -81,177 +81,91 @@
       <div class="navigation d-flex flex-wrap" style="gap: 20px">
         <a href="#cast">Cast</a>
         <a href="#crew">Crew</a>
-        <a href="#seasons">Seasons</a>
+        <a v-if="title.total_temporadas > 0" href="#seasons">Seasons</a>
         <a href="#comments">Comments</a>
         <a href="#quizzes">Quizzes</a>
       </div>
-      <hr />
+      <hr class="mt-5 mb-5">
       <section id="cast" class="mt-5 mb-3">
         <p class="subtitle">Cast</p>
         <div class="cast-members row">
-          <div class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" v-for="(member, i) in (showFullCast ? titleCast.length : 6)" :key="i">
-            <div style="background-color: var(--azul-escuro2); border-radius: 10px; w-100">
-              <div class="cast-photo" :style="{ backgroundImage: 'url(' + titleCast[i].foto + ')' }" style="
-                  background-repeat: no-repeat;
-                  background-size: cover;
-                  background-position: top;
-                  width: 100%;
-                  height: 150px;
-                  border-top-right-radius: 10px;
-                  border-top-left-radius: 10px;
-                "></div>
-              <p class="text-center pt-3 pb-3 m-0">{{ titleCast[i].nome }}</p>
-              
+          <template v-for="i in title.elenco.length">
+            <div v-show="(i - 1) > 5 ? (showFullCast ? true : false) : true" class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" :key="i">
+              <div style="background-color: var(--azul-escuro2); border-radius: 10px; w-100">
+                <div class="cast-photo" :style="{ backgroundImage: 'url(' + title.elenco[i - 1].image + ')' }" style="
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center;
+                    width: 100%;
+                    height: 150px;
+                    border-top-right-radius: 10px;
+                    border-top-left-radius: 10px;
+                  "></div>
+                <p class="text-center pt-3 m-0" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{ title.elenco[i - 1].name }}</p>
+                <div class="w-100 pb-3 d-flex justify-content-center m-0 text-center">
+                  <p class="p-0 m-0" style="color: var(--cinza2); width: 90%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{ fixCharacterName(title.elenco[i - 1].asCharacter) }}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          </template>
         </div>
         <div class="mt-3 mb-3">
-          <a id="see-full-cast" @click="showFullCast = !showFullCast"><i :class="{
-                'fas fa-minus-circle': showFullCast,
-                'fas fa-plus-circle': !showFullCast,
-              }"></i>
-            {{
-              showFullCast ? "Hide the complete cast" : "See the complete cast"
-            }}</a>
+          <a id="see-full-cast" @click="showFullCast = !showFullCast"><i :class="{'fas fa-minus-circle': showFullCast, 'fas fa-plus-circle': !showFullCast,}"></i>
+            {{ showFullCast ? "Hide the complete cast" : "See the complete cast" }}
+          </a>
         </div>
       </section>
-      <hr />
+      <hr class="mt-5 mb-5">
       <section id="crew">
         <p class="subtitle">Crew</p>
         <p>
           Writers:
-          <span style="color: var(--cinza2)">{{getCrewDescription(info[3])}}</span>
+          <span style="color: var(--cinza2)">{{ extenseWriting(title.escritores) }}</span>
         </p>
         <p>
           Producers:
-          <span style="color: var(--cinza2)">{{getCrewDescription(info[5])}}</span>
+          <span style="color: var(--cinza2)">{{ extenseWriting(title.produtores) }}</span>
         </p>
         <p>
           Directors:
-          <span style="color: var(--cinza2)">{{getCrewDescription(info[4])}}</span>
+          <span style="color: var(--cinza2)">{{ extenseWriting(title.diretores) }}</span>
         </p>
       </section>
-      <hr />
-      <!-- <section id="seasons">
-        <p class="subtitle">Seasons</p>
-        <div class="d-flex num-seasons" style="gap: 25px">
-          <p class="
-              title-season
-              d-flex
-              justify-content-center
-              align-items-center" :class="selectedSeason == i ? 'active' : ''" v-for="i in 5" :key="i"
-            @click="selectedSeason = i">
-            {{ i }}
-          </p>
-        </div>
-        <div class="carousel-wrapper" style="position: relative;">
-          <span class="nav-left" @click="simulateScroll('left')"><i class="fas fa-chevron-left"></i></span>
-          <span class="nav-right" @click="simulateScroll('right')"><i class="fas fa-chevron-right"></i></span>
-          <div class="row-carousel disable-scrollbars">
-            <div class="row__inner p-0">
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BMjAxNjFhNzQtOWNjYy00YjY5LWJmMDQtMDZhNWI1NTM3NDU5XkEyXkFqcGdeQXVyNDg4MjkzNDk@._V1_FMjpg_UX1000_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>1</strong>&nbsp;&nbsp;&nbsp;"Efectuar lo acordado"
+      <hr class="mt-5 mb-5">
+      <div v-if="title.total_temporadas > 0">
+        <section id="seasons">
+          <p class="subtitle">Seasons</p>
+          <div class="d-flex num-seasons" style="gap: 25px">
+            <p class="
+                title-season
+                d-flex
+                justify-content-center
+                align-items-center" :class="selectedSeason == i ? 'active' : ''" v-for="i in title.total_temporadas" :key="i"
+              @click="selectedSeason = i">
+              {{ i }}
+            </p>
+          </div>
+          <div class="carousel-wrapper" style="position: relative;">
+            <span class="nav-left" @click="simulateScroll('left')"><i class="fas fa-chevron-left"></i></span>
+            <span class="nav-right" @click="simulateScroll('right')"><i class="fas fa-chevron-right"></i></span>
+            <div class="row-carousel disable-scrollbars">
+              <div class="row__inner p-0">
+              <div class="tile" v-for="(episodio, i) in title.episodios.filter(ep => ep.num_temporada == selectedSeason)" :key="i">
+                <div class="tile__media">
+                  <img class="tile__img" :src="episodio.banner" />
                 </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BNDM5ZDE0ZTYtOWQxYy00Yzc3LTg1YTQtNzFiM2YyOTExNDk0XkEyXkFqcGdeQXVyNjI4MTY4MjA@._V1_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>2</strong>&nbsp;&nbsp;&nbsp;"Imprudencias letales"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BZjM3OWZhYzMtMTM4OS00YjA2LWFlYjItZTk2NTI1YmU3YTUwXkEyXkFqcGdeQXVyNDg4MjkzNDk@._V1_FMjpg_UX1000_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>3</strong>&nbsp;&nbsp;&nbsp;"Errar al disparar"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BOTdhODAwYTktZWIyMy00MDJlLTlkNjQtOWE4OWVlODc1OTBjXkEyXkFqcGdeQXVyNDg4MjkzNDk@._V1_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>4</strong>&nbsp;&nbsp;&nbsp;"Caballo de Troya"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BYzc5YzU2MWQtMjg4Ni00ZjI3LTg3YWUtOTdkZWE3MDE2NmQ0XkEyXkFqcGdeQXVyNDg4MjkzNDk@._V1_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>5</strong>&nbsp;&nbsp;&nbsp;"El día de la marmota"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BODNlMzgzOGMtNzlmZi00YWIzLWFiMzAtNzBhM2UxMDBlOTIyXkEyXkFqcGdeQXVyNjI4MTY4MjA@._V1_FMjpg_UX1000_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>6</strong>&nbsp;&nbsp;&nbsp;"La cálida guerra fría"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BYTMwZGZiNmEtYjkxNi00YzRkLWEzNWQtZGQ1NjUzOGU3MDNmXkEyXkFqcGdeQXVyNzE5ODM5NTY@._V1_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>7</strong>&nbsp;&nbsp;&nbsp;"Refrigerada inestabilidad"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BODkxZmE3MGUtYTExMS00OTc5LTlkYWItYWVmNGM3ZDIzYzdjXkEyXkFqcGdeQXVyNDg4MjkzNDk@._V1_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>8</strong>&nbsp;&nbsp;&nbsp;"Tú lo has buscado"
-                </div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="tile__media">
-                <img class="tile__img" src="https://m.media-amazon.com/images/M/MV5BMDFiMDAwYjYtZmVlZi00M2NkLTljNDQtYjQ1MTYyODYwYTg0XkEyXkFqcGdeQXVyNDg4MjkzNDk@._V1_.jpg" alt="" />
-              </div>
-              <div class="tile__details">
-                <div class="tile__title">
-                  <strong>9</strong>&nbsp;&nbsp;&nbsp;"El que la sigue la consigue"
+                <div class="tile__details">
+                  <div class="tile__title">
+                    <strong>{{ episodio.num_episodio }}</strong>&nbsp;&nbsp;&nbsp;"{{ episodio.titulo }}"
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          </div>
+          </section>
+          <hr class="mt-5 mb-5">
         </div>
-        </div>
-        </section>
-        <hr> -->
         <div class="row">
           <div class="col-md-8">
             <section id="comments">
@@ -272,7 +186,7 @@
                 <div class="card-comment d-flex" style="gap: 15px;" v-for="(comment, i) in comments" :key="i" >
                   <div  :style="'background-image: url(' + getAllUsers[comment.id_utilizador].avatar + ');'" style="min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
                   <div class="details d-flex flex-column">
-                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ comment.data }}</span></p>
+                    <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ new Date(comment.data).getDate() + "/" + (parseInt(new Date(comment.data).getMonth()) + 1) + "/" + new Date(comment.data).getFullYear() + " at " + new Date(comment.data).getHours() + ":" + String(new Date(comment.data).getMinutes()).padStart(2, '0') + "h" }}</span></p>
                     <p id="comment-message">{{ comment.comentario }}</p>
                   </div>
                 </div>
@@ -326,68 +240,74 @@
 
 
 <script>
- import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
-  // $route.params.imdbid
   data() {
     return {
       showFullCast: false,
       selectedSeason: 1,
       showStars: false,
       savedStars: 0,
-      info:[],
+      title: [],
       userLikes: [],
       userSeen: [],
-      comments:[],
-      titleCast: [],
-      comentario:"",
-      userRatings:[],
+      comments: [],
+      comentario: "",
+      userRatings: []
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getGenreDescription", "getAllCast", "getCrewDescription", "getTitleLikes","getLoggedUser","getHasSeen","getTitleComments","getAllUsers","getUserInfo","getCommentsQuantity","getUserRating"]),
+      ...mapGetters(["getTitleInfo", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableCommentID", "getUserTitleRating"]),
   },
   mounted () {
-    document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.info[0][0].banner})`;
+    document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.title.banner})`;
     this.verifyLike();
     this.verifySeen();
     this.verifyRating();
   },
   created () {
-    this.info = this.getTitleInfo(this.$route.params.imdbid);
-    this.userLikes=this.getTitleLikes(this.getLoggedUser.id);
-    this.userSeen=this.getHasSeen(this.getLoggedUser.id);
-    this.comments=this.getTitleComments(this.$route.params.imdbid);
-    this.userRatings=this.getUserRating(this.getLoggedUser.id,this.$route.params.imdbid)
-    // Meter o cast do filme/série todo num objeto
-    this.info[1].map(cast => {
-      this.titleCast.push(this.getAllCast.find(member => member.id_pessoa == cast.id_pessoa));
-    });
+    this.title = this.getTitleInfo(this.$route.params.imdbid);
+    this.userLikes = this.getTitleLikes(this.getLoggedUser.id);
+    this.userSeen = this.getTitlesSeenByUser(this.getLoggedUser.id);
+    this.comments = this.getTitleComments(this.$route.params.imdbid);
+    this.userRatings = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) || 0;
   },
   methods: {
      ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE"]),
     addNewComment() {
       const DATA_COMMENT = new Date();
-      this.SET_NEW_COMMENT({id_comentario:this.getCommentsQuantity+1,id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,comentario: this.comentario, data: DATA_COMMENT});
-      this.comments.push({comentario: this.comentario, data: DATA_COMMENT, id_utilizador:this.getLoggedUser.id});
+      this.SET_NEW_COMMENT({
+        id_comentario: this.getNextAvailableCommentID,
+        id_imdb: this.$route.params.imdbid,
+        id_utilizador: this.getLoggedUser.id,
+        comentario: this.comentario,
+        data: DATA_COMMENT
+      });
+      this.comments.push({
+        comentario: this.comentario,
+        data: DATA_COMMENT,
+        id_utilizador: this.getLoggedUser.id
+        });
     },
     verifyRating(){
-      for(let i=0;i<this.userRatings.length;i++){
-        for (let j = 0; j < this.userRatings[0].pontuacao; j++) {
-          this.fillStars(j+1,'a')
-        }
-      }
+      for (let i = 0; i < this.userRatings.pontuacao; i++) {
+        this.fillStars(i + 1, 'a');
+      }   
     },
     changeRating(n, event_type){
-      this.fillStars(n,event_type)
-      if(this.savedStars>0){
-        let aux={id_imdb:this.$route.params.imdbid,id_utilizador:this.getLoggedUser.id,pontuacao:this.savedStars}
-        this.SET_NEW_RATE(aux);
+      this.fillStars(n, event_type)
+      if(this.savedStars > 0){
+        this.SET_NEW_RATE({
+          id_imdb: this.$route.params.imdbid,
+          id_utilizador: this.getLoggedUser.id,
+          pontuacao: this.savedStars
+        });
       }
-      else{
+      else {
         this.REMOVE_RATE(this.$route.params.imdbid);
       }
-      this.userRatings[0]={pontuacao:this.savedStars};
+      this.userRatings.pontuacao = this.savedStars;
     },
     verifyLike(){
       let wasfound=false;
@@ -416,9 +336,11 @@ export default {
       }
     },
     addNewSeen(){
-      let aux={id_imdb:this.$route.params.imdbid, id_utilizador:this.getLoggedUser.id}
       if(!this.userSeen.some(filme=>filme==this.$route.params.imdbid)){
-        this.SET_HAS_SEEN(aux);
+        this.SET_HAS_SEEN({
+          id_imdb: this.$route.params.imdbid,
+          id_utilizador: this.getLoggedUser.id
+        });
         this.userSeen.push(this.$route.params.imdbid);
         this.verifySeen();
       }
@@ -429,9 +351,11 @@ export default {
       }
     },
     addNewLike(){
-      let aux={id_imdb:this.$route.params.imdbid, id_utilizador:this.getLoggedUser.id}
       if(!this.userLikes.some(filme=>filme==this.$route.params.imdbid)){
-        this.SET_NEW_LIKE(aux);
+        this.SET_NEW_LIKE({
+          id_imdb: this.$route.params.imdbid,
+          id_utilizador: this.getLoggedUser.id
+        });
         this.userLikes.push(this.$route.params.imdbid);
         this.verifyLike();
       }
@@ -477,6 +401,33 @@ export default {
             }
         }
         
+    },
+    extenseWriting(arr) {
+      // Função que normaliza um array
+      // ["Carro", "Perna", "Prédio"] => Carro, Perna e Prédio
+      let resultString = "";
+      for (let i = 0; i < arr.length; i++) {
+        if ((i == (arr.length - 1)) && (arr.length > 1)) {
+          resultString = resultString.slice(0, -2);
+          resultString += " and "+ (arr[i].name ? arr[i].name : arr[i]);
+        } else {
+          resultString += arr.length > 1 ? (arr[i].name ? arr[i].name : arr[i]) + ", " : (arr[i].name ? arr[i].name : arr[i]);
+        }
+      }
+      return resultString;
+    },
+    fixCharacterName(name) {
+      // O nome do personagem vem assim da API: Skyler White 62 episodes, 2008-2013
+      // Esta função devolverá apenas Skyler White
+      let result = "";
+      for (let i = 0; i < name.length; i++) {
+        if (name[i] == " " || isNaN(name[i])) {
+          result += name[i];
+        } else {
+          break;
+        }
+      }
+      return result.trim();
     }
   }
 };

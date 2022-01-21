@@ -131,7 +131,7 @@ export default {
     },
     registerUser() {
       if (this.isEmailAvailable(this.new_user.email)) {
-        this.new_user.id = this.getNextAvailableID;
+        this.new_user.id = this.getNextAvailableUserID;
         this.new_user.data_registo = new Date();
         this.SET_NEW_USER(this.new_user);
         this.$swal('Success!', 'The sign in was successful.', 'success');
@@ -143,7 +143,7 @@ export default {
   computed: {
     ...mapGetters(["isEmailAvailable"]),
     ...mapGetters(["isUser"]),
-    ...mapGetters(["getNextAvailableID"])
+    ...mapGetters(["getNextAvailableUserID"])
   }
 }
 </script>

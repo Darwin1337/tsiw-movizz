@@ -1,514 +1,241 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-// Popular a localstorage com informação pre-determinada
+// Popular a localstorage com informação pré-determinada
 import dataObra from "../assets/data/obra.json";
-import dataGeneroObra from "../assets/data/genero_obra.json";
-import dataDiretorObra from "../assets/data/diretor_obra.json";
-import dataProdutorObra from "../assets/data/produtor_obra.json";
-import dataEscritorObra from "../assets/data/escritor_obra.json";
-import dataEquipaObra from "../assets/data/equipa.json";
-import dataElencoObra from "../assets/data/elenco_obra.json";
+import dataGenero from "../assets/data/genero.json";
+import dataUsers from "../assets/data/users.json";
+import topmovies from "../assets/data/250movies.json";
+import topseries from "../assets/data/250series.json";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    obras_gosto:localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [],
-    vistos:localStorage.vistos ? JSON.parse(localStorage.vistos) : [],
-    classificacao_obra:localStorage.classificacao_obra?JSON.parse(localStorage.classificacao_obra):[
-      {
-         id_imdb:"tt0111161",
-         id_utilizador:1,
-         pontuacao:4,
-      }
-   ],
-    comentarios_obra:localStorage.comentarios_obra?JSON.parse(localStorage.comentarios_obra):
-    [
-      {
-         id_comentario:1,
-         id_imdb:"tt0111161",
-         id_utilizador:1,
-         comentario:"ola",
-         data:"13-11-2012"
-      }
-    ],
-    elenco_obra: localStorage.elenco_obra ? JSON.parse(localStorage.elenco_obra) : dataElencoObra,
-    equipa: localStorage.equipa ? JSON.parse(localStorage.equipa) : dataEquipaObra,
-    genero_obra: localStorage.genero_obra ? JSON.parse(localStorage.genero_obra) : dataGeneroObra,
+    obras_gosto: localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [],
+    vistos: localStorage.vistos ? JSON.parse(localStorage.vistos) : [],
+    classificacao_obra: localStorage.classificacao_obra?JSON.parse(localStorage.classificacao_obra): [{ id_imdb:"tt0111161", id_utilizador: 1, pontuacao: 4 }],
+    comentarios_obra: localStorage.comentarios_obra ? JSON.parse(localStorage.comentarios_obra) : [{ id_comentario: 0, id_imdb: "tt0111161", id_utilizador: 1, comentario: "Bom filme!", data: "2022-01-20T18:06:43.231Z" }],
     obra: localStorage.obra ? JSON.parse(localStorage.obra) : dataObra,
-    produtor_obra: localStorage.produtor_obra ? JSON.parse(localStorage.produtor_obra) : dataProdutorObra,
-    diretor_obra: localStorage.diretor_obra ? JSON.parse(localStorage.diretor_obra) : dataDiretorObra,
-    escritor_obra: localStorage.escritor_obra ? JSON.parse(localStorage.escritor_obra) : dataEscritorObra,
-    genero: localStorage.genero ? JSON.parse(localStorage.genero) :
-      [
-        {
-          id_genero: 0,
-          descricao: 'Action'
-        },
-        {
-          id_genero: 1,
-          descricao: 'Adventure'
-        },
-        {
-          id_genero: 2,
-          descricao: 'Animation'
-        },
-        {
-          id_genero: 3,
-          descricao: 'Biography'
-        },
-        {
-          id_genero: 4,
-          descricao: 'Comedy'
-        },
-        {
-          id_genero: 5,
-          descricao: 'Crime'
-        },
-        {
-          id_genero: 6,
-          descricao: 'Documentary'
-        },
-        {
-          id_genero: 7,
-          descricao: 'Drama'
-        },
-        {
-          id_genero: 8,
-          descricao: 'Family'
-        },
-        {
-          id_genero: 9,
-          descricao: 'Fantasy'
-        },
-        {
-          id_genero: 10,
-          descricao: 'Game Show'
-        },
-        {
-          id_genero: 11,
-          descricao: 'History'
-        },
-        {
-          id_genero: 12,
-          descricao: 'Horror'
-        },
-        {
-          id_genero: 13,
-          descricao: 'Music'
-        },
-        {
-          id_genero: 14,
-          descricao: 'Musical'
-        },
-        {
-          id_genero: 15,
-          descricao: 'Mystery'
-        },
-        {
-          id_genero: 16,
-          descricao: 'News'
-        },
-        {
-          id_genero: 17,
-          descricao: 'Reality-TV'
-        },
-        {
-          id_genero: 18,
-          descricao: 'Romance'
-        },
-        {
-          id_genero: 19,
-          descricao: 'Sci-Fi'
-        },
-        {
-          id_genero: 20,
-          descricao: 'Sport	'
-        },
-        {
-          id_genero: 21,
-          descricao: 'Superhero'
-        },
-        {
-          id_genero: 22,
-          descricao: 'Talk Show'
-        },
-        {
-          id_genero: 23,
-          descricao: 'Thriller'
-        },
-        {
-          id_genero: 24,
-          descricao: 'War'
-        },
-        {
-          id_genero: 25,
-          descricao: 'Western'
-        }
-    ],
-    users: localStorage.users ? JSON.parse(localStorage.users) :
-      [
-        {
-          "id": 0,
-          "primeiro_nome": "Admin",
-          "ultimo_nome": "ESMAD",
-          "email": "admin",
-          "password": "esmad2122",
-          "data_nascimento": "1990-01-01",
-          "avatar": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-          "id_badge": 0,
-          "pontos": 0,
-          "xp": 0,
-          "nivel": 0,
-          "num_quizzes": 0,
-          "num_certas": 0,
-          "num_erradas": 0,
-          "num_ajudas": 0,
-          "data_registo": new Date()
-        },
-        {
-          "id": 1,
-          "primeiro_nome": "User",
-          "ultimo_nome": "ESMAD",
-          "email": "user",
-          "password": "esmad2122",
-          "data_nascimento": "1990-01-01",
-          "avatar": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-          "id_badge": 0,
-          "pontos": 0,
-          "xp": 0,
-          "nivel": 0,
-          "num_quizzes": 0,
-          "num_certas": 0,
-          "num_erradas": 0,
-          "num_ajudas": 0,
-          "data_registo": new Date()
-        }
-    ],
+    movies: topmovies,
+    genero: localStorage.genero ? JSON.parse(localStorage.genero) : dataGenero,
+    users: localStorage.users ? JSON.parse(localStorage.users) : dataUsers,
     loggedUser: localStorage.loggedUser ? JSON.parse(localStorage.loggedUser) : null,
-    badges: localStorage.badges ? JSON.parse(localStorage.badges) :
-      [
-        {
-          "icon": require("../assets/images/badges/0.svg"),
-          "name": "Freshman",
-          "xp_min": 0,
-          "xp_max": 749,
-          "level": 0
-        },
-        {
-          "icon": require("../assets/images/badges/1.svg"),
-          "name": "Sophomore",
-          "xp_min": 750,
-          "xp_max": 1499,
-          "level": 5
-        },
-        {
-          "icon": require("../assets/images/badges/2.svg"),
-          "name": "Junior",
-          "xp_min": 1500,
-          "xp_max": 2249,
-          "level": 10
-        },
-        {
-          "icon": require("../assets/images/badges/3.svg"),
-          "name": "Senior",
-          "xp_min": 2250,
-          "xp_max": 2999,
-          "level": 15
-        },
-        {
-          "icon": require("../assets/images/badges/4.svg"),
-          "name": "Graduated",
-          "xp_min": 3000,
-          "xp_max": 3749,
-          "level": 20
-        },
-        {
-          "icon": require("../assets/images/badges/5.svg"),
-          "name": "Apprentice",
-          "xp_min": 3750,
-          "xp_max": 4499,
-          "level": 25
-        },
-        {
-          "icon": require("../assets/images/badges/6.svg"),
-          "name": "Extra",
-          "xp_min": 4500,
-          "xp_max": 5249,
-          "level": 30
-        },
-        {
-          "icon": require("../assets/images/badges/7.svg"),
-          "name": "Producer",
-          "xp_min": 5250,
-          "xp_max": 5999,
-          "level": 35
-        },
-        {
-          "icon": require("../assets/images/badges/8.svg"),
-          "name": "Expert",
-          "xp_min": 6000,
-          "xp_max": 6749,
-          "level": 40
-        },
-        {
-          "icon": require("../assets/images/badges/9.svg"),
-          "name": "Cinema God",
-          "xp_min": 6750,
-          "xp_max": 7499,
-          "level": 45
-        },
-        {
-          "icon": require("../assets/images/badges/10.svg"),
-          "name": "Freshman",
-          "xp_min": 7500,
-          "xp_max": 999999999,
-          "level": 50
-        }
-    ]
+    badges: localStorage.badges ? JSON.parse(localStorage.badges) : [{"icon":require("../assets/images/badges/0.svg"),"name":"Freshman","xp_min":0,"xp_max":749,"level":0},{"icon":require("../assets/images/badges/1.svg"),"name":"Sophomore","xp_min":750,"xp_max":1499,"level":5},{"icon":require("../assets/images/badges/2.svg"),"name":"Junior","xp_min":1500,"xp_max":2249,"level":10},{"icon":require("../assets/images/badges/3.svg"),"name":"Senior","xp_min":2250,"xp_max":2999,"level":15},{"icon":require("../assets/images/badges/4.svg"),"name":"Graduated","xp_min":3000,"xp_max":3749,"level":20},{"icon":require("../assets/images/badges/5.svg"),"name":"Apprentice","xp_min":3750,"xp_max":4499,"level":25},{"icon":require("../assets/images/badges/6.svg"),"name":"Extra","xp_min":4500,"xp_max":5249,"level":30},{"icon":require("../assets/images/badges/7.svg"),"name":"Producer","xp_min":5250,"xp_max":5999,"level":35},{"icon":require("../assets/images/badges/8.svg"),"name":"Expert","xp_min":6000,"xp_max":6749,"level":40},{"icon":require("../assets/images/badges/9.svg"),"name":"Cinema God","xp_min":6750,"xp_max":7499,"level":45},{"icon":require("../assets/images/badges/10.svg"),"name":"Freshman","xp_min":7500,"xp_max":999999999,"level":50}],
+    tempSeries: topseries,
+    cur_api: 0,
+    api_keys: [],
+    quant_calls: 0
   },
   getters: {
     isEmailAvailable: (state) => (email) => state.users.every((user) => user.email !== email),
     getLoggedUser: (state) => state.loggedUser,
     isUser: (state) => (email, password) => state.users.some((user) => user.email === email && user.password === password),
     getBadges: (state) => state.badges,
-    getNextAvailableID: (state) => state.users ? state.users[state.users.length - 1].id + 1 : 0,
+    getNextAvailableUserID: (state) => state.users ? state.users[state.users.length - 1].id + 1 : 0,
     getAllUsers: (state) => state.users,
-    getAllMovies:(state) => state.obra,
-    getTitleInfo:(state)=>(id)=>
-    [state.obra.filter(filme=>filme.id_imdb==id),
-      state.elenco_obra.filter(ator=>ator.id_imdb==id),
-      state.genero_obra.filter(genero=>genero.id_imdb==id),
-      state.escritor_obra.filter(escritor=>escritor.id_imdb==id),
-      state.diretor_obra.filter(diretor=>diretor.id_imdb==id),
-      state.produtor_obra.filter(produtor=>produtor.id_imdb==id)
-    ],
-    getCrewDescription:(state)=>(ids)=>{
-      let result="";
-      for (let i = 0; i < ids.length; i++) {
-        for (let j = 0; j < state.equipa.length; j++) {
-          if (ids[i].id_pessoa==state.equipa[j].id_pessoa) {
-            if (i==ids.length-1 && ids.length>1) {
-              result=result.slice(0,-2)
-              result+=" and "+state.equipa[j].nome;
-            }
-            else
-            {
-              if (ids.length>1) {
-                result+=state.equipa[j].nome+", ";
-              }
-              else{
-                result+=state.equipa[j].nome;
-              }
-            }
-            break;
-          }
-        }
-      }
-      return result;
-    },
-    getTitleLikes:(state) => (id) => {
-      let result=[];
-      for (let j = 0; j < state.obras_gosto.length; j++) {
-         if (id==state.obras_gosto[j].id_utilizador) {
-            result.push(state.obras_gosto[j].id_imdb);
-         }
-      }
-      return result;
-    },
-    getHasSeen:(state) => (id) => {
-      let result=[];
-      for (let j = 0; j < state.vistos.length; j++) {
-         if (id==state.vistos[j].id_utilizador) {
-            result.push(state.vistos[j].id_imdb);
-         }
-      }
-      return result;
-    },
-    getGenreDescription:(state)=>(ids)=>{
-      let result="";
-      for (let i = 0; i < ids.length; i++) {
-        for (let j = 0; j < state.genero.length; j++) {
-          if (ids[i].id_genero==state.genero[j].id_genero) {
-            if (i==ids.length-1 && ids.length>1) {
-              result=result.slice(0,-2)
-              result+=" and "+state.genero[j].descricao;
-            }
-            else {
-              result += ids.length > 1 ? state.genero[j].descricao + ", " : result+=state.genero[j].descricao;
-            }
-            break;
-          }
-        }
-      }
-      return result;
-    },
-    getAllCast:(state) => state.equipa,
-    getUserInfo:(state)=>(id)=>{
-      let result=[];
-      for (let j = 0; j < state.users.length; j++) {
-         if (id==state.users[j].id) {
-            result.push(state.users[j]);
-         }
-      }
-      
-      return result;
-    },
-    getTitleComments:(state)=>(id)=>{
-      let result=[];
-      for (let i = 0; i < state.comentarios_obra.length; i++) {
-         if (id==state.comentarios_obra[i].id_imdb) {
-            result.push({id_utilizador:state.comentarios_obra[i].id_utilizador, comentario:state.comentarios_obra[i].comentario, data:state.comentarios_obra[i].data});
-         }
-      }
-      return result;
-    },
-    getCommentsQuantity:(state)=>state.comentarios_obra.length,
-    getUserRating:(state)=>(id, imdb)=>{
-      let result=[];
-      for (let i = 0; i < state.classificacao_obra.length; i++) {
-         if (id==state.classificacao_obra[i].id_utilizador && imdb==state.classificacao_obra[i].id_imdb) {
-            result.push({pontuacao:state.classificacao_obra[i].pontuacao});
-         }
-      }
-      return result;
-    }
+    getAllTitles: (state) => state.obra,
+    getTitleInfo: (state) => (id) => state.obra.find(obra => obra.id_imdb == id),
+    getTitleLikes: (state) => (id) => state.obras_gosto.filter(titulo => titulo.id_utilizador == id).map(titulo => titulo.id_imdb),
+    getTitlesSeenByUser: (state) => (id) => state.vistos.filter(titulo => titulo.id_utilizador == id).map(visto => visto.id_imdb),
+    getTitleComments: (state) => (id_imdb) => state.comentarios_obra.filter(comentario => comentario.id_imdb == id_imdb),
+    getNextAvailableCommentID: (state) => state.comentarios ? state.comentarios_obra[state.comentarios.length - 1].id_comentario : 0,
+    getUserTitleRating: (state) => (id, id_imdb) => state.classificacao_obra.find(classificacao => classificacao.id_utilizador == id && classificacao.id_imdb == id_imdb)
   },
   actions:{
     async loadMovies(context) {
-      for(let i=0; i<25; i++) {
+      for (let i=0; i<25; i++) {
+        console.log("Série nmr. " + (i + 1));
+        console.log("A ir buscar info de:" + this.state.tempSeries[i].title);
         let wasfound=false;
         for (let j=0; j<this.state.obra.length; j++) {
-          if(this.state.movies[i].id==this.state.obra[j].id_imdb){
+          if(this.state.tempSeries[i].id==this.state.obra[j].id_imdb){
             wasfound=true;
+            console.log(this.state.tempSeries[i].title + " already exists, skipping");
           }
         }
         if(!wasfound){
           const response = await fetch(
-            `https://imdb-api.com/en/API/Title/k_utdlvs0n/${this.state.movies[i].id}/FullCast,Posters,Trailer`
+            `https://imdb-api.com/en/API/Title/${this.state.api_keys[this.state.cur_api]}/${this.state.tempSeries[i].id}/FullCast,Posters,Trailer`
           );
+          this.state.quant_calls += 3;
           if (response.ok) {
-            context.commit("SET_OBRA", await response.json());
+            console.log("à espera da response")
+            const beSure = await response.json();
+            console.log("recebeu response")
+            if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
+              console.log("a dar set à obra")
+              context.commit("SET_OBRA", beSure);
+              console.log(this.state.tempSeries[i].title + ": a gurdar a informação");
+              if (beSure.tvSeriesInfo || beSure.tvSeriesInfo != null || beSure.tvSeriesInfo != "null") {
+                console.log(this.state.tempSeries[i].title + ": a ir buscar as temporadas (" + beSure.tvSeriesInfo.seasons.length +")");
+                await this.dispatch('loadSeriesSeason', beSure);
+              }
+            } else {
+              console.log("api was changed check logs");
+              console.log("next index was supposed to be: " + i);
+              console.log("but now we are going to repeat: " + (i - 1));
+              i--;
+              localStorage.setItem(this.state.cur_api + '_exceeded', new Date());
+              this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
+            }
           } else {
-            throw new Error(response.status);
+            console.log("api was changed check logs");
+            console.log("next index was supposed to be: " + i);
+            console.log("but now we are going to repeat: " + (i - 1));
+            i--;
+            localStorage.setItem(this.state.cur_api + '_exceeded', new Date());
+            this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
+            // throw new Error(response.status);
           }
         }
       }
     },
+    // async loadMovies(context) {
+    //   console.log("starting...")
+    //   for(let i=0; i<25; i++) {
+    //     let wasfound=false;
+    //     for (let j=0; j<this.state.obra.length; j++) {
+    //       if(this.state.movies[i].id==this.state.obra[j].id_imdb){
+    //         console.log("já tem");
+    //         wasfound=true;
+    //       }
+    //     }
+    //     if(!wasfound){
+    //       const response = await fetch(
+    //         `https://imdb-api.com/en/API/Title/k_82n08589/${this.state.movies[i].id}/FullCast,Posters,Trailer`
+    //       );
+    //       if (response.ok) {
+    //         context.commit("SET_OBRA", await response.json());
+    //       } else {
+    //         throw new Error(response.status);
+    //       }
+    //     }
+    //   }
+    // },
+    async loadSeriesSeason(context, payload) {
+      for (let j = 0; j < payload.tvSeriesInfo.seasons.length; j++) {
+        console.log("A ir buscar temporada " + (j + 1) + " de " + payload.title);
+        const response = await fetch(
+          `https://imdb-api.com/en/API/SeasonEpisodes/${this.state.api_keys[this.state.cur_api]}/${payload.id}/${j + 1}`
+        );
+        this.state.quant_calls += 1;
+        if (response.ok) {
+          const beSure = await response.json();
+          if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
+            context.commit("SET_SEASON", beSure);
+          } else {
+            console.log("SEASONS: api was changed check logs");
+            console.log("SEASONS: next index was supposed to be: " + j);
+            console.log("SEASONS: but now we are going to repeat: " + (j - 1));
+            j--;
+            localStorage.setItem('SEASONS_' + this.state.cur_api + '_exceeded', new Date());
+            this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
+          }
+        } else {
+          console.log("SEASONS: api was changed check logs");
+          console.log("SEASONS: next index was supposed to be: " + j);
+          console.log("SEASONS: but now we are going to repeat: " + (j - 1));
+          j--;
+          localStorage.setItem('SEASONS_' + this.state.cur_api + '_exceeded', new Date());
+          this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
+          // throw new Error(response.status);
+        }
+      }
+    }
   },
   mutations: {
-    SET_OBRA: (state, payload) => {
-      state.obra.push({
-        id_imdb:payload.id,
-        titulo: payload.title,
-        sinopse: payload.plot,
-        poster: payload.image,
-        banner: payload.posters.backdrops[0].link,
-        trailer: payload.trailer.link,
-        ano: payload.year,
-        pais: payload.countryList[0].value,
-        lingua: payload.languageList[0].value,
-        class_etaria:payload.contentRating == "Approved" ? "PG-13" : payload.contentRating,
-        duracao:payload.runtimeMins,
-        total_temporadas:0,
-        pontuacao_imdb:payload.imDbRating
-      });
+    SET_SEASON: (state, payload) => {
+      try {
+        for (let k = 0; k < payload.episodes.length; k++) {
+          state.obra[state.obra.length - 1].episodios.push({
+            id_imdb: payload.imDbId,
+            num_temporada: payload.episodes[k].seasonNumber,
+            num_episodio: payload.episodes[k].episodeNumber,
+            titulo: payload.episodes[k].title,
+            banner: payload.episodes[k].image
+          });
+        }
+      } catch (e) {
+        alert("STOP!!!!! " + e)
+      }
+
       localStorage.obra = JSON.stringify(state.obra);
-      //generos
-      for(let i=0; i<payload.genreList.length; i++){
-        for(let j=0; j<state.genero.length; j++){
-          if(payload.genreList[i].value==state.genero[j].descricao){
-            state.genero_obra.push({id_imdb:payload.id, id_genero:state.genero[j].id_genero})
-            localStorage.genero_obra= JSON.stringify(state.genero_obra);
-            break;
-          }
-        }
+      console.log("Temporada " + payload.episodes[0].seasonNumber + " de " + payload.title + " obtida com sucesso");
+      if (payload.episodes[0].seasonNumber == state.obra[state.obra.length - 1].total_temporadas) {
+        console.log("Série foi obtida completamente com sucesso");
       }
-      //atores
-      for(let i=0; i<payload.actorList.length; i++){
-        let wasfound=false;
-        for(let j=0; j<state.equipa.length; j++){
-          if(payload.actorList[i].id==state.equipa[j].id_pessoa){
-            wasfound=true;
-            state.elenco_obra.push({id_imdb:payload.id, id_pessoa:payload.actorList[i].id})
-            localStorage.elenco_obra= JSON.stringify(state.elenco_obra);
-            break;
-          }
-        }
-        if(!wasfound){
-          state.equipa.push({id_pessoa:payload.actorList[i].id, nome:payload.actorList[i].name, foto:payload.actorList[i].image})
-          localStorage.equipa= JSON.stringify(state.equipa);
-          state.elenco_obra.push({id_imdb:payload.id, id_pessoa:payload.actorList[i].id})
-          localStorage.elenco_obra= JSON.stringify(state.elenco_obra);
-        }
+    },
+    SET_OBRA: (state, payload) => {
+      try {
+        state.obra.push({
+          id_imdb:payload.id,
+          titulo: payload.title,
+          sinopse: payload.plot,
+          poster: payload.image,
+          banner: payload.posters.backdrops.length == 0 || payload.poster ? prompt("Enter the link for the banner of " + payload.title + ":") : payload.posters.backdrops[0].link,
+          trailer: payload.trailer.link,
+          ano: payload.year,
+          pais: payload.countryList[0].value,
+          lingua: payload.languageList[0].value,
+          class_etaria: payload.contentRating == "Approved" ? "PG-13" : payload.contentRating,
+          duracao: payload.runtimeMins ? payload.runtimeMins : "Running time not available",
+          total_temporadas: payload.tvSeriesInfo ? payload.tvSeriesInfo.seasons.length : 0,
+          genero: [],
+          episodios: [],
+          elenco: payload.actorList.length > 50 ? payload.actorList.slice(0, 50) : payload.actorList,
+          produtores: [],
+          diretores: payload.directorList,
+          escritores: !payload.tvSeriesInfo ? payload.writerList : null,
+          pontuacao_imdb:payload.imDbRating
+        });
+      } catch (e) {
+        alert("Error: " + e)
       }
-      //produtores
-      let wasProducerfound=false;
-      for(let i=0; i<payload.fullCast.others.length; i++){
-        if(payload.fullCast.others[i].job=="Produced by"){
-          wasProducerfound=true;
-          for(let j=0; j<payload.fullCast.others[i].items.length; j++){
-            let wasfound=false;
-            for(let k=0; k<state.equipa.length; k++){
-              if(payload.fullCast.others[i].items[j].id==state.equipa[k].id_pessoa){
-                wasfound=true;
-                state.produtor_obra.push({id_imdb:payload.id, id_pessoa:payload.fullCast.others[i].items[j].id})
-                localStorage.produtor_obra= JSON.stringify(state.produtor_obra);
-                break;
-              }
-            }
-            if(!wasfound){
-              state.equipa.push({id_pessoa:payload.fullCast.others[i].items[j].id, nome:payload.fullCast.others[i].items[j].name, foto:"https://imdb-api.com/images/original/nopicture.jpg"})
-              localStorage.equipa= JSON.stringify(state.equipa);
-              state.produtor_obra.push({id_imdb:payload.id, id_pessoa:payload.fullCast.others[i].items[j].id})
-              localStorage.produtor_obra= JSON.stringify(state.produtor_obra);
-            }
+
+      // Géneros
+      payload.genreList.map(genre => {
+        state.obra[state.obra.length - 1].genero.push(genre.value);
+      });
+
+      // Produtores
+      for (let i = 0; i < payload.fullCast.others.length; i++){
+        const JOB = payload.fullCast.others[i].job;
+        if (JOB.toLowerCase().trim() == "produced by" || JOB.toLowerCase().trim() == "series produced by") {
+          if (state.obra[state.obra.length - 1].total_temporadas > 0) {
+            // Se for série manter um cap de 5 produtores - os principais - para não encher a localstorage
+            state.obra[state.obra.length - 1].produtores = payload.fullCast.others[i].items.length > 5 ? payload.fullCast.others[i].items.slice(0, 5) : payload.fullCast.others[i].items;
+          } else {
+            // Se for um filme, obter todos os produtores
+            state.obra[state.obra.length - 1].produtores = payload.fullCast.others[i].items;
           }
           break;
         }
       }
-      if (!wasProducerfound){
-        state.produtor_obra.push({id_imdb:payload.id, id_pessoa: null})
-      }
 
-      //diretores
-      for(let i=0; i<payload.directorList.length; i++){
-        let wasfound=false;
-        for(let j=0; j<state.equipa.length; j++){
-          if(payload.directorList[i].id==state.equipa[j].id_pessoa){
-            wasfound=true;
-            state.diretor_obra.push({id_imdb:payload.id, id_pessoa:payload.directorList[i].id})
-            localStorage.diretor_obra= JSON.stringify(state.diretor_obra);
-            break;
+      // Se for série alterar uns certos campos que a API devolve de maneira diferente
+      if (state.obra[state.obra.length - 1].total_temporadas > 0) {
+        // Escritores (manter um cap de 5 escritores - os principais - para não encher a localstorage)
+        // Há uma chance de os escritores serem iguais então é necessário verificar isso
+        for (let i = 0; i < payload.fullCast.writers.items.length; i++) {
+          if (state.obra[state.obra.length - 1].escritores) {
+            if (!state.obra[state.obra.length - 1].escritores.some(escritor => escritor.id == payload.fullCast.writers.items[i].id)) {
+              state.obra[state.obra.length - 1].escritores.push(payload.fullCast.writers.items[i]);
+              if (state.obra[state.obra.length - 1].escritores.length == 5) {
+                break;
+              }
+            }
+          } else {
+            state.obra[state.obra.length - 1].escritores = [payload.fullCast.writers.items[i]];
           }
         }
-        if(!wasfound){
-          state.equipa.push({id_pessoa:payload.directorList[i].id, nome:payload.directorList[i].name, foto:"https://imdb-api.com/images/original/nopicture.jpg"})
-          localStorage.equipa= JSON.stringify(state.equipa);
-          state.diretor_obra.push({id_imdb:payload.id, id_pessoa:payload.directorList[i].id})
-          localStorage.diretor_obra= JSON.stringify(state.diretor_obra);
-        }
+
+        // Diretores (manter um cap de 5 diretores - os principais - para não encher a localstorage)
+        state.obra[state.obra.length - 1].diretores = payload.fullCast.directors.items.length > 5 ? payload.fullCast.directors.items.slice(0, 5) : payload.fullCast.directors.items;
       }
 
-      //escritor
-      for(let i=0; i<payload.writerList.length; i++){
-        let wasfound=false;
-        for(let j=0; j<state.equipa.length; j++){
-          if(payload.writerList[i].id==state.equipa[j].id_pessoa){
-            wasfound=true;
-            state.escritor_obra.push({id_imdb:payload.id, id_pessoa:payload.writerList[i].id})
-            localStorage.escritor_obra= JSON.stringify(state.escritor_obra);
-            break;
-          }
-        }
-        if(!wasfound){
-          state.equipa.push({id_pessoa:payload.writerList[i].id, nome:payload.writerList[i].name, foto:"https://imdb-api.com/images/original/nopicture.jpg"})
-          localStorage.equipa= JSON.stringify(state.equipa);
-          state.escritor_obra.push({id_imdb:payload.id, id_pessoa:payload.writerList[i].id})
-          localStorage.escritor_obra= JSON.stringify(state.escritor_obra);
-        }
-      }
+      localStorage.obra = JSON.stringify(state.obra);
+      console.log(payload.title + " obtido com sucesso");
     },
     SET_MOVIES: (state, payload) => {
       state.movies = payload
@@ -557,10 +284,9 @@ export default new Vuex.Store({
     },
     SET_NEW_RATE(state,payload){
       const idx=state.classificacao_obra.findIndex(rate=>rate.id_utilizador==payload.id_utilizador && rate.id_imdb==payload.id_imdb)
-      if(idx==-1){
+      if (idx == -1){
          state.classificacao_obra.push(payload);
-      }
-      else{
+      } else {
          state.classificacao_obra[idx].id_imdb=payload.id_imdb;
          state.classificacao_obra[idx].id_utilizador=payload.id_utilizador;
          state.classificacao_obra[idx].pontuacao=payload.pontuacao;
