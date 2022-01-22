@@ -1,0 +1,14 @@
+[
+	{
+		"id_premio": 0,
+		"nome": "Cinema NOS ticket",
+        "img": "https://www.cheatsheet.com/wp-content/uploads/2017/10/Netflix.jpg",
+        "valor": 2000
+	},
+    {
+		"id_premio": 1,
+		"nome": "Netflix",
+        "img": "https://filmdaily.co/wp-content/uploads/2020/12/netflix-7.jpeg",
+        "valor": 5000
+	}
+]

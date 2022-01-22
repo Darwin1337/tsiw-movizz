@@ -43,7 +43,7 @@
     <div style="height:425px;">
       <div class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5" style=" height:100% ; background-position: center; border-radius: 10px;">
         <div class="container for-about">
-          <p style="color: var(--cinza2); font-weight: 500;">Quizz of the day</p>
+          <p style="color: var(--cinza2); font-weight: 500;">Quiz of the day</p>
           <h3 style="font-weight: bold;">Stranger Things</h3>
           <h5>Think you know about the upside down? Think again.</h5>
           <p style="color: var(--cinza2); font-weight: bold;">10 questions • Normal difficulty</p>

@@ -5,7 +5,9 @@ import Vuex from "vuex";
 import dataObra from "../assets/data/obra.json";
 import dataGenero from "../assets/data/genero.json";
 import dataUsers from "../assets/data/users.json";
-import dataPlatforms from "../assets/data/plataformas.json"
+import dataPlatforms from "../assets/data/plataformas.json";
+import dataPremios from "../assets/data/premios.json";
+import dataPremioUtilizador from "../assets/data/premio_utilizador.json";
 
 Vue.use(Vuex);
 
@@ -23,7 +25,9 @@ export default new Vuex.Store({
     comentarios_obra: localStorage.comentarios_obra ? JSON.parse(localStorage.comentarios_obra) : [{ id_comentario: 0, id_imdb: "tt0366551", id_utilizador: 1, comentario: "Bom filme!", data: "2022-01-20T18:06:43.231Z" }],
     cur_api: 0,
     api_keys: [],
-    quant_calls: 0
+    quant_calls: 0,
+    premios:localStorage.premios?JSON.parse(localStorage.premios) : dataPremios,
+    premios_utilizador:localStorage.premios_utilizador?JSON.parse(localStorage.premios_utilizador) : dataPremioUtilizador,
   },
   getters: {
     isEmailAvailable: (state) => (email) => state.users.every((user) => user.email !== email),
@@ -42,6 +46,11 @@ export default new Vuex.Store({
     getUserTitleRating: (state) => (id, id_imdb) => state.classificacao_obra.find(classificacao => classificacao.id_utilizador == id && classificacao.id_imdb == id_imdb),
     getAllViewsByTitle: (state) => state.obra.map(title => { return({ id_imdb: title.id_imdb, visualizacoes: state.vistos.filter(visto => visto.id_imdb == title.id_imdb).length }) }),
     getTitleMovizzRating: (state) => (id) => parseFloat(parseFloat(state.classificacao_obra.filter(rating => rating.id_imdb == id).map(rating => rating.pontuacao).reduce((accum, curr) => accum + curr, 0)) / parseFloat(state.classificacao_obra.filter(rating => rating.id_imdb == id).length || 1)).toFixed(1),
+    getAllPrizes: (state) => state.premios,
+    getAllPremiosUtilizador: (state) => state.premios_utilizador,
+    getPremioInfo:(state)=>(id)=>state.premios.find(premio => premio.id_premio == id),
+    getAllCommentsLoggedUser: (state) =>(id)=> state.comentarios_obra.filter(comentario=>comentario.id_utilizador==id),
+    getAllRatingsLoggedUser: (state) =>(id)=> state.classificacao_obra.filter(classificacao=>classificacao.id_utilizador==id)
   },
   actions:{
     // async loadMovies(context) {
@@ -310,6 +319,12 @@ export default new Vuex.Store({
     REMOVE_COMMENT(state,payload){
       state.comentarios_obra = state.comentarios_obra.filter(comment=>(comment.id_comentario!=payload && comment.id_utilizador==state.loggedUser.id) || comment.id_utilizador!=state.loggedUser.id);
       localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
+    },
+    SET_NEW_BUY(state,payload){
+      state.premios_utilizador.push({id_utilizador:payload.id_utilizador, id_premio: payload.id_premio, data: payload.data});
+      localStorage.premios_utilizador = JSON.stringify(state.premios_utilizador);
+      state.loggedUser.pontos-=payload.valor;
+      localStorage.loggedUser = JSON.stringify(state.loggedUser);
     }
   }
 });

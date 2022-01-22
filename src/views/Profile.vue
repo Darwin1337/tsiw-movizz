@@ -295,7 +295,7 @@
     <div class="filtros" v-if="selectedTab == 'history'">
       <div class="row gy-2">
         <div class="col-md-12 col-lg-6 col-xl-4">
-          <p style="color: var(--azul-claro); font-weight: 500;">Ratings</p>
+          <p style="color: var(--azul-claro); font-weight: 500;">Comments</p>
           <div>
             <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
               <div class="col-lg-6">
@@ -317,23 +317,23 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="i in 10" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllCommentsLoggedUser(getLoggedUser.id)" :key="i">
               <div class="d-flex flex-wrap" style="gap: 5px;">
-                <p style="color: var(--cinza-claro);">July 21st 2020</p>
-                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>The Wolf of Wall Street</strong></p>
+                <p style="color: var(--cinza-claro);">{{title.data}}</p>
+                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>{{getTitleInfo(title.id_imdb).titulo}}</strong></p>
               </div>
               <div>
-                <p>O Lobo de Wall Street é imperdível para os cinéfilos.</p>
+                <p>{{title.comentario}}</p>
               </div>
               <div class="d-flex" style="gap: 10px;">
-                <button class="edit-btn">See comment</button>
-                <button class="custom-logout-btn">Delete</button>
+                <button class="edit-btn" @click="$router.push({ name: 'Title', params: { imdbid: title.id_imdb} })">See comment</button>
+                <button class="custom-logout-btn" @click="removeComment(title.id_comentario)">Delete</button>
               </div>
             </div>
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
-          <p style="color: var(--azul-claro); font-weight: 500;">Comments</p>
+          <p style="color: var(--azul-claro); font-weight: 500;">Ratings</p>
           <div>
             <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
               <div class="col-lg-6">
@@ -357,26 +357,21 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="i in 10" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllRatingsLoggedUser(getLoggedUser.id)" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
-                <div>
+                <div class="col-3">
                   <div style="width: 85px; height: 125px; min-width: 85px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" src="https://upload.wikimedia.org/wikipedia/pt/8/8b/Superbad_Poster.png">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="getTitleInfo(title.id_imdb).poster">
                   </div>
                 </div>
-                <div class="d-flex flex-column">
-                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>The Wolf of Wall Street</strong></p>
-                  <p style="color: var(--cinza-claro);">July 21st 2020</p>
+                <div class="d-flex flex-column col-8">
+                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>{{getTitleInfo(title.id_imdb).titulo}}</strong></p>
                   <div class="stars d-flex" style="gap: 5px; cursor: pointer; color: var(--laranja);">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star" v-for="i in title.pontuacao" :key="i"></i>
                   </div>
                   <div class="d-flex mt-auto" style="gap: 10px;">
-                    <button class="edit-btn">Edit</button>
-                    <button class="custom-logout-btn">Delete</button>
+                    <button class="edit-btn" @click="$router.push({ name: 'Title', params: { imdbid: title.id_imdb} })">See Rating</button>
+                    <button class="custom-logout-btn" @click="removeRate(title.id_imdb)">Delete</button>
                   </div>
                 </div>
               </div>
@@ -408,17 +403,17 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="i in 10" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllPremiosUtilizador" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div>
                   <div style="width: 125px; height: 125px; min-width: 125px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" src="https://cinemas.nos.pt/noticias/PublishingImages/Imagem%20Institucional.jpg">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="getPremioInfo(title.id_premio).img">
                   </div>
                 </div>
                 <div class="d-flex flex-column">
-                  <p style="color: var(--laranja);" class="m-0"><strong>Cinemas NOS ticket</strong></p>
-                  <p style="color: var(--cinza-claro);">July 21st 2020</p>
-                  <p style="color: var(--cinza-claro);"><strong>3000</strong> points</p>
+                  <p style="color: var(--laranja);" class="m-0"><strong>{{getPremioInfo(title.id_premio).nome}}</strong></p>
+                  <p style="color: var(--cinza-claro);">{{title.data}}</p>
+                  <p style="color: var(--cinza-claro);"><strong>{{getPremioInfo(title.id_premio).valor}}</strong> points</p>
                 </div>
               </div>
             </div>
@@ -545,7 +540,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE","REMOVE_LIKE","REMOVE_HAS_SEEN"]),
+    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE","REMOVE_LIKE","REMOVE_HAS_SEEN","REMOVE_COMMENT","REMOVE_RATE"]),
     removeLike(id){
       this.$swal({
         title: 'Warning!',
@@ -584,7 +579,6 @@ export default {
       });
     },
     editUser(event, isAvatar) {
-      console.log("lol");
       if (!isAvatar) {
         // Se o email foi alterado, verificar se o mesmo é igual a algum já presente
         const WAS_EMAIL_CHANGED = this.edit_user.email != this.getAllUsers[this.getAllUsers.findIndex(user => parseInt(user.id) == parseInt(this.$route.params.id))].email ? true : false;
@@ -664,12 +658,41 @@ export default {
       if (parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id)) {
         this.SET_LOGGED_USER(this.edit_user.email);
       }
+    },
+    removeComment(id_comentario){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this movie from viewed?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_COMMENT(id_comentario);
+        }
+      });
+    },
+    removeRate(id_imdb){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this movie from viewed?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_RATE(id_imdb);
+        }
+      });
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser"]),
+    ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllPremiosUtilizador","getAllCommentsLoggedUser","getAllRatingsLoggedUser", "getPremioInfo"]),
   },
   mounted () {
+    console.log(this.getAllCommentsLoggedUser(this.getLoggedUser.id));
     this.edit_user.primeiro_nome = this.getLoggedUser.primeiro_nome;
     this.edit_user.ultimo_nome = this.getLoggedUser.ultimo_nome;
     this.edit_user.email = this.getLoggedUser.email;

@@ -4,25 +4,26 @@
     <span
       class="p-2 mt-2 mb-2"
       style="background-color: var(--azul-escuro); border-radius: 5px; display: inline-block;">
-      <b>1875</b> points
+      <b>{{getLoggedUser.pontos}}</b> points
     </span>
      
     <div class="modal fade backgroundBlur" id="exampleModal" ref="exampleModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
         <div class="modal-content modalrewards">
+          <span id="idPremio" style="display: none;"></span>
           <div class="modal-body row m-0 gy-3">
             <div
               class="card-image-modal col-md-5">
-              <img class="w-100 h-100" :src="Math.floor(Math.random() * 2) + 1 == 1 ? 'https://www.cheatsheet.com/wp-content/uploads/2017/10/Netflix.jpg' : 'https://filmdaily.co/wp-content/uploads/2020/12/netflix-7.jpeg'" alt="Card image cap">
+              <img class="w-100 h-100" id="premioImagem">
             </div>
             <div class="col-md-7">
               <div class="d-flex h-100 flex-column justify-content-between">
                 <div>
-                  <p>Are you sure you want to exchange your points for the <b>Cinemas NOS ticket?</b></p>
-                  <p style="color: var(--cinza-claro)">This reward costs 3000 points</p>
+                  <p id="premioNome"></p>
+                  <p style="color: var(--cinza-claro)" id="premioPreco"></p>
                 </div>
                 <div class="ms-auto">
-                  <button type="button" class="btn green-btn me-2">Yes</button>
+                  <button type="button" class="btn green-btn me-2" data-bs-dismiss="modal" @click="comprarPremio()">Yes</button>
                   <button type="button" class="btn red-btn" data-bs-dismiss="modal">No</button>
                 </div>
               </div>
@@ -32,58 +33,57 @@
       </div>
     </div>
     <div class="row">
-      <template v-for="i in 5">
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 p-2" :key="i">
-          <div class="card carddesign">
-            <div
-              class="card-image">
-              <img class="w-100 h-100" src="https://www.cheatsheet.com/wp-content/uploads/2017/10/Netflix.jpg" alt="Card image cap">
-            </div>
-            <div class="card-body text-center">
-              <h5 class="card-title">Cinema NOS ticket</h5>
-              <p class="card-text">3000</p>
-              <button class="orange-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" style="max-width: 150px; width: 100%;">Buy</button>
-            </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 p-2" v-for="(premio,index) in getAllPrizes" :key="index">
+        <div class="card carddesign">
+          <div
+            class="card-image">
+            <img class="w-100 h-100" :src="getAllPrizes[index].img" alt="Card image cap">
+          </div>
+          <div class="card-body text-center">
+            <h5 class="card-title">{{getAllPrizes[index].nome}}</h5>
+            <p class="card-text">{{getAllPrizes[index].valor}} pontos</p>
+            <button :disabled="getAllPrizes[index].valor>getLoggedUser.pontos" :class="{noPoints:getAllPrizes[index].valor>getLoggedUser.pontos}" class="orange-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openModal(index)" style="max-width: 150px; width: 100%;">Buy</button>
           </div>
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 p-2" :key="i * (i + 45)">
-          <div class="card carddesign">
-            <div
-              class="card-image">
-              <img class="w-100 h-100" src="https://filmdaily.co/wp-content/uploads/2020/12/netflix-7.jpeg" alt="Card image cap">
-            </div>
-            <div class="card-body text-center">
-              <h5 class="card-title">Cinema NOS ticket</h5>
-              <p class="card-text">3000</p>
-              <button class="orange-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" style="max-width: 150px; width: 100%;">Buy</button>
-            </div>
-          </div>
-        </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
-
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default ({
   data() {
     return {
-      // modal: null
+      
     }
   },
+  computed: {
+    ...mapGetters(["getLoggedUser", "getAllPrizes"])
+  },
   methods: {
-    ...mapActions([
-      "loadMovies",
-    ]),
+    ...mapActions(["loadMovies"]),
+    ...mapMutations(["SET_NEW_BUY"]),
     callAction() {
       this.loadMovies();
     },
+    openModal(i){
+      document.querySelector("#premioNome").innerHTML=`Are you sure you want to exchange your points for the <b>${this.getAllPrizes[i].nome}</b>`;
+      document.querySelector("#premioPreco").innerHTML=`This reward costs ${this.getAllPrizes[i].valor} points`;
+      document.querySelector("#premioImagem").src=this.getAllPrizes[i].img;
+      document.querySelector("#idPremio").innerHTML= i;
+    },
+    comprarPremio(){
+      const id=document.querySelector("#idPremio").innerHTML;
+      this.SET_NEW_BUY({id_utilizador:this.getLoggedUser.id, id_premio: id, data: new Date(), valor: this.getAllPrizes[id].valor})
+    }
   }
 })
 </script>
 
 <style scoped>
+.noPoints{
+  background-color:var(--cinza3);
+}
 .modalrewards{
   background-color: #151E2E;
 }
