@@ -8,6 +8,7 @@ import dataUsers from "../assets/data/users.json";
 import dataPlatforms from "../assets/data/plataformas.json";
 import dataPremios from "../assets/data/premios.json";
 import dataPremioUtilizador from "../assets/data/premio_utilizador.json";
+import dataQuiz from "../assets/data/quiz.json";
 
 Vue.use(Vuex);
 
@@ -22,10 +23,13 @@ export default new Vuex.Store({
     obras_gosto: localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [],
     vistos: localStorage.vistos ? JSON.parse(localStorage.vistos) : [],
     classificacao_obra: localStorage.classificacao_obra ? JSON.parse(localStorage.classificacao_obra) : [{ id_imdb:"tt0366551", id_utilizador: 1, pontuacao: 4 }],
+    classificacao_quiz: localStorage.classificacao_quiz ? JSON.parse(localStorage.classificacao_quiz) : [],
     comentarios_obra: localStorage.comentarios_obra ? JSON.parse(localStorage.comentarios_obra) : [{ id_comentario: 0, id_imdb: "tt0366551", id_utilizador: 1, comentario: "Bom filme!", data: "2022-01-20T18:06:43.231Z" }],
+    comentarios_quiz: localStorage.comentarios_quiz ? JSON.parse(localStorage.comentarios_quiz) : [],
     cur_api: 0,
     api_keys: [],
     quant_calls: 0,
+    quiz: localStorage.quiz ? JSON.parse(localStorage.quiz) : dataQuiz,
     premios:localStorage.premios?JSON.parse(localStorage.premios) : dataPremios,
     premios_utilizador:localStorage.premios_utilizador?JSON.parse(localStorage.premios_utilizador) : dataPremioUtilizador,
   },
@@ -42,15 +46,20 @@ export default new Vuex.Store({
     getTitleLikes: (state) => (id) => state.obras_gosto.filter(titulo => titulo.id_utilizador == id).map(titulo => titulo.id_imdb),
     getTitlesSeenByUser: (state) => (id) => state.vistos.filter(titulo => titulo.id_utilizador == id).map(visto => visto.id_imdb),
     getTitleComments: (state) => (id_imdb) => state.comentarios_obra.filter(comentario => comentario.id_imdb == id_imdb),
-    getNextAvailableCommentID: (state) => state.comentarios_obra.length>0 ? state.comentarios_obra[state.comentarios_obra.length - 1].id_comentario + 1 : 0,
+    getQuizComments: (state) => (id_quiz) => state.comentarios_quiz.filter(comentario => comentario.id_quiz == id_quiz),
+    getNextAvailableTitleCommentID: (state) => state.comentarios_obra.length > 0 ? state.comentarios_obra[state.comentarios_obra.length - 1].id_comentario + 1 : 0,
+    getNextAvailableQuizCommentID: (state) => state.comentarios_quiz.length > 0 ? state.comentarios_quiz[state.comentarios_quiz.length - 1].id_comentario + 1 : 0,
     getUserTitleRating: (state) => (id, id_imdb) => state.classificacao_obra.find(classificacao => classificacao.id_utilizador == id && classificacao.id_imdb == id_imdb),
+    getUserQuizRating: (state) => (id, id_quiz) => state.classificacao_quiz.find(classificacao => classificacao.id_utilizador == id && classificacao.id_quiz == id_quiz),
     getAllViewsByTitle: (state) => state.obra.map(title => { return({ id_imdb: title.id_imdb, visualizacoes: state.vistos.filter(visto => visto.id_imdb == title.id_imdb).length }) }),
     getTitleMovizzRating: (state) => (id) => parseFloat(parseFloat(state.classificacao_obra.filter(rating => rating.id_imdb == id).map(rating => rating.pontuacao).reduce((accum, curr) => accum + curr, 0)) / parseFloat(state.classificacao_obra.filter(rating => rating.id_imdb == id).length || 1)).toFixed(1),
+    getQuizRating: (state) => (id) => parseFloat(parseFloat(state.classificacao_quiz.filter(rating => rating.id_quiz == id).map(rating => rating.pontuacao).reduce((accum, curr) => accum + curr, 0)) / parseFloat(state.classificacao_quiz.filter(rating => rating.id_quiz == id).length || 1)).toFixed(1),
     getAllPrizes: (state) => state.premios,
     getAllPremiosUtilizador: (state) => state.premios_utilizador,
     getPremioInfo:(state)=>(id)=>state.premios.find(premio => premio.id_premio == id),
     getAllCommentsLoggedUser: (state) =>(id)=> state.comentarios_obra.filter(comentario=>comentario.id_utilizador==id),
-    getAllRatingsLoggedUser: (state) =>(id)=> state.classificacao_obra.filter(classificacao=>classificacao.id_utilizador==id)
+    getAllRatingsLoggedUser: (state) =>(id)=> state.classificacao_obra.filter(classificacao=>classificacao.id_utilizador==id),
+    getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id)
   },
   actions:{
     // async loadMovies(context) {
@@ -288,11 +297,15 @@ export default new Vuex.Store({
       state.vistos.push(payload);
       localStorage.vistos = JSON.stringify(state.vistos);
     },
-    SET_NEW_COMMENT(state,payload){
+    SET_NEW_TITLE_COMMENT(state, payload){
       state.comentarios_obra.push(payload);
       localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
     },
-    SET_NEW_RATE(state,payload){
+    SET_NEW_QUIZ_COMMENT(state, payload){
+      state.comentarios_quiz.push(payload);
+      localStorage.comentarios_quiz = JSON.stringify(state.comentarios_quiz);
+    },
+    SET_NEW_TITLE_RATING(state,payload){
       const idx=state.classificacao_obra.findIndex(rate=>rate.id_utilizador==payload.id_utilizador && rate.id_imdb==payload.id_imdb)
       if (idx == -1){
          state.classificacao_obra.push(payload);
@@ -304,6 +317,22 @@ export default new Vuex.Store({
       localStorage.classificacao_obra = JSON.stringify(state.classificacao_obra);
       
     },
+    SET_NEW_QUIZ_RATING(state,payload){
+      const idx=state.classificacao_quiz.findIndex(rate=>rate.id_utilizador==payload.id_utilizador && rate.id_quiz==payload.id_quiz)
+      if (idx == -1){
+         state.classificacao_quiz.push(payload);
+      } else {
+         state.classificacao_quiz[idx].id_quiz=payload.id_quiz;
+         state.classificacao_quiz[idx].id_utilizador=payload.id_utilizador;
+         state.classificacao_quiz[idx].pontuacao=payload.pontuacao;
+      }
+      localStorage.classificacao_quiz = JSON.stringify(state.classificacao_quiz);
+      
+    },
+    REMOVE_QUIZ_RATING(state, payload){
+      state.classificacao_quiz = state.classificacao_quiz.filter(rate=>(rate.id_quiz != payload && rate.id_utilizador==state.loggedUser.id) || rate.id_utilizador != state.loggedUser.id);
+      localStorage.classificacao_quiz = JSON.stringify(state.classificacao_quiz);
+    },
     REMOVE_HAS_SEEN(state,payload){
       state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
       localStorage.vistos = JSON.stringify(state.vistos);
@@ -312,18 +341,52 @@ export default new Vuex.Store({
       state.obras_gosto= state.obras_gosto.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
       localStorage.obras_gosto = JSON.stringify(state.obras_gosto);
     },
-    REMOVE_RATE(state,payload){
+    REMOVE_TITLE_RATING(state,payload){
       state.classificacao_obra= state.classificacao_obra.filter(rate=>(rate.id_imdb!=payload && rate.id_utilizador==state.loggedUser.id) || rate.id_utilizador!=state.loggedUser.id);
       localStorage.classificacao_obra = JSON.stringify(state.classificacao_obra);
     },
-    REMOVE_COMMENT(state,payload){
+    REMOVE_TITLE_COMMENT(state,payload){
       state.comentarios_obra = state.comentarios_obra.filter(comment=>(comment.id_comentario!=payload && comment.id_utilizador==state.loggedUser.id) || comment.id_utilizador!=state.loggedUser.id);
       localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
+    },
+    REMOVE_QUIZ_COMMENT(state,payload){
+      state.comentarios_quiz = state.comentarios_quiz.filter(comment=>(comment.id_comentario != payload && comment.id_utilizador == state.loggedUser.id) || comment.id_utilizador != state.loggedUser.id);
+      localStorage.comentarios_quiz = JSON.stringify(state.comentarios_quiz);
     },
     SET_NEW_BUY(state,payload){
       state.premios_utilizador.push({id_utilizador:payload.id_utilizador, id_premio: payload.id_premio, data: payload.data});
       localStorage.premios_utilizador = JSON.stringify(state.premios_utilizador);
       state.loggedUser.pontos-=payload.valor;
+      localStorage.loggedUser = JSON.stringify(state.loggedUser);
+    },
+    SET_QUIZ_ATTEMPT(state, payload) {
+      state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].played.push(payload);
+      localStorage.users = JSON.stringify(state.users);
+      state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
+      localStorage.loggedUser = JSON.stringify(state.loggedUser);
+    },
+    UPDATE_QUIZ_ATTEMPT(state, payload) {
+      state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].played[state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].played.length - 1] = payload;
+      localStorage.users = JSON.stringify(state.users);
+      state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
+      localStorage.loggedUser = JSON.stringify(state.loggedUser);
+    },
+    UPDATE_USER_POINTS(state, payload) {
+      state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].pontos += payload;
+      localStorage.users = JSON.stringify(state.users);
+      state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
+      localStorage.loggedUser = JSON.stringify(state.loggedUser);
+    },
+    UPDATE_USER_XP(state, payload) {
+      state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].xp += payload;
+      localStorage.users = JSON.stringify(state.users);
+      state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
+      localStorage.loggedUser = JSON.stringify(state.loggedUser);
+    },
+    UPDATE_USER_LEVEL(state) {
+      state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].nivel = parseInt(state.users[state.users.findIndex(user => user.id == state.loggedUser.id)].nivel) + 1;
+      localStorage.users = JSON.stringify(state.users);
+      state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
       localStorage.loggedUser = JSON.stringify(state.loggedUser);
     }
   }

@@ -52,8 +52,8 @@
                   <div
                     style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
                     <div
-                      :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp * 100) / ((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150)).toFixed(2) + '%' }"
-                      style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;">
+                      style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;"
+                      :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp - (this.getAllUsers[$route.params.id].nivel * 150)) * 100) / (((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150) - (this.getAllUsers[$route.params.id].nivel * 150)).toFixed(2) + '%' }">
                     </div>
                   </div>
                   <div class="d-flex justify-content-between">
@@ -453,7 +453,7 @@
                 <div
                   style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
                   <div
-                    :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp * 100) / ((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150)).toFixed(2) + '%' }"
+                    :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp - (this.getAllUsers[$route.params.id].nivel * 150)) * 100) / (((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150) - (this.getAllUsers[$route.params.id].nivel * 150)).toFixed(2) + '%' }"
                     style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;">
                   </div>
                 </div>
@@ -692,13 +692,13 @@ export default {
     ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllPremiosUtilizador","getAllCommentsLoggedUser","getAllRatingsLoggedUser", "getPremioInfo"]),
   },
   mounted () {
-    console.log(this.getAllCommentsLoggedUser(this.getLoggedUser.id));
     this.edit_user.primeiro_nome = this.getLoggedUser.primeiro_nome;
     this.edit_user.ultimo_nome = this.getLoggedUser.ultimo_nome;
     this.edit_user.email = this.getLoggedUser.email;
     this.edit_user.password = this.getLoggedUser.password;
     this.edit_user.data_nascimento = this.getLoggedUser.data_nascimento;
     this.edit_user.avatar = this.getLoggedUser.avatar;
+    
     for (let i = 0; i < this.getTitleLikes(this.getLoggedUser.id).length; i++) {
       this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.getLoggedUser.id)[i]))
     }

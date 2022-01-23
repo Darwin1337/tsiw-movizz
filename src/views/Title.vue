@@ -265,7 +265,7 @@ export default {
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableCommentID", "getUserTitleRating", "getTitleMovizzRating"]),
+      ...mapGetters(["getTitleInfo", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableTitleCommentID", "getUserTitleRating", "getTitleMovizzRating"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.title.banner})`;
@@ -282,7 +282,7 @@ export default {
     this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);
   },
   methods: {
-    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_COMMENT","SET_NEW_RATE","REMOVE_RATE","REMOVE_COMMENT"]),
+    ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_TITLE_COMMENT","SET_NEW_TITLE_RATING","REMOVE_TITLE_RATING","REMOVE_TITLE_COMMENT"]),
     removeComment(id) {
       this.$swal({
         title: 'Warning!',
@@ -293,7 +293,7 @@ export default {
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.REMOVE_COMMENT(id);
+          this.REMOVE_TITLE_COMMENT(id);
           this.comments= this.comments.filter(comment=>comment.id_comentario!=id);
         }
       });
@@ -302,15 +302,15 @@ export default {
     addNewComment() {
       const DATA_COMMENT = new Date();
       this.comments.push({
-        id_comentario: this.getNextAvailableCommentID,
+        id_comentario: this.getNextAvailableTitleCommentID,
         id_imdb: this.$route.params.imdbid,
         id_utilizador: this.getLoggedUser.id,
         comentario: this.comentario,
         data: DATA_COMMENT,
         spoiler:this.spoiler
       });
-      this.SET_NEW_COMMENT({
-        id_comentario: this.getNextAvailableCommentID,
+      this.SET_NEW_TITLE_COMMENT({
+        id_comentario: this.getNextAvailableTitleCommentID,
         id_imdb: this.$route.params.imdbid,
         id_utilizador: this.getLoggedUser.id,
         comentario: this.comentario,
@@ -326,14 +326,14 @@ export default {
     changeRating(n, event_type){
       this.fillStars(n, event_type)
       if(this.savedStars > 0){
-        this.SET_NEW_RATE({
+        this.SET_NEW_TITLE_RATING({
           id_imdb: this.$route.params.imdbid,
           id_utilizador: this.getLoggedUser.id,
           pontuacao: this.savedStars
         });
       }
       else {
-        this.REMOVE_RATE(this.$route.params.imdbid);
+        this.REMOVE_TITLE_RATING(this.$route.params.imdbid);
       }
       this.userRatings.pontuacao = this.savedStars;
       this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);

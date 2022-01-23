@@ -1,0 +1,669 @@
+[
+	{
+	   "id_quiz":0,
+	   "tipo":{
+		  "descricao":"curto",
+		  "num_perguntas":5
+	   },
+	   "dificuldade":{
+		  "descricao":"normal",
+		  "pontos_pergunta":10
+	   },
+	   "especifico": true,
+	   "titulo":"Prison Break",
+	   "descricao":"Contrary to the series, there's no escaping this quiz.",
+	   "poster":"https://imdb-api.com/images/original/MV5BMTg3NTkwNzAxOF5BMl5BanBnXkFtZTcwMjM1NjI5MQ@@._V1_Ratio0.6833_AL_.jpg",
+	   "banner":"https://imdb-api.com/posters/original/7w165QdHmJuTHSQwEyJDBDpuDT7.jpg",
+	   "perguntas":[
+		  {
+			 "id_pergunta":0,
+			 "id_imdb":"tt0455275",
+			 "texto":"Who, from The Fox River 8, did Mahome execute?",
+			 "tipo_pergunta":"texto",
+			 "url_conteudo":"https://i.ytimg.com/vi/XBmqpWsUI18/maxresdefault.jpg",
+			 "opcao_1":"John 'Abruzzi' Abruzzi",
+			 "opcao_2":"Fernando 'Sucre' Sucre",
+			 "opcao_3":"David 'Tweener' Apolskis",
+			 "opcao_4":"Charles 'Haywire' Patoshik", 
+			 "opcao_correta":3
+		  },
+		  {
+			 "id_pergunta":1,
+			 "id_imdb":"tt0455275",
+			 "texto":"Who was the first inmate out of the infirmary window on the night of the escape?",
+			 "tipo_pergunta":"texto",
+			 "url_conteudo":"https://i.ytimg.com/vi/aGdfn0yByx8/maxresdefault.jpg",
+			 "opcao_1":"Lincoln",
+			 "opcao_2":"Schofield",
+			 "opcao_3":"C-Note",
+			 "opcao_4":"Sucre",
+			 "opcao_correta":1
+		  },
+		  {
+			 "id_pergunta":2,
+			 "id_imdb":"tt0455275",
+			 "texto":"What was the name of Alex Mahone's son?",
+			 "tipo_pergunta":"texto",
+			 "url_conteudo":"https://static.wikia.nocookie.net/prisonbreak/images/b/b0/Vlcsnap-97057.jpg",
+			 "opcao_1":"Cameron",
+			 "opcao_2":"Caleb",
+			 "opcao_3":"Cairon",
+			 "opcao_4":"Colin",
+			 "opcao_correta":1
+		  },
+		  {
+			 "id_pergunta":3,
+			 "id_imdb":"tt0455275",
+			 "texto":"Where is Sona located?",
+			 "tipo_pergunta":"texto",
+			 "url_conteudo":"https://upload.wikimedia.org/wikipedia/commons/1/1b/Aerial_photograph_of_Penitenciar%C3%ADa_Federal_de_Sona.png",
+			 "opcao_1":"Egypt",
+			 "opcao_2":"Mexico",
+			 "opcao_3":"Panama",
+			 "opcao_4":"Colombia",
+			 "opcao_correta":3
+		  },
+		  {
+			 "id_pergunta":4,
+			 "id_imdb":"tt0455275",
+			 "texto":"Who is Sucre engaged to?",
+			 "tipo_pergunta":"texto",
+			 "url_conteudo":"https://i0.wp.com/static.fmovies.cab/images/cele/V24u1HQTX65hnjeoN1lw3MbG4TGB0Jt-Qh77FCmJOVScvik03hAGUhAsZ7l7kynWsDlLJMS6yxd2HbCP4lW0UhCfiPFi179tbfiKPzgOuNU.jpg?",
+			 "opcao_1":"Sarah",
+			 "opcao_2":"Sheba",
+			 "opcao_3":"Sofia",
+			 "opcao_4":"Maricruz",
+			 "opcao_correta":4
+		  }
+	   ]
+	},
+	{
+		"id_quiz":1,
+		"tipo":{
+		   "descricao":"longo",
+		   "num_perguntas":10
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico": false,
+		"titulo":"Marvel Cinematic Universe",
+		"descricao":"Are you a true Avenger? Let's see about that...",
+		"poster":"https://images.theposterdb.com/prod/public/images/meta/collections/optimized/1993/poster.webp",
+		"banner":"https://m.media-amazon.com/images/I/61Uol30H+3L._AC_SL1000_.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt0458339",
+			  "texto":"Who is known as 'the first avenger'?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://quadrinheiros.files.wordpress.com/2019/05/vingadores-mcu-quadrinheiros.jpg",
+			  "opcao_1":"Captain America",
+			  "opcao_2":"Captain Marvel",
+			  "opcao_3":"Iron Man",
+			  "opcao_4":"Black Widow",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt0371746",
+			  "texto":"Who helped Tony Stark to build his first suit in 'Iron Man'?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://cdn.vox-cdn.com/thumbor/iIh5hjpIUYT_Kp4Nnev1THFwv94=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16182713/mark1.jpg",
+			  "opcao_1":"Obadiah Stane",
+			  "opcao_2":"Jarvis",
+			  "opcao_3":"Ho Yinsen",
+			  "opcao_4":"Pepper Potts?",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt0800080",
+			  "texto":"How is Betty Banner related to General Ross? She's his...",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.einerd.com.br/wp-content/uploads/2020/06/o-incrivel-hulk-e1592569647243.jpeg",
+			  "opcao_1":"Cousin",
+			  "opcao_2":"Sister",
+			  "opcao_3":"Wife",
+			  "opcao_4":"Daughter",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt4154796",
+			  "texto":"What video game is Thor addicted to in 'Avengers: Endgame'?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static1.srcdn.com/wordpress/wp-content/uploads/2020/04/Chris-Hemsworth-as-Fat-Thor-in-Avengers-Endgame-1.jpg",
+			  "opcao_1":"Fortnite",
+			  "opcao_2":"League of Legends",
+			  "opcao_3":"World of Warcraft",
+			  "opcao_4":"Call of Duty",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt3498820",
+			  "texto":"In which film does Black Panther first appear?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://m0.joe.ie/wp-content/uploads/2020/09/08092612/boseman.0.jpg",
+			  "opcao_1":"Black Panther",
+			  "opcao_2":"Captain America: Civil War",
+			  "opcao_3":"Captain America: The Winter Soldier",
+			  "opcao_4":"Black Widow",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":5,
+			  "id_imdb":"tt0800369",
+			  "texto":"What is the name of Kat Dennings’ character in Thor and in WandaVision?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://m0.joe.ie/wp-content/uploads/2020/09/08092610/maxresdefault-16.jpg",
+			  "opcao_1":"Jane Foster",
+			  "opcao_2":"Darcy Lewis",
+			  "opcao_3":"Peggy Carter",
+			  "opcao_4":"Sharon Carter",
+			  "opcao_correta":2
+		   },
+		   {
+				"id_pergunta":6,
+				"id_imdb":"tt4154664",
+				"texto":"In Captain Marvel, what kind of alien is Goose?",
+				"tipo_pergunta":"texto",
+				"url_conteudo":"https://m0.joe.ie/wp-content/uploads/2020/09/08092611/MV5BNzRlM2IxMmMtYjgwMy00YWE0LTkwMDItNWI4MWY4OGNjN2VmXkEyXkFqcGdeQXVyNjg2NjQwMDQ_._V1_SY1000_SX1500_AL_.0.jpg",
+				"opcao_1":"Flerken",
+				"opcao_2":"Chitauri",
+				"opcao_3":"Sakaaran",
+				"opcao_4":"Krylorian",
+				"opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":7,
+			  "id_imdb":"tt5095030",
+			  "texto":"Where does Ant-Man get stuck at the end of Ant-Man and the Wasp?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.cnet.com/a/img/wPc43xZafH0uzBejutZOHfZeAxY=/940x0/2018/05/01/c9855429-01f5-4190-b917-567b5e8b4385/ant-man-wasp-image.jpg",
+			  "opcao_1":"Wakanda",
+			  "opcao_2":"In Space",
+			  "opcao_3":"The Quantum Realm",
+			  "opcao_4":"Earth 616",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":8,
+			  "id_imdb":"tt2395427",
+			  "texto":"What is the name of Tony Stark's AI system, since 'Avengers: Age of Ultron'?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://resizing.flixster.com/0M_STnvROSsofAp1XbBL1OV7wxA=/740x380/v2/https://statcdn.fandango.com/MPX/image/NBCU_Fandango/230/687/AvengersAgeofUltron_Trailer1.jpg",
+			  "opcao_1":"F.R.I.D.A.Y",
+			  "opcao_2":"J.A.R.V.I.S",
+			  "opcao_3":"A.L.F.R.E.D",
+			  "opcao_4":"H.O.W.A.R.D",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":9,
+			  "id_imdb":"tt1228705",
+			  "texto":"Which of these people has a cameo in Iron Man 2?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://m0.joe.ie/wp-content/uploads/2020/09/08092611/Screen_Shot_2019_12_20_at_2.19.38_PM.0.jpeg",
+			  "opcao_1":"Joe Russo",
+			  "opcao_2":"Bill Gates",
+			  "opcao_3":"Mark Zuckerberg",
+			  "opcao_4":"Elon Musk",
+			  "opcao_correta":4
+		   }
+ 
+		]
+	},
+	{
+		"id_quiz":2,
+		"tipo":{
+		   "descricao":"longo",
+		   "num_perguntas":10
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Originals Quiz",
+		"descricao":"There are Mikaelsons everywhere, are you a member of this ancient vampire family?",
+		"poster":"https://espalhafactos.com/wp-content/uploads/2018/07/118267033_1300x1733.jpg",
+		"banner":"https://streamingsbrasil.com/wp-content/uploads/2020/05/the-originals.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt2632424",
+			  "texto":"Who turned Klaus into a Vampire?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://2.bp.blogspot.com/-Vl5gNw3shSg/Ww1aO13y4uI/AAAAAAAAbmA/1j9ezZVOQ0wGy8RnX2ap2963bwZoXS5DACLcBGAs/s1600/5817b56966fbf.png",
+			  "opcao_1":"The Ancestors",
+			  "opcao_2":"Hope",
+			  "opcao_3":"Esther",
+			  "opcao_4":"Tyler",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt2632424",
+			  "texto":"What does Klaus call Hayley?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://imgix.bustle.com/rehost/2016/9/13/8031cb70-36c7-4981-a2e6-81ab8813a963.jpg?w=1200&h=630&fit=crop&crop=faces&fm=jpg",
+			  "opcao_1":"Little Hybrid",
+			  "opcao_2":"Little Vampire",
+			  "opcao_3":"Little Witch",
+			  "opcao_4":"Little Wolf",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt2632424",
+			  "texto":"What Was Hayley's Husband's Name?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://criticalhits.com.br/wp-content/uploads/2021/07/hayley-marshall-the-originals.jpg",
+			  "opcao_1":"Jackson",
+			  "opcao_2":"Elijah",
+			  "opcao_3":"Tristan",
+			  "opcao_4":"Aiden",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt2632424",
+			  "texto":"Who is the oldest of the Mikaelson siblings?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.tricurioso.com/wp-content/uploads/2018/09/fatos-curiosos-sobre-a-serie-the-originals.jpg",
+			  "opcao_1":"Freya",
+			  "opcao_2":"Elijah",
+			  "opcao_3":"Finn",
+			  "opcao_4":"Rebekah",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt2632424",
+			  "texto":"Why did Esther turn her kids into vampires?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://pm1.narvii.com/6451/4710a557f331b26593ed1f9c809a2452d030419c_hq.jpg",
+			  "opcao_1":"She didn't turn them",
+			  "opcao_2":"To make them live forever",
+			  "opcao_3":"It was a spell that went wrong",
+			  "opcao_4":"To protect them",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":5,
+			  "id_imdb":"tt2632424",
+			  "texto":" Who took Hayley’s daughter Hope right after her birth in order to protect her?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://br.web.img3.acsta.net/newsv7/16/07/29/16/55/412490.jpg",
+			  "opcao_1":"Elijah",
+			  "opcao_2":"Rebekah",
+			  "opcao_3":"Freya",
+			  "opcao_4":"Esther",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":6,
+			  "id_imdb":"tt2632424",
+			  "texto":"What family of werewolves did Hayley belong to?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://bladeofthesashurai.files.wordpress.com/2013/10/originals-04.jpg",
+			  "opcao_1":"Landry Family",
+			  "opcao_2":"Unger Family",
+			  "opcao_3":"Labonair Family",
+			  "opcao_4":"Dahlia And Esther’s Family",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":7,
+			  "id_imdb":"tt2632424",
+			  "texto":"Hope is a hybrid of what species?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://br.web.img3.acsta.net/newsv7/17/07/17/21/32/119339.jpg",
+			  "opcao_1":"Vampire-Werewolf",
+			  "opcao_2":"Vampire-Witch",
+			  "opcao_3":"Werewolf-Witch-Vampire",
+			  "opcao_4":"Witch-Werewolf",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":8,
+			  "id_imdb":"tt2632424",
+			  "texto":"Which actress plays the role of Rebekah Mikaelson?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://criticalhits.com.br/wp-content/uploads/2020/09/prove-sabe-tudo-rebekah-mikaelson-the-originals.jpg",
+			  "opcao_1":"Phoebe Tonkin",
+			  "opcao_2":"Claire Holt",
+			  "opcao_3":"Nina Dobrev",
+			  "opcao_4":"Yasmine Al-Bustami",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":9,
+			  "id_imdb":"tt2632424",
+			  "texto":"What is the weapon that can kill an Original?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://tvrecappersanonymous.files.wordpress.com/2012/02/vlcsnap-2012-02-03-07h01m34s91.png?w=584",
+			  "opcao_1":"White Oak Stake",
+			  "opcao_2":"Werewolf's Blood",
+			  "opcao_3":"Silver",
+			  "opcao_4":"Gold Dagger",
+			  "opcao_correta":1
+		   }
+		]
+	},
+	{
+		"id_quiz":3,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"dificil",
+		   "pontos_pergunta":15
+		},
+		"especifico":true,
+		"titulo":"The Walking Dead",
+		"descricao":"Would you survive a zombie apocalypse?",
+		"poster":"https://upload.wikimedia.org/wikipedia/pt/thumb/5/5d/TWD_11T_Poster.jpg/250px-TWD_11T_Poster.jpg",
+		"banner":"https://br.web.img3.acsta.net/newsv7/21/08/29/04/48/1386318.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt1520211",
+			  "texto":"What Year Did The Walking Dead Premiere?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sportshub.cbsistatic.com/i/2021/04/09/102a6c85-386f-4846-97ae-b98aa1b1d1b9/the-walking-dead-season-1-1234477.jpg",
+			  "opcao_1":"2011",
+			  "opcao_2":"2010",
+			  "opcao_3":"2009",
+			  "opcao_4":"2008",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt1520211",
+			  "texto":"T-Dog Sacrificed Himself To Save... ?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.hollywoodreporter.com/wp-content/uploads/2012/09/Walking_Dead_Season_3_T_Dog_302_a_h.jpg",
+			  "opcao_1":"Carol",
+			  "opcao_2":"Lori",
+			  "opcao_3":"Carl",
+			  "opcao_4":"Beth",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt1520211",
+			  "texto":"The Image Of What Was On The Window Of The Car That Abducted Beth?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://imagoi.com/wp-content/uploads/2020/03/hershel-beth-e-carl-the-walking-dead.jpg",
+			  "opcao_1":"A heart",
+			  "opcao_2":"A chef's hat",
+			  "opcao_3":"A cross",
+			  "opcao_4":"A baseball bat",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt1520211",
+			  "texto":"When Rick Goes Nuts In Alexandria Towards The End Of Season 5, Who Knocks Him Out?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/walkingdead/images/7/7f/Alexandria_S9.png",
+			  "opcao_1":"Abraham",
+			  "opcao_2":"Michonne",
+			  "opcao_3":"Daryl",
+			  "opcao_4":"Maggie",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt1520211",
+			  "texto":"Which Of These Was NOT Decapitated By The Whisperers?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"http://images.amcnetworks.com/amc.com/wp-content/uploads/2019/04/the-walking-dead-episode-916-beta-hurst-alpha-morton-1200x707.jpg",
+			  "opcao_1":"Enid",
+			  "opcao_2":"Henry",
+			  "opcao_3":"Tara",
+			  "opcao_4":"Rosita",
+			  "opcao_correta":4
+		   }
+		]
+	},
+	{
+		"id_quiz":4,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"dificil",
+		   "pontos_pergunta":15
+		},
+		"especifico":true,
+		"titulo":"Rick and Morty",
+		"descricao":"Boom! Big reveal! I turned myself into a quiz!",
+		"poster":"https://cdn.europosters.eu/image/1300/posters/rick-morty-portal-i86752.jpg",
+		"banner":"https://tm.ibxk.com.br//ms/images/highlights/000/043/919/41576.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt2861424",
+			  "texto":"Which Scientist In The Microverse Created Their Own Microverse?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://m.media-amazon.com/images/M/MV5BZWFmMzFkNzUtY2I2OC00YmU1LWEzZTctMDQ0MDUxMGRmNDQ3XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg",
+			  "opcao_1":"Cronenberg Rick",
+			  "opcao_2":"Donna Gueterman",
+			  "opcao_3":"King Flippy Nips",
+			  "opcao_4":"Zeep Xanflop",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt2861424",
+			  "texto":"In Never Ricking Morty, Who Voices The Story Lord?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/rickandmorty/images/5/50/S4e6_00082.png",
+			  "opcao_1":"Chris Meloni",
+			  "opcao_2":"Michael Cudlitz",
+			  "opcao_3":"Paul Giamatti",
+			  "opcao_4":"Ozzy Osbourne",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt2861424",
+			  "texto":"When The Cromulon Alien Appears Over Earth, What Does He Demand To Hear?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/rickandmorty/images/7/72/S2e5_Cromulon.png",
+			  "opcao_1":"A recital of Dirk Diggler’s final lines from Boogie Nights",
+			  "opcao_2":"An explanation as to why space is littered with garbage",
+			  "opcao_3":"An original song",
+			  "opcao_4":"An apology from Rick for the actions of Evil Rick",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt2861424",
+			  "texto":"What Is The Dating App That Glootie Develops?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/rickandmorty/images/3/30/Glootie.png",
+			  "opcao_1":"Lovefinderrz",
+			  "opcao_2":"Hookuppz",
+			  "opcao_3":"Bootycallz",
+			  "opcao_4":"Sweethearttz",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt2861424",
+			  "texto":"Why Did Rick Turn Himself Into Pickle Rick?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://cdn.mos.cms.futurecdn.net/4v4rmrxbbRs2k8rw3zegpE.jpg",
+			  "opcao_1":"To avoid a family birthday",
+			  "opcao_2":"To avoid a family therapy session",
+			  "opcao_3":"To avoid a family wedding",
+			  "opcao_4":"To avoid a family funeral",
+			  "opcao_correta":2
+		   }
+		]
+	},
+	{
+		"id_quiz":5,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"dificil",
+		   "pontos_pergunta":15
+		},
+		"especifico":true,
+		"titulo":"Superbad",
+		"descricao":"Are you McLovin's brother?",
+		"poster":"https://static.wikia.nocookie.net/dublagempedia/images/c/cf/Superbad.jpg",
+		"banner":"http://s2.glbimg.com/eXhINjrE3FA8sxs3aFhctg6DOwE=/smart/e.glbimg.com/og/ed/f/original/2017/08/18/superbad.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt0829482",
+			  "texto":"What Is McLovin's Real Name In The Film?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sm.ign.com/ign_pt/blogroll/s/seth-rogen/seth-rogen-responds-to-iowa-teen-arrested-with-superbad-mclo_52fs.jpg",
+			  "opcao_1":"Greg",
+			  "opcao_2":"Fogell",
+			  "opcao_3":"Mark",
+			  "opcao_4":"Francis",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt0829482",
+			  "texto":"What Song Is Evan Forced To Sing During The House Party?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Evan.Superbad.webp",
+			  "opcao_1":"These Eyes",
+			  "opcao_2":"Total Eclipse Of The Heart",
+			  "opcao_3":"Here I Go Again",
+			  "opcao_4":"Too Young To Fall In Love",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt0829482",
+			  "texto":"What Is The Name Of The Police Officer's Who Arrest McLovin'?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/09/27/12/superbad.jpg",
+			  "opcao_1":"Slater & Michaels",
+			  "opcao_2":"Mitchell & Kirkstein",
+			  "opcao_3":"Wayne & Grayson",
+			  "opcao_4":"Hader & Rogen",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt0829482",
+			  "texto":"What Class Is Seth Paired With Jules In?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://i.pinimg.com/736x/49/92/bc/4992bc7696ef7a3a8933a7b4b255688e--emma-stone-gonna.jpg",
+			  "opcao_1":"English",
+			  "opcao_2":"Wood Work",
+			  "opcao_3":"Maths",
+			  "opcao_4":"Home Economics",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt0829482",
+			  "texto":"What Does Seth Use To Hold The Alcohol For The Party?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static2.srcdn.com/wordpress/wp-content/uploads/2020/01/Jonah-Hill-in-Superbad.jpg",
+			  "opcao_1":"Buckets",
+			  "opcao_2":"Detergent Bottles",
+			  "opcao_3":"Water Bottles",
+			  "opcao_4":"Flower Vase",
+			  "opcao_correta":2
+		   }
+		]
+	},
+	{
+		"id_quiz":6,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Stranger Things",
+		"descricao":"Think you know about the upside down? Think again.",
+		"poster":"https://cdn.europosters.eu/image/1300/posters/stranger-things-group-i99512.jpg",
+		"banner":"https://observatoriodocinema.uol.com.br/wp-content/uploads/2020/11/1138205.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt4574334",
+			  "texto":"What Was The Name Of The Female DOE Agent That Worked Alongside Brenner?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/9/9f/DOE.png",
+			  "opcao_1":"Rachel Hunt",
+			  "opcao_2":"Agnes Holland",
+			  "opcao_3":"Connie Frazier",
+			  "opcao_4":"Terry Ives",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt4574334",
+			  "texto":"Where Does Dustin's Girlfriend Suzie Live?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://hips.hearstapps.com/hmg-prod/images/stranger-things-3-who-is-suzie-1562784495.png",
+			  "opcao_1":"Detroit, Michigan",
+			  "opcao_2":"Phoenix, Arizona",
+			  "opcao_3":"Austin, Texas",
+			  "opcao_4":"Salt Lake City, Utah",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt4574334",
+			  "texto":"Hawkins Is A Fictional Town In Which State?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/2/2a/Hawkins.png",
+			  "opcao_1":"Massachusetts",
+			  "opcao_2":"Texas",
+			  "opcao_3":"California",
+			  "opcao_4":"Indiana",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt4574334",
+			  "texto":"The First Episode Of Season 2 Is Named After Which '80s Movie?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sm.ign.com/ign_pt/news/s/stranger-t/stranger-things-season-2-ratings-revealed_rqch.jpg",
+			  "opcao_1":"Blade Runner",
+			  "opcao_2":"Mad Max",
+			  "opcao_3":"The Terminator",
+			  "opcao_4":"Total Recall",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt4574334",
+			  "texto":"What's The Byers' Dog's Name?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://bloody-disgusting.com/wp-content/uploads/2018/07/stranger-things-dog.jpeg",
+			  "opcao_1":"Max",
+			  "opcao_2":"Wolfie",
+			  "opcao_3":"Chester",
+			  "opcao_4":"William",
+			  "opcao_correta":3
+		   }
+		]
+	}
+ ]

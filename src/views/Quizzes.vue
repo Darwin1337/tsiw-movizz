@@ -57,7 +57,7 @@
                 </div>
                 <div class="tile__details p-2">
                   <p class="quiz-card-title">Quiz about Prison Break</p>
-                  <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: '1' } })">▶</p>
+                  <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: '0' } })">▶</p>
                   <p class="quiz-card-rating">4.7</p>
                 </div>
               </div>
@@ -121,7 +121,7 @@
             </div>
             <div class="tile__details-custom p-2 text-center">
               <p class="quiz-card-title">Quiz about Marvel Universe</p>
-              <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: '1' } })">▶</p>
+              <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: '0' } })">▶</p>
               <p class="quiz-card-rating">5.0</p>
             </div>
           </div>
