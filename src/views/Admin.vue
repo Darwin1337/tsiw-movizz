@@ -853,12 +853,12 @@
           <button class="addNewQuizButton" data-bs-toggle="modal" data-bs-target="#addPrizeModal">Add new prize</button>
         </div>
         <div class="row">
-          <div class="col-xl-2 col-lg-3 col-md-4 col-12 mt-3 quizImg" v-for="i in 25" :key="i">
-            <img class="w-100" style="border-radius:5px 5px 0px 0px; max-height:180px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRHKhKhf5FHipKrDPy25oKSuW8RAEEq6mQ980Uu7QsQ03rJPudJLdK4cBUFbxjoCz43KE&usqp=CAU" alt="">
+          <div class="col-xl-2 col-lg-3 col-md-4 col-12 mt-3 quizImg" v-for="(prize,i) in getAllPrizes" :key="i">
+            <img class="w-100" style="border-radius:5px 5px 0px 0px; max-height:180px;" :src="prize.img" alt="">
             <div class="d-flex flex-column" style="padding:10px; background-color:var(--azul-escuro2); border-radius:0px 0px 5px 5px;">
-              <p class="m-0 text-center">Cinemas NOS ticket</p>
-              <button class="editQuizButtonPrizes" data-bs-toggle="modal" data-bs-target="#editPrizeModal">Edit</button>
-              <button class="removeQuizButton" data-bs-toggle="modal" data-bs-target="#removePrizeModal">Remove</button>
+              <p class="m-0 text-center">{{prize.nome}}</p>
+              <button class="editQuizButtonPrizes" data-bs-toggle="modal" data-bs-target="#editPrizeModal" @click="listInfo(prize.id_premio)" >Edit</button>
+              <button class="removeQuizButton" @click="removePrize(prize.id_premio)">Remove</button>
             </div>
           </div>
         </div>
@@ -873,7 +873,7 @@
                       <p>Are you sure you want to remove this prize?</p>
                     </div>
                     <div class="ms-auto">
-                      <button type="button" class="btn green-btn me-2">Yes</button>
+                      <button type="button" class="btn green-btn me-2" >Yes</button>
                       <button type="button" class="btn red-btn" data-bs-dismiss="modal">No</button>
                     </div>
                   </div>
@@ -889,18 +889,18 @@
               <div class="modal-body m-0 gy-3">
                 <div class="d-flex h-100 flex-column justify-content-between">
                   <h5>New prize</h5>
-                  <form @submit.prevent="" id="addNewQuizModal">
+                  <form @submit.prevent="addNewPrize()" id="addNewQuizModal">
                     <p class="m-0 mt-3 colorOrange">General</p> 
                     <div class="mt-3">
-                      <input type="text" class="w-100" placeholder="Name" required>
+                      <input type="text" class="w-100" placeholder="Name" v-model="prizes.prizeName" required>
                     </div>
                     <div class="row mt-0 g-3">
                       <div class="col-xl-6">
-                        <input type="number" class="w-100" placeholder="Price" required>
+                        <input type="number" class="w-100" v-model="prizes.prizeCost" placeholder="Price" required>
                       </div>
                       <div class="col-xl-6">
                         <span>Image</span>
-                        <img style="width: 100%; max-height: 100px; object-fit: cover; object-position: center; border-radius: 5px; min-height: 100px;" src="../assets/images/imageNewQuiz.png">
+                        <img style="width: 100%; max-height: 100px; object-fit: cover; object-position: center; border-radius: 5px; min-height: 100px;" :src="prizes.prizeImg==''?require('../assets/images/imageNewQuiz.png'):prizes.prizeImg" >
                         <!-- Mostrar o ícone de remover apenas se não for a imagem default -->
                         <!-- ../assets/images/imageNewQuiz.png -->
                         <!-- <div style="position: relative;">
@@ -910,7 +910,7 @@
                       </div>
                     </div>
                     <div class="ms-auto mt-4 d-flex" style="gap: 15px;">
-                      <input class="addQuestionButton" type="submit" data-bs-dismiss="modal" value="Add prize">
+                      <input class="addQuestionButton" type="submit" value="Add prize">
                       <input class="close-btn" type="button" data-bs-dismiss="modal" value="Close"/>
                     </div>
                   </form>
@@ -927,7 +927,7 @@
                 <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
                   <label for="url-pic">URL for the picture:</label>
                   <div class="input-group">
-                    <input type="text" class="form-control bg-inputs" aria-label="URL" required placeholder="URL">
+                    <input type="text" class="form-control bg-inputs" aria-label="URL" required placeholder="URL" v-model="prizes.prizeImg">
                     <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
                   </div>
                   <div class="d-flex" style="gap: 15px;">
@@ -946,20 +946,20 @@
               <div class="modal-body m-0 gy-3">
                 <div class="d-flex h-100 flex-column justify-content-between">
                   <h5>Edit prize</h5>
-                  <form @submit.prevent="" id="addNewQuizModal">
+                  <form @submit.prevent="editPrize(editPrizes.prizeId)" id="addNewQuizModal">
                     <p class="m-0 mt-3 colorOrange">General</p> 
                     <div class="mt-3">
-                      <input type="text" class="w-100" value="1 Month Amazon Prime Video Subscription" required>
+                      <input type="text" class="w-100" v-model="editPrizes.prizeName" required>
                     </div>
                     <div class="row mt-0 g-3">
                       <div class="col-xl-6">
-                        <input type="number" class="w-100" value="5000" required>
+                        <input type="number" class="w-100" v-model="editPrizes.prizeCost" required>
                       </div>
                       <div class="col-xl-6">
                         <span>Image</span>
-                        <img style="width: 100%; max-height: 100px; object-fit: cover; object-position: center; border-radius: 5px; min-height: 100px;" src="https://m.media-amazon.com/images/G/01/digital/video/acquisition/amazon_video_light_on_dark.png">
+                        <img style="width: 100%; max-height: 100px; object-fit: cover; object-position: center; border-radius: 5px; min-height: 100px;" :src="editPrizes.prizeImg">
                         <div style="position: relative;">
-                          <span style="cursor: pointer"><i style="right: 10px;" class="fas fa-trash removeIcon"></i></span>
+                          <span style="cursor: pointer"><i style="right: 10px;" class="fas fa-trash removeIcon" @click="editPrizes.prizeImg='https://i.ibb.co/8PmJCqD/image-New-Quiz.png'"></i></span>
                         </div>
                         <button type="button" class="uploadButton mt-2" data-bs-target="#editPrizeUploadPicture" data-bs-toggle="modal">Upload</button>
                       </div>
@@ -982,7 +982,7 @@
                 <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
                   <label for="url-pic">URL for the picture:</label>
                   <div class="input-group">
-                    <input type="text" class="form-control bg-inputs" aria-label="URL" required value="https://static.globalnoticias.pt/storage/DN/2016/original/ng5677498.jpg">
+                    <input type="text" class="form-control bg-inputs" aria-label="URL" required v-model="editPrizes.prizeImg">
                     <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
                   </div>
                   <div class="d-flex" style="gap: 15px;">
@@ -1000,6 +1000,7 @@
 </template>
 
 <script>
+import { mapGetters,mapMutations } from "vuex";
   export default {
     data() {
       return {
@@ -1017,10 +1018,61 @@
         themes : ["Movie", "Series", "Actors", "Universes", "Anual", "Platform"],
         types:["Normal", "Long"],
         questionType:["Text", "Video", "Audio"],
-        filters:["All", "Blocked", "Not blocked"]
+        filters:["All", "Blocked", "Not blocked"],
+        prizes:{
+          prizeId:null,
+          prizeName:"",
+          prizeCost:null,
+          prizeImg:'',
+        },
+        editPrizes:{
+          prizeId:null,
+          prizeName:"",
+          prizeCost:null,
+          prizeImg:"",
+        },
       }
     },
-  
+    
+   
+    methods: {
+      ...mapMutations(["SET_NEW_QUIZ","REMOVE_QUIZ","UPDATE_QUIZ"]),
+      addNewPrize() {
+        if(this.prizes.prizeImg==""){
+          this.SET_NEW_QUIZ({id_premio:this.getAllPrizes.length, nome:this.prizes.prizeName, img:"https://i.ibb.co/8PmJCqD/image-New-Quiz.png", valor:this.prizes.prizeCost});
+        }
+        else{
+           this.SET_NEW_QUIZ({id_premio:this.getAllPrizes.length, nome:this.prizes.prizeName, img:this.prizes.prizeImg, valor:this.prizes.prizeCost});
+        }
+      },
+      removePrize(id){
+        this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this prize?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_QUIZ(id)
+        }
+      });
+        
+      },
+      listInfo(id){
+        this.editPrizes.prizeId=id,
+        this.editPrizes.prizeName=this.getPremioInfo(id).nome,
+        this.editPrizes.prizeCost=this.getPremioInfo(id).valor,
+        this.editPrizes.prizeImg=this.getPremioInfo(id).img
+      },
+      editPrize(id){
+        this.UPDATE_QUIZ({id_premio:id, nome:this.editPrizes.prizeName, valor: this.editPrizes.prizeCost, img: this.editPrizes.prizeImg})
+      }
+    },
+    computed: {
+      ...mapGetters(["getAllPrizes","getPremioInfo"]),
+    },
   }
 </script>
 

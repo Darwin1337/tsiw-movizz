@@ -388,6 +388,21 @@ export default new Vuex.Store({
       localStorage.users = JSON.stringify(state.users);
       state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
       localStorage.loggedUser = JSON.stringify(state.loggedUser);
+    },
+    SET_NEW_QUIZ(state,payload) {
+      state.premios.push(payload);
+      localStorage.premios = JSON.stringify(state.premios);
+    },
+    REMOVE_QUIZ(state,payload) {
+      state.premios = state.premios.filter(premio=>(premio.id_premio != payload));
+      localStorage.premios = JSON.stringify(state.premios);
+    },
+    UPDATE_QUIZ(state,payload) {
+      state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].id_premio = payload.id_premio;
+      state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].nome = payload.nome;
+      state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].img = payload.img;
+      state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].valor = payload.valor;
+      localStorage.premios = JSON.stringify(state.premios);
     }
   }
 });
