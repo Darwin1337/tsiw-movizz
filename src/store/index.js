@@ -59,7 +59,9 @@ export default new Vuex.Store({
     getPremioInfo:(state)=>(id)=>state.premios.find(premio => premio.id_premio == id),
     getAllCommentsLoggedUser: (state) =>(id)=> state.comentarios_obra.filter(comentario=>comentario.id_utilizador==id),
     getAllRatingsLoggedUser: (state) =>(id)=> state.classificacao_obra.filter(classificacao=>classificacao.id_utilizador==id),
-    getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id)
+    getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id),
+    getAllPlatforms:(state)=>state.plataformas,
+    getPlatformsById:(state)=>(id)=>state.plataformas.find(plat=>plat.id_plataforma==id),
   },
   actions:{
     // async loadMovies(context) {
@@ -403,6 +405,20 @@ export default new Vuex.Store({
       state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].img = payload.img;
       state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].valor = payload.valor;
       localStorage.premios = JSON.stringify(state.premios);
-    }
+    },
+    UPDATE_TITLE_PLATFORM(state,payload){
+      if(!state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas.find(plat=>plat.id_plataforma==payload.id_plataforma)){
+        state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas.push({id_plataforma:payload.id_plataforma, nome:payload.nome})
+        localStorage.obra = JSON.stringify(state.obra);
+      }
+    },
+    REMOVE_PLATFORM(state,payload){
+      state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas = state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas.filter(plat=>(plat.id_plataforma != payload.id_plataforma));
+      localStorage.obra= JSON.stringify(state.obra);
+    },
+    REMOVE_TITLE(state,payload){
+      state.obra = state.obra.filter(obra=>(obra.id_imdb != payload));
+      localStorage.obra= JSON.stringify(state.obra);
+    },
   }
 });

@@ -689,14 +689,14 @@
         </div>
         <div>
           <div class="row g-3">
-            <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar.obras" :key="index">
+            <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(title, index) in getAllTitles" :key="index">
               <div class="tile-custom">
                 <div class="tile__media-custom">
-                  <img class="tile__img" src="https://upload.wikimedia.org/wikipedia/pt/b/b7/TheDarkKnightRises.jpg" alt="" />
+                  <img class="tile__img" :src="title.poster" alt="" />
                 </div>
                 <div class="d-flex flex-column">
-                  <button class="editQuizButton" data-bs-toggle="modal" data-bs-target="#editMovieModal" style="font-size: 1rem;">Edit</button>
-                  <button class="removeQuizButton" data-bs-toggle="modal" data-bs-target="#removeMovieModal" style="font-size: 1rem;">Remove</button>
+                  <button class="editQuizButton" data-bs-toggle="modal" data-bs-target="#editMovieModal" style="font-size: 1rem;" @click="listTitleInfo(title.id_imdb)">Edit</button>
+                  <button class="removeQuizButton" style="font-size: 1rem;" @click="removeTitle(title.id_imdb)">Remove</button>
                 </div>
               </div>
             </div>
@@ -778,11 +778,14 @@
                 <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
                   <label for="url-pic">Name of the platform:</label>
                   <div class="input-group">
-                    <input type="text" class="form-control bg-inputs" aria-label="Name" required placeholder="Name">
-                    <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
+                    <select id="platformSelect" class="form-control bg-inputs">
+                      <option :value="opt.id_plataforma" v-for="(opt,i) in getAllPlatforms" :key="i">
+                        {{opt.nome}}
+                      </option>
+                    </select>
                   </div>
                   <div class="d-flex" style="gap: 15px;">
-                    <button type="submit" class="orange-btn" data-bs-target="#editMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Add platform</button>
+                    <button type="submit" class="orange-btn" data-bs-target="#editMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal" @click="addPlatform()">Add platform</button>
                     <button class="red-btn" type="button" data-bs-target="#editMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                   </div>
                 </form>
@@ -800,24 +803,18 @@
                   <form action="" id="addNewQuizModal">
                     <p class="m-0 mt-3 colorOrange">General</p> 
                     <div class="mt-3">
-                      <input type="text" class="w-100" value="0455275" required>
+                      <input type="text" class="w-100" :value="editTitle.titleId" required>
                     </div>
                     <p class="m-0 mt-3 colorOrange">Avaliable at</p> 
-                    <input type="text" class="w-100 mt-3" disabled value="Netflix">
-                    <div style="position: relative;">
-                      <span><i style="right: 10px;" class="fas fa-trash removeIcon"></i></span>
-                    </div>
-                    <input type="text" class="w-100 mt-3" disabled value="Hulu">
-                    <div style="position: relative;">
-                      <span><i style="right: 10px;" class="fas fa-trash removeIcon"></i></span>
-                    </div>
-                    <input type="text" class="w-100 mt-3" disabled value="Amazon Prime Video">
-                    <div style="position: relative;">
-                      <span><i style="right: 10px;" class="fas fa-trash removeIcon"></i></span>
+                    <div v-for="(plat,i) in editTitle.titlePlatforms[0]" :key="i">
+                      <input type="text" class="w-100 mt-3" disabled :value="plat.nome">
+                      <div style="position: relative;">
+                        <span><i style="right: 10px;" class="fas fa-trash removeIcon" @click="removePlatform(plat.id_plataforma)"></i></span>
+                      </div>
                     </div>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#addPlatform" class="uploadButton mt-3">Add platform</button>
                     <div class="ms-auto mt-5 d-flex" style="gap: 15px;">
-                        <input class="addQuestionButton" type="submit" data-bs-dismiss="modal" value="Edit movie/series">
+                        <input class="addQuestionButton" type="submit" data-bs-dismiss="modal" value="Edit movie/series" >
                         <input class="close-btn" type="button" data-bs-dismiss="modal" value="Close"/>
                     </div>
                   </form>
@@ -1031,12 +1028,17 @@ import { mapGetters,mapMutations } from "vuex";
           prizeCost:null,
           prizeImg:"",
         },
+        editTitle:{
+          titleName:"",
+          titleId:null,
+          titlePlatforms:[],
+        },
       }
     },
     
    
     methods: {
-      ...mapMutations(["SET_NEW_QUIZ","REMOVE_QUIZ","UPDATE_QUIZ"]),
+      ...mapMutations(["SET_NEW_QUIZ","REMOVE_QUIZ","UPDATE_QUIZ","UPDATE_TITLE_PLATFORM","REMOVE_PLATFORM","REMOVE_TITLE"]),
       addNewPrize() {
         if(this.prizes.prizeImg==""){
           this.SET_NEW_QUIZ({id_premio:this.getAllPrizes.length, nome:this.prizes.prizeName, img:"https://i.ibb.co/8PmJCqD/image-New-Quiz.png", valor:this.prizes.prizeCost});
@@ -1068,10 +1070,50 @@ import { mapGetters,mapMutations } from "vuex";
       },
       editPrize(id){
         this.UPDATE_QUIZ({id_premio:id, nome:this.editPrizes.prizeName, valor: this.editPrizes.prizeCost, img: this.editPrizes.prizeImg})
+      },
+      listTitleInfo(id){
+        this.editTitle.titleId=null
+        this.editTitle.titlePlatforms=[]
+        this.editTitle.titleId=id,
+        this.editTitle.titlePlatforms.push(this.getTitleInfo(id).plataformas)
+      },
+      addPlatform(){
+        //this.editTitle.titlePlatforms[0].push({id_plataforma:document.querySelector("#platformSelect").value, nome:this.getPlatformsById(document.querySelector("#platformSelect").value).nome})
+        if(!this.getAllTitles[this.getAllTitles.findIndex(ob=>ob.id_imdb==this.editTitle.titleId)].plataformas.find(plat=>plat.id_plataforma==document.querySelector("#platformSelect").value)){
+          this.UPDATE_TITLE_PLATFORM({id_imdb:this.editTitle.titleId, id_plataforma:document.querySelector("#platformSelect").value, nome:this.getPlatformsById(document.querySelector("#platformSelect").value).nome})
+        }
+        else{
+        this.$swal({
+          title: 'Oops...',
+          text: "This platform already registed in this title",
+          icon: 'error',
+        })
+        }
+      },
+      removePlatform(id){
+        
+        this.REMOVE_PLATFORM({id_imdb: this.editTitle.titleId, id_plataforma:id})
+        this.listTitleInfo(this.editTitle.titleId)
+        //this.editTitle.titlePlatforms=this.editTitle.titlePlatforms.filter(plat=>plat.id_plataforma!=id)
+      },
+      removeTitle(id){
+          this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this title?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_TITLE(id)
+        }
+      });
+        
       }
     },
     computed: {
-      ...mapGetters(["getAllPrizes","getPremioInfo"]),
+      ...mapGetters(["getAllPrizes","getPremioInfo","getAllTitles","getTitleInfo","getAllPlatforms","getPlatformsById"]),
     },
   }
 </script>
