@@ -10,7 +10,8 @@
 		  "pontos_pergunta":10
 	   },
 	   "especifico": true,
-	   "titulo":"Prison Break",
+	   "titulo":"Prison Break Quiz",
+	   "tema": "Series",
 	   "descricao":"Contrary to the series, there's no escaping this quiz.",
 	   "poster":"https://imdb-api.com/images/original/MV5BMTg3NTkwNzAxOF5BMl5BanBnXkFtZTcwMjM1NjI5MQ@@._V1_Ratio0.6833_AL_.jpg",
 	   "banner":"https://imdb-api.com/posters/original/7w165QdHmJuTHSQwEyJDBDpuDT7.jpg",
@@ -88,9 +89,10 @@
 		   "pontos_pergunta":10
 		},
 		"especifico": false,
-		"titulo":"Marvel Cinematic Universe",
+		"titulo":"Marvel Cinematic Universe Quiz",
+		"tema": "Universes",
 		"descricao":"Are you a true Avenger? Let's see about that...",
-		"poster":"https://images.theposterdb.com/prod/public/images/meta/collections/optimized/1993/poster.webp",
+		"poster":"https://i.imgur.com/967quxL.jpg",
 		"banner":"https://m.media-amazon.com/images/I/61Uol30H+3L._AC_SL1000_.jpg",
 		"perguntas":[
 		   {
@@ -227,7 +229,8 @@
 		   "pontos_pergunta":10
 		},
 		"especifico":true,
-		"titulo":"Originals Quiz",
+		"titulo":"The Originals Quiz",
+		"tema": "Series",
 		"descricao":"There are Mikaelsons everywhere, are you a member of this ancient vampire family?",
 		"poster":"https://espalhafactos.com/wp-content/uploads/2018/07/118267033_1300x1733.jpg",
 		"banner":"https://streamingsbrasil.com/wp-content/uploads/2020/05/the-originals.jpg",
@@ -365,7 +368,8 @@
 		   "pontos_pergunta":15
 		},
 		"especifico":true,
-		"titulo":"The Walking Dead",
+		"titulo":"The Walking Dead Quiz",
+		"tema": "Series",
 		"descricao":"Would you survive a zombie apocalypse?",
 		"poster":"https://upload.wikimedia.org/wikipedia/pt/thumb/5/5d/TWD_11T_Poster.jpg/250px-TWD_11T_Poster.jpg",
 		"banner":"https://br.web.img3.acsta.net/newsv7/21/08/29/04/48/1386318.jpg",
@@ -443,7 +447,8 @@
 		   "pontos_pergunta":15
 		},
 		"especifico":true,
-		"titulo":"Rick and Morty",
+		"titulo":"Rick and Morty Quiz",
+		"tema": "Series",
 		"descricao":"Boom! Big reveal! I turned myself into a quiz!",
 		"poster":"https://cdn.europosters.eu/image/1300/posters/rick-morty-portal-i86752.jpg",
 		"banner":"https://tm.ibxk.com.br//ms/images/highlights/000/043/919/41576.jpg",
@@ -521,9 +526,10 @@
 		   "pontos_pergunta":15
 		},
 		"especifico":true,
-		"titulo":"Superbad",
+		"titulo":"Superbad Quiz",
+		"tema": "Movie",
 		"descricao":"Are you McLovin's brother?",
-		"poster":"https://static.wikia.nocookie.net/dublagempedia/images/c/cf/Superbad.jpg",
+		"poster":"https://imdb-api.com/images/original/MV5BMTc0NjIyMjA2OF5BMl5BanBnXkFtZTcwMzIxNDE1MQ@@._V1_Ratio0.6762_AL_.jpg",
 		"banner":"http://s2.glbimg.com/eXhINjrE3FA8sxs3aFhctg6DOwE=/smart/e.glbimg.com/og/ed/f/original/2017/08/18/superbad.jpg",
 		"perguntas":[
 		   {
@@ -599,7 +605,683 @@
 		   "pontos_pergunta":10
 		},
 		"especifico":true,
-		"titulo":"Stranger Things",
+		"titulo":"Stranger Things Quiz",
+		"tema": "Series",
+		"descricao":"Think you know about the upside down? Think again.",
+		"poster":"https://cdn.europosters.eu/image/1300/posters/stranger-things-group-i99512.jpg",
+		"banner":"https://observatoriodocinema.uol.com.br/wp-content/uploads/2020/11/1138205.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt4574334",
+			  "texto":"What Was The Name Of The Female DOE Agent That Worked Alongside Brenner?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/9/9f/DOE.png",
+			  "opcao_1":"Rachel Hunt",
+			  "opcao_2":"Agnes Holland",
+			  "opcao_3":"Connie Frazier",
+			  "opcao_4":"Terry Ives",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt4574334",
+			  "texto":"Where Does Dustin's Girlfriend Suzie Live?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://hips.hearstapps.com/hmg-prod/images/stranger-things-3-who-is-suzie-1562784495.png",
+			  "opcao_1":"Detroit, Michigan",
+			  "opcao_2":"Phoenix, Arizona",
+			  "opcao_3":"Austin, Texas",
+			  "opcao_4":"Salt Lake City, Utah",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt4574334",
+			  "texto":"Hawkins Is A Fictional Town In Which State?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/2/2a/Hawkins.png",
+			  "opcao_1":"Massachusetts",
+			  "opcao_2":"Texas",
+			  "opcao_3":"California",
+			  "opcao_4":"Indiana",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt4574334",
+			  "texto":"The First Episode Of Season 2 Is Named After Which '80s Movie?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sm.ign.com/ign_pt/news/s/stranger-t/stranger-things-season-2-ratings-revealed_rqch.jpg",
+			  "opcao_1":"Blade Runner",
+			  "opcao_2":"Mad Max",
+			  "opcao_3":"The Terminator",
+			  "opcao_4":"Total Recall",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt4574334",
+			  "texto":"What's The Byers' Dog's Name?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://bloody-disgusting.com/wp-content/uploads/2018/07/stranger-things-dog.jpeg",
+			  "opcao_1":"Max",
+			  "opcao_2":"Wolfie",
+			  "opcao_3":"Chester",
+			  "opcao_4":"William",
+			  "opcao_correta":3
+		   }
+		]
+	},
+	{
+		"id_quiz":7,
+		"tipo":{
+		   "descricao":"longo",
+		   "num_perguntas":10
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"La Casa de Papel Quiz",
+		"tema": "Series",
+		"descricao":"Either we both win or we both lose",
+		"poster":"https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg",
+		"banner":"https://tm.ibxk.com.br/2021/02/17/17171315706333.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt6468322",
+			  "texto":"Inspector Raquel’s Mother Suffers From What Medical Condition?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://lingopie.com/learn-spanish-with-casa-de-papel/images/ep13.jpg",
+			  "opcao_1":"Alzheimer’s Disease",
+			  "opcao_2":"Post-Traumatic Stress Disorder",
+			  "opcao_3":"Paranoid Schizophrenia",
+			  "opcao_4":"Schizoaffective Disorder",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt6468322",
+			  "texto":"How Much Currency Does The Gang Print At The Royal Mint?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://img.fastshare.cz/upload/tn/201901/1547206924_c51321eb6fb2995f7668ae466b30ef49_10.jpg",
+			  "opcao_1":"984 million Euros",
+			  "opcao_2":"994 million Euros",
+			  "opcao_3":"904 million Euros",
+			  "opcao_4":"884 million Euros",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt6468322",
+			  "texto":"With Regards To Good Relationship And Mutual Understanding, Which Among These Is A Wrong Pair?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://exame.com/wp-content/uploads/2019/07/la-casa-de-papel.gif",
+			  "opcao_1":"Berlin and Nairobi",
+			  "opcao_2":"Denver and Moscow",
+			  "opcao_3":"Rio and Tokyo",
+			  "opcao_4":"Helsinki and Oslo",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt6468322",
+			  "texto":"How Many Heists Had Berlin Pulled Off Before The Events Of ‘Money Heist’?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://mixdeseries.com.br/wp-content/uploads/2020/04/La-Casa-de-Papel-Berlim.jpg",
+			  "opcao_1":"28",
+			  "opcao_2":"27",
+			  "opcao_3":"23",
+			  "opcao_4":"19",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt6468322",
+			  "texto":"Raquel's Mother Has How Many Daughters?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static3.srcdn.com/wordpress/wp-content/uploads/2020/07/Money-Heist-Mariv---Cropped.jpg",
+			  "opcao_1":"1",
+			  "opcao_2":"2",
+			  "opcao_3":"3",
+			  "opcao_4":"4",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":5,
+			  "id_imdb":"tt6468322",
+			  "texto":"How Many Hostages Escaped During The Heist?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://revistaforum.com.br/wp-content/uploads/2018/03/la-casa-de-papel.jpg",
+			  "opcao_1":"16",
+			  "opcao_2":"17",
+			  "opcao_3":"26",
+			  "opcao_4":"27",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":6,
+			  "id_imdb":"tt6468322",
+			  "texto":"How Many Members Of The Original Team Die (or Are Presumed Dead) During The Course Of Money Heist?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static3.srcdn.com/wordpress/wp-content/uploads/2020/07/Moscows-Death-Money-Heist-Cropped.jpg",
+			  "opcao_1":"1",
+			  "opcao_2":"2",
+			  "opcao_3":"3",
+			  "opcao_4":"4",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":7,
+			  "id_imdb":"tt6468322",
+			  "texto":"Who Quoted This - 'After All, What’s More Human Than The Fight For Survival?'",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.justwatch.com/images/backdrop/242778527/s640/la-casa-de-papel",
+			  "opcao_1":"Rio",
+			  "opcao_2":"The Professor",
+			  "opcao_3":"Berlin",
+			  "opcao_4":"Tokyo",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":8,
+			  "id_imdb":"tt6468322",
+			  "texto":"What Is The Name Of Berlin’s Girlfriend Who Comes To Visit At The Monastery?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://trecobox.com.br/wp-content/uploads/2018/04/DWFvln4WkAEuI_L.jpg",
+			  "opcao_1":"Mónica",
+			  "opcao_2":"Tatiana",
+			  "opcao_3":"Alicia",
+			  "opcao_4":"Ariadna",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":9,
+			  "id_imdb":"tt6468322",
+			  "texto":"How is Berlin related to the Professor? He is his...",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.metroworldnews.com.br/resizer/YnzxZ-IJ8_W1swPdf3pOeOaqjE0=/1200x630/filters:format(jpg):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/metroworldnews/65YQRSBRORE4NFOEPPC3A5G2DQ.jpg",
+			  "opcao_1":"Cousin",
+			  "opcao_2":"Boyfriend",
+			  "opcao_3":"Brother",
+			  "opcao_4":"Uncle",
+			  "opcao_correta":3
+		   }
+ 
+		]
+	},
+	{
+		"id_quiz":8,
+		"tipo":{
+		   "descricao":"longo",
+		   "num_perguntas":10
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Breaking Bad Quiz",
+		"tema": "Series",
+		"descricao":"Who really is the one who knocks?",
+		"poster":"https://p2.trrsf.com/image/fget/cf/648/0/images.terra.com/2013/06/25/breaking-bad-season-5-part-2-poster.jpg",
+		"banner":"https://bordalo.observador.pt/v2/q:85/rs:fill:1920:1079/c:1920:1079:nowe:0:0/plain/https://s3.observador.pt/wp-content/uploads/2016/09/23161800/breaking-bad.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt0903747",
+			  "texto":"What Stage Cancer Is Walter Diagnosed With?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.looper.com/img/gallery/the-controversial-breaking-bad-scene-32-would-have-refused-to-film/intro-1628518531.jpg",
+			  "opcao_1":"1",
+			  "opcao_2":"2",
+			  "opcao_3":"3",
+			  "opcao_4":"4",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt0903747",
+			  "texto":"What Is The Surname Of Walter Jr's Friend, Louis?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://i.imgur.com/8aDA6Hr.jpg",
+			  "opcao_1":"Corbertt",
+			  "opcao_2":"Cartwright",
+			  "opcao_3":"Collett",
+			  "opcao_4":"Cuthbert",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt0903747",
+			  "texto":"What Was The Address Of The House Jesse Bought From His Aunt?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.breakingbad-locations.com/wp-content/uploads/2014/01/E02-Cats-in-the-Bag.mkv_002291334.jpg",
+			  "opcao_1":"9809 Falcon Street",
+			  "opcao_2":"9089 Aurora Street",
+			  "opcao_3":"9809 Margo Street",
+			  "opcao_4":"8909 Indigo Street",
+			  "opcao_correta":3
+		   },
+		   {
+			   "id_pergunta":3,
+			   "id_imdb":"tt0903747",
+			   "texto":"What Does Marie Steal From One Of The Open Houses?",
+			   "tipo_pergunta":"texto",
+			   "url_conteudo":"https://static2.srcdn.com/wordpress/wp-content/uploads/2020/06/Breaking-Bad-Marie.jpg",
+			   "opcao_1":"A Ladle",
+			   "opcao_2":"A Spoon",
+			   "opcao_3":"A Knife",
+			   "opcao_4":"A Fork",
+			   "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt0903747",
+			  "texto":"Jane Wants To Go To A Museum To See Whose Paintings?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://rollingstone.uol.com.br/media/_versions/jane-breakingbad-krysten_ritter-reproducao_widelg.jpg",
+			  "opcao_1":"Frida Kahlo",
+			  "opcao_2":"Louise Élisabeth Vigée Le Brun",
+			  "opcao_3":"Judy Chicago",
+			  "opcao_4":"Georgia O'Keeffe",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":5,
+			  "id_imdb":"tt0903747",
+			  "texto":"Who Takes Skyler To The Hospital When She Is In Labor?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://img.r7.com/images/2014/02/13/7h951o8ch1_7xd59fpd45_file.jpg",
+			  "opcao_1":"Louis",
+			  "opcao_2":"Ted",
+			  "opcao_3":"Hank",
+			  "opcao_4":"Marie",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":6,
+			  "id_imdb":"tt0903747",
+			  "texto":"How Much Money Does Walt Bring Skyler To Launder?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://qph.fs.quoracdn.net/main-qimg-4a7a89775403f099e9eb47213f7c6937-lq",
+			  "opcao_1":"$274,000",
+			  "opcao_2":"$284,000",
+			  "opcao_3":"$294,000",
+			  "opcao_4":"$304,000",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":7,
+			  "id_imdb":"tt0903747",
+			  "texto":"What Is The Nickname Of The Motel Where Wendy Works?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static2.srcdn.com/wordpress/wp-content/uploads/2021/01/3F06BB92-BFA3-4AC8-A4A7-DE5F30A3C019.jpeg",
+			  "opcao_1":"The Meth Motel",
+			  "opcao_2":"The Easy Inn",
+			  "opcao_3":"The Crack Camp",
+			  "opcao_4":"The Crystal Palace",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":8,
+			  "id_imdb":"tt0903747",
+			  "texto":"What Letter Does Hank's Witness Say The Meth Dealer's Name Starts With?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"http://hollywoodlife.com/wp-content/uploads/2013/08/breaking-bad-blood-money-ftr.jpg",
+			  "opcao_1":"W",
+			  "opcao_2":"H",
+			  "opcao_3":"J",
+			  "opcao_4":"M",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":9,
+			  "id_imdb":"tt0903747",
+			  "texto":"What Brand Of Car Does Gus Fring Drive?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://rollingstone.uol.com.br/media/_versions/gus-los-pollos-hermanos_widelg.jpg",
+			  "opcao_1":"Ford",
+			  "opcao_2":"Volvo",
+			  "opcao_3":"Nissan",
+			  "opcao_4":"Chevrolet",
+			  "opcao_correta":1
+		   }
+ 
+		]
+	},
+	{
+		"id_quiz":9,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"dificil",
+		   "pontos_pergunta":15
+		},
+		"especifico":false,
+		"titulo":"Netflix Quiz #1",
+		"tema": "Platform",
+		"descricao":"Let's see if you are a real Netflix subscriber",
+		"poster":"https://i2.wp.com/cloud.estacaonerd.com/wp-content/uploads/2021/02/17192525/capa.png",
+		"banner":"https://patiohype.com.br/wp-content/uploads/2020/09/s%C3%A9ries-da-Netflix3.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt5180504",
+			  "texto":"In the show The Witcher, what is the first beast Geralt Slays?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.looper.com/img/gallery/what-the-monsters-of-the-witcher-should-really-look-like/intro-1577109714.jpg",
+			  "opcao_1":"Graveir",
+			  "opcao_2":"Leshen",
+			  "opcao_3":"Kikimora",
+			  "opcao_4":"Drowner",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt7221388",
+			  "texto":"In the show Cobra Kai, who returns at the end of season 1?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.nit.pt/wp-content/uploads/2021/01/388c07ed43a84982d92e8ae7cba588fe-11.jpg",
+			  "opcao_1":"Mr Miyagi",
+			  "opcao_2":"John Kreese",
+			  "opcao_3":"Ali Mills",
+			  "opcao_4":"Chozen",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt7991608",
+			  "texto":"Who is Nolan Booth (Ryan Reynolds) in the movie Red Notice?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.thehindu.com/entertainment/6vywt8/article37439559.ece/ALTERNATES/LANDSCAPE_1200/RN2020092424793r",
+			  "opcao_1":"An Interpol Agent",
+			  "opcao_2":"John Hartley's Friend",
+			  "opcao_3":"An Ancient Art Collector",
+			  "opcao_4":"An Internationally Wanted Thief",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt10919420",
+			  "texto":"In the show Squid Game, what is the number of the main character",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://cdn.mos.cms.futurecdn.net/rkeeBGj4bnZk6PFNj39LMC.jpg",
+			  "opcao_1":"456",
+			  "opcao_2":"450",
+			  "opcao_3":"001",
+			  "opcao_4":"119",
+			  "opcao_correta":1
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt11126994",
+			  "texto":"The Netflix show 'Arcane' belongs to the universe of which well known game? ",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://www.riotgames.com/darkroom/1440/b540da2b9afe5ec83e842a2d84f6dbb1:e95535ecd35e48592908762c9353926a/arcane-final-poster-16x9-no-text-no-border.jpg",
+			  "opcao_1":"World of Warcraft",
+			  "opcao_2":"League Of Legends",
+			  "opcao_3":"Hearthstone",
+			  "opcao_4":"Dota 2",
+			  "opcao_correta":2
+		   }
+		]
+	},
+	{
+		"id_quiz":10,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Stranger Things Quiz",
+		"tema": "Series",
+		"descricao":"Think you know about the upside down? Think again.",
+		"poster":"https://cdn.europosters.eu/image/1300/posters/stranger-things-group-i99512.jpg",
+		"banner":"https://observatoriodocinema.uol.com.br/wp-content/uploads/2020/11/1138205.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt4574334",
+			  "texto":"What Was The Name Of The Female DOE Agent That Worked Alongside Brenner?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/9/9f/DOE.png",
+			  "opcao_1":"Rachel Hunt",
+			  "opcao_2":"Agnes Holland",
+			  "opcao_3":"Connie Frazier",
+			  "opcao_4":"Terry Ives",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt4574334",
+			  "texto":"Where Does Dustin's Girlfriend Suzie Live?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://hips.hearstapps.com/hmg-prod/images/stranger-things-3-who-is-suzie-1562784495.png",
+			  "opcao_1":"Detroit, Michigan",
+			  "opcao_2":"Phoenix, Arizona",
+			  "opcao_3":"Austin, Texas",
+			  "opcao_4":"Salt Lake City, Utah",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt4574334",
+			  "texto":"Hawkins Is A Fictional Town In Which State?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/2/2a/Hawkins.png",
+			  "opcao_1":"Massachusetts",
+			  "opcao_2":"Texas",
+			  "opcao_3":"California",
+			  "opcao_4":"Indiana",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt4574334",
+			  "texto":"The First Episode Of Season 2 Is Named After Which '80s Movie?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sm.ign.com/ign_pt/news/s/stranger-t/stranger-things-season-2-ratings-revealed_rqch.jpg",
+			  "opcao_1":"Blade Runner",
+			  "opcao_2":"Mad Max",
+			  "opcao_3":"The Terminator",
+			  "opcao_4":"Total Recall",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt4574334",
+			  "texto":"What's The Byers' Dog's Name?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://bloody-disgusting.com/wp-content/uploads/2018/07/stranger-things-dog.jpeg",
+			  "opcao_1":"Max",
+			  "opcao_2":"Wolfie",
+			  "opcao_3":"Chester",
+			  "opcao_4":"William",
+			  "opcao_correta":3
+		   }
+		]
+	},
+	{
+		"id_quiz":11,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Stranger Things Quiz",
+		"tema": "Series",
+		"descricao":"Think you know about the upside down? Think again.",
+		"poster":"https://cdn.europosters.eu/image/1300/posters/stranger-things-group-i99512.jpg",
+		"banner":"https://observatoriodocinema.uol.com.br/wp-content/uploads/2020/11/1138205.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt4574334",
+			  "texto":"What Was The Name Of The Female DOE Agent That Worked Alongside Brenner?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/9/9f/DOE.png",
+			  "opcao_1":"Rachel Hunt",
+			  "opcao_2":"Agnes Holland",
+			  "opcao_3":"Connie Frazier",
+			  "opcao_4":"Terry Ives",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt4574334",
+			  "texto":"Where Does Dustin's Girlfriend Suzie Live?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://hips.hearstapps.com/hmg-prod/images/stranger-things-3-who-is-suzie-1562784495.png",
+			  "opcao_1":"Detroit, Michigan",
+			  "opcao_2":"Phoenix, Arizona",
+			  "opcao_3":"Austin, Texas",
+			  "opcao_4":"Salt Lake City, Utah",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt4574334",
+			  "texto":"Hawkins Is A Fictional Town In Which State?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/2/2a/Hawkins.png",
+			  "opcao_1":"Massachusetts",
+			  "opcao_2":"Texas",
+			  "opcao_3":"California",
+			  "opcao_4":"Indiana",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt4574334",
+			  "texto":"The First Episode Of Season 2 Is Named After Which '80s Movie?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sm.ign.com/ign_pt/news/s/stranger-t/stranger-things-season-2-ratings-revealed_rqch.jpg",
+			  "opcao_1":"Blade Runner",
+			  "opcao_2":"Mad Max",
+			  "opcao_3":"The Terminator",
+			  "opcao_4":"Total Recall",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt4574334",
+			  "texto":"What's The Byers' Dog's Name?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://bloody-disgusting.com/wp-content/uploads/2018/07/stranger-things-dog.jpeg",
+			  "opcao_1":"Max",
+			  "opcao_2":"Wolfie",
+			  "opcao_3":"Chester",
+			  "opcao_4":"William",
+			  "opcao_correta":3
+		   }
+		]
+	},
+	{
+		"id_quiz":12,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Stranger Things Quiz",
+		"tema": "Series",
+		"descricao":"Think you know about the upside down? Think again.",
+		"poster":"https://cdn.europosters.eu/image/1300/posters/stranger-things-group-i99512.jpg",
+		"banner":"https://observatoriodocinema.uol.com.br/wp-content/uploads/2020/11/1138205.jpg",
+		"perguntas":[
+		   {
+			  "id_pergunta":0,
+			  "id_imdb":"tt4574334",
+			  "texto":"What Was The Name Of The Female DOE Agent That Worked Alongside Brenner?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/9/9f/DOE.png",
+			  "opcao_1":"Rachel Hunt",
+			  "opcao_2":"Agnes Holland",
+			  "opcao_3":"Connie Frazier",
+			  "opcao_4":"Terry Ives",
+			  "opcao_correta":3
+		   },
+		   {
+			  "id_pergunta":1,
+			  "id_imdb":"tt4574334",
+			  "texto":"Where Does Dustin's Girlfriend Suzie Live?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://hips.hearstapps.com/hmg-prod/images/stranger-things-3-who-is-suzie-1562784495.png",
+			  "opcao_1":"Detroit, Michigan",
+			  "opcao_2":"Phoenix, Arizona",
+			  "opcao_3":"Austin, Texas",
+			  "opcao_4":"Salt Lake City, Utah",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":2,
+			  "id_imdb":"tt4574334",
+			  "texto":"Hawkins Is A Fictional Town In Which State?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://static.wikia.nocookie.net/strangerthings8338/images/2/2a/Hawkins.png",
+			  "opcao_1":"Massachusetts",
+			  "opcao_2":"Texas",
+			  "opcao_3":"California",
+			  "opcao_4":"Indiana",
+			  "opcao_correta":4
+		   },
+		   {
+			  "id_pergunta":3,
+			  "id_imdb":"tt4574334",
+			  "texto":"The First Episode Of Season 2 Is Named After Which '80s Movie?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://sm.ign.com/ign_pt/news/s/stranger-t/stranger-things-season-2-ratings-revealed_rqch.jpg",
+			  "opcao_1":"Blade Runner",
+			  "opcao_2":"Mad Max",
+			  "opcao_3":"The Terminator",
+			  "opcao_4":"Total Recall",
+			  "opcao_correta":2
+		   },
+		   {
+			  "id_pergunta":4,
+			  "id_imdb":"tt4574334",
+			  "texto":"What's The Byers' Dog's Name?",
+			  "tipo_pergunta":"texto",
+			  "url_conteudo":"https://bloody-disgusting.com/wp-content/uploads/2018/07/stranger-things-dog.jpeg",
+			  "opcao_1":"Max",
+			  "opcao_2":"Wolfie",
+			  "opcao_3":"Chester",
+			  "opcao_4":"William",
+			  "opcao_correta":3
+		   }
+		]
+	},
+	{
+		"id_quiz":13,
+		"tipo":{
+		   "descricao":"curto",
+		   "num_perguntas":5
+		},
+		"dificuldade":{
+		   "descricao":"normal",
+		   "pontos_pergunta":10
+		},
+		"especifico":true,
+		"titulo":"Stranger Things Quiz",
+		"tema": "Series",
 		"descricao":"Think you know about the upside down? Think again.",
 		"poster":"https://cdn.europosters.eu/image/1300/posters/stranger-things-group-i99512.jpg",
 		"banner":"https://observatoriodocinema.uol.com.br/wp-content/uploads/2020/11/1138205.jpg",
