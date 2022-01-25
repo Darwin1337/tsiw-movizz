@@ -190,7 +190,7 @@
                     <p v-if="comment.spoiler" class="comment-message" style="color: var(--vermelho);">Spoiler!!! <span @click="mostrarSpoiler(comment.comentario, i)" style="cursor: pointer;">See hidden comment</span></p>
                     <p v-else class="comment-message">{{ comment.comentario }}</p>
                   </div>
-                  <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario)" class="unblock-button"><i class="fas fa-trash"></i></span>
+                  <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario, comment.id_utilizador)" class="unblock-button"><i class="fas fa-trash"></i></span>
                 </div>
                 <div>
                   <p v-if="comments.length==0">Be the first to comment on this title</p>
@@ -201,40 +201,20 @@
           <div class="col-md-4">
             <section id="quizzes">
               <p class="subtitle">Find this show in these quizzes</p>
-              <div class="related-card d-flex">
-                <div class="related-image"></div>
+              <div class="related-card d-flex mb-3" v-for="i in relatedQuizzes.length" :key="i">
+                <div class="related-image"
+                :style="'background-image: url(' + relatedQuizzes[i - 1].banner + ');'"></div>
                 <div class="related-info d-flex flex-column p-2">
-                  <p id="related-quiz-title">Netflix</p>
-                  <p id="related-quiz-description">Questions from your favorite Netflix shows!</p>
-                  <a class="d-flex" style="gap: 10px;">
+                  <p id="related-quiz-title">{{ relatedQuizzes[i - 1].titulo }}</p>
+                  <p id="related-quiz-description">{{ relatedQuizzes[i - 1].descricao }}</p>
+                  <a class="d-flex" style="gap: 10px; cursor: pointer;" @click="$router.push({ name: 'Quiz', params: { id: relatedQuizzes[i - 1].id_quiz }})">
                     <img src="../assets/images/play_icon.png" alt="Play icon" width="25px" height="25px">
                     <p>Play</p>
                   </a>
                 </div>
               </div>
-              <br>
-              <div class="related-card d-flex">
-                <div class="related-image"></div>
-                <div class="related-info d-flex flex-column p-2">
-                  <p id="related-quiz-title">Netflix</p>
-                  <p id="related-quiz-description">Questions from your favorite Netflix shows!</p>
-                  <a class="d-flex" style="gap: 10px;">
-                    <img src="../assets/images/play_icon.png" alt="Play icon" width="25px" height="25px">
-                    <p>Play</p>
-                  </a>
-                </div>
-              </div>
-              <br>
-              <div class="related-card d-flex">
-                <div class="related-image"></div>
-                <div class="related-info d-flex flex-column p-2">
-                  <p id="related-quiz-title">Netflix</p>
-                  <p id="related-quiz-description">Questions from your favorite Netflix shows!</p>
-                  <a class="d-flex" style="gap: 10px;">
-                    <img src="../assets/images/play_icon.png" alt="Play icon" width="25px" height="25px">
-                    <p>Play</p>
-                  </a>
-                </div>
+              <div v-if="relatedQuizzes.length == 0">
+                <p>This title is not in any of our quizzes, sorry.</p>
               </div>
             </section>
           </div>
@@ -261,11 +241,12 @@ export default {
       comentario: "",
       userRatings: [],
       movizzRating: 0.00,
-      spoiler: false
+      spoiler: false,
+      relatedQuizzes: []
     };
   },
   computed: {
-      ...mapGetters(["getTitleInfo", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableTitleCommentID", "getUserTitleRating", "getTitleMovizzRating"]),
+      ...mapGetters(["getTitleInfo", "getAllQuizzes", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableTitleCommentID", "getUserTitleRating", "getTitleMovizzRating"]),
   },
   mounted () {
     document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.title.banner})`;
@@ -280,10 +261,11 @@ export default {
     this.comments = this.getTitleComments(this.$route.params.imdbid);
     this.userRatings.pontuacao = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) ? this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid).pontuacao : 0;
     this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);
+    this.relatedQuizzes = this.getAllQuizzes.filter(quiz => quiz.perguntas.some(pergunta => pergunta.id_imdb == this.$route.params.imdbid));
   },
   methods: {
     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_TITLE_COMMENT","SET_NEW_TITLE_RATING","REMOVE_TITLE_RATING","REMOVE_TITLE_COMMENT"]),
-    removeComment(id) {
+    removeComment(id_comment_a, id_user_a) {
       this.$swal({
         title: 'Warning!',
         text: "Are you sure you want to remove this comment?",
@@ -293,8 +275,8 @@ export default {
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.REMOVE_TITLE_COMMENT(id);
-          this.comments= this.comments.filter(comment=>comment.id_comentario!=id);
+          this.REMOVE_TITLE_COMMENT({ id_comment: id_comment_a, id_user: id_user_a });
+          this.comments= this.comments.filter(comment=>comment.id_comentario!=id_comment_a);
         }
       });
       
@@ -305,7 +287,7 @@ export default {
         id_comentario: this.getNextAvailableTitleCommentID,
         id_imdb: this.$route.params.imdbid,
         id_utilizador: this.getLoggedUser.id,
-        comentario: this.comentario,
+        comentario: this.comentario.trim(),
         data: DATA_COMMENT,
         spoiler:this.spoiler
       });
@@ -313,7 +295,7 @@ export default {
         id_comentario: this.getNextAvailableTitleCommentID,
         id_imdb: this.$route.params.imdbid,
         id_utilizador: this.getLoggedUser.id,
-        comentario: this.comentario,
+        comentario: this.comentario.trim(),
         data: DATA_COMMENT,
         spoiler:this.spoiler
       });
@@ -333,7 +315,7 @@ export default {
         });
       }
       else {
-        this.REMOVE_TITLE_RATING(this.$route.params.imdbid);
+        this.REMOVE_TITLE_RATING({ id_imdb: this.$route.params.imdbid, id_user: this.getLoggedUser.id });
       }
       this.userRatings.pontuacao = this.savedStars;
       this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);
@@ -374,7 +356,10 @@ export default {
         this.verifySeen();
       }
       else{
-        this.REMOVE_HAS_SEEN(this.$route.params.imdbid);
+        this.REMOVE_HAS_SEEN({
+          id_imdb: this.$route.params.imdbid,
+          id_user: this.getLoggedUser.id
+        });
         this.userSeen= this.userSeen.filter(filme=>!filme==this.$route.params.imdbid);
         this.verifySeen();
       }
@@ -389,7 +374,10 @@ export default {
         this.verifyLike();
       }
       else{
-        this.REMOVE_LIKE(this.$route.params.imdbid);
+        this.REMOVE_LIKE({
+          id_imdb: this.$route.params.imdbid,
+          id_user: this.getLoggedUser.id
+        });
         this.userLikes= this.userLikes.filter(filme=>!filme==this.$route.params.imdbid);
         this.verifyLike();
       }
@@ -713,7 +701,6 @@ a {
 
 .related-card .related-image {
   width: 150px;
-  background-image: url("https://cdn.discordapp.com/attachments/819526744419598356/916005827469512764/netflix.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

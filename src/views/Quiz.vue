@@ -138,10 +138,10 @@
                         <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ new Date(comment.data).getDate() + "/" + (parseInt(new Date(comment.data).getMonth()) + 1) + "/" + new Date(comment.data).getFullYear() + " at " + new Date(comment.data).getHours() + ":" + String(new Date(comment.data).getMinutes()).padStart(2, '0') + "h" }}</span></p>
                         <p class="comment-message">{{ comment.comentario }}</p>
                     </div>
-                        <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario)" class="unblock-button"><i class="fas fa-trash"></i></span>
+                        <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario, comment.id_utilizador)" class="unblock-button"><i class="fas fa-trash"></i></span>
                     </div>
                     <div>
-                        <p v-if="comments.length==0">Be the first to comment on this title</p>
+                        <p v-if="comments.length==0">Be the first to comment on this quiz</p>
                     </div>
                 </div>
                 </section>
@@ -353,7 +353,7 @@ import { mapGetters, mapMutations } from "vuex";
                         });
                     }
                     else {
-                        this.REMOVE_QUIZ_RATING(this.$route.params.id);
+                        this.REMOVE_QUIZ_RATING({ id_quiz: this.$route.params.id, id_user: this.getLoggedUser.id });
                     }
                     this.userRatings.pontuacao = this.savedStars;
                     this.movizzRating = this.getQuizRating(this.$route.params.id);
@@ -361,7 +361,7 @@ import { mapGetters, mapMutations } from "vuex";
                     this.$swal.fire('You have never completed this quiz, please play it at least once to have the ability to rate!');
                 }
             },
-            removeComment(id) {
+            removeComment(id_comment_a, id_user_a) {
                 this.$swal({
                     title: 'Warning!',
                     text: "Are you sure you want to remove this comment?",
@@ -371,8 +371,8 @@ import { mapGetters, mapMutations } from "vuex";
                     cancelButtonText: 'No, cancel!',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.REMOVE_QUIZ_COMMENT(id);
-                        this.comments = this.comments.filter(comment => comment.id_comentario != id);
+                        this.REMOVE_QUIZ_COMMENT({ id_comment: id_comment_a, id_user: id_user_a });
+                        this.comments= this.comments.filter(comment=>comment.id_comentario!=id_comment_a);
                     }
                 });
             },
@@ -383,14 +383,14 @@ import { mapGetters, mapMutations } from "vuex";
                         id_comentario: this.getNextAvailableQuizCommentID,
                         id_quiz: this.$route.params.id,
                         id_utilizador: this.getLoggedUser.id,
-                        comentario: this.comentario,
+                        comentario: this.comentario.trim(),
                         data: DATA_COMMENT
                     });
                     this.SET_NEW_QUIZ_COMMENT({
                         id_comentario: this.getNextAvailableQuizCommentID,
                         id_quiz: this.$route.params.id,
                         id_utilizador: this.getLoggedUser.id,
-                        comentario: this.comentario,
+                        comentario: this.comentario.trim(),
                         data: DATA_COMMENT
                     });
                 } else {

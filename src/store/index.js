@@ -27,8 +27,9 @@ export default new Vuex.Store({
     comentarios_obra: localStorage.comentarios_obra ? JSON.parse(localStorage.comentarios_obra) : [{ id_comentario: 0, id_imdb: "tt0366551", id_utilizador: 1, comentario: "Bom filme!", data: "2022-01-20T18:06:43.231Z" }],
     comentarios_quiz: localStorage.comentarios_quiz ? JSON.parse(localStorage.comentarios_quiz) : [],
     cur_api: 0,
-    api_keys: [],
-    quant_calls: 0,
+    api_keys: ["k_bxe02t9j", "k_82n08589", "k_z0rw7im2", "k_ysbktlgy", "k_z0rw7im2", "k_n116qcbn", "k_h21sbegj", "k_utdlvs0n", "k_14iolt3q", "k_p9fk9brd", "k_3gpl3mmq", "k_23fa7215", "k_08fh2pq9", "k_8luslxgk", "k_zhzvooqo", "k_o6h8ohp8"],
+    tries_main: 0,
+    tries_eps: 0,
     quiz: localStorage.quiz ? JSON.parse(localStorage.quiz) : dataQuiz,
     premios:localStorage.premios?JSON.parse(localStorage.premios) : dataPremios,
     premios_utilizador:localStorage.premios_utilizador?JSON.parse(localStorage.premios_utilizador) : dataPremioUtilizador,
@@ -37,11 +38,13 @@ export default new Vuex.Store({
     isEmailAvailable: (state) => (email) => state.users.every((user) => user.email !== email),
     getLoggedUser: (state) => state.loggedUser,
     isUser: (state) => (email, password) => state.users.some((user) => user.email === email && user.password === password),
+    isLocked: (state) => (email) => state.users.find((user) => user.email === email).is_locked,
     getBadges: (state) => state.badges,
-    getNextAvailableUserID: (state) => state.users.length > 0 ? state.users[state.users.length - 1].id + 1 : 0,
+    getNextAvailableUserID: (state) => state.users.length > 0 ? Math.max.apply(null, state.users.map(user => user.id)) + 1 : 0,
     getAllUsers: (state) => state.users,
     getAllTitles: (state) => state.obra,
     getAllGenres: (state) => state.genero,
+    getAllQuizzes: (state) => state.quiz,
     getTitleInfo: (state) => (id) => state.obra.find(obra => obra.id_imdb == id),
     getTitleLikes: (state) => (id) => state.obras_gosto.filter(titulo => titulo.id_utilizador == id).map(titulo => titulo.id_imdb),
     getTitlesSeenByUser: (state) => (id) => state.vistos.filter(titulo => titulo.id_utilizador == id).map(visto => visto.id_imdb),
@@ -55,115 +58,106 @@ export default new Vuex.Store({
     getTitleMovizzRating: (state) => (id) => parseFloat(parseFloat(state.classificacao_obra.filter(rating => rating.id_imdb == id).map(rating => rating.pontuacao).reduce((accum, curr) => accum + curr, 0)) / parseFloat(state.classificacao_obra.filter(rating => rating.id_imdb == id).length || 1)).toFixed(1),
     getQuizRating: (state) => (id) => parseFloat(parseFloat(state.classificacao_quiz.filter(rating => rating.id_quiz == id).map(rating => rating.pontuacao).reduce((accum, curr) => accum + curr, 0)) / parseFloat(state.classificacao_quiz.filter(rating => rating.id_quiz == id).length || 1)).toFixed(1),
     getAllPrizes: (state) => state.premios,
-    getAllPremiosUtilizador: (state) => state.premios_utilizador,
-    getPremioInfo:(state)=>(id)=>state.premios.find(premio => premio.id_premio == id),
-    getAllCommentsLoggedUser: (state) =>(id)=> state.comentarios_obra.filter(comentario=>comentario.id_utilizador==id),
-    getAllRatingsLoggedUser: (state) =>(id)=> state.classificacao_obra.filter(classificacao=>classificacao.id_utilizador==id),
+    getAllUserPrizes: (state) => (id) => state.premios_utilizador.filter(premio => premio.id_utilizador == id),
+    getPrizeInfo:(state)=>(id)=>state.premios.find(premio => premio.id_premio == id),
+    getAllUserComments: (state) =>(id)=> state.comentarios_obra.filter(comentario=>comentario.id_utilizador==id).concat(state.comentarios_quiz.filter(comentario=>comentario.id_utilizador==id)),
+    getAllUserRatings: (state) =>(id)=> state.classificacao_obra.filter(classificacao=>classificacao.id_utilizador==id).concat(state.classificacao_quiz.filter(classificacao=>classificacao.id_utilizador==id)),
     getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id),
-    getAllPlatforms:(state)=>state.plataformas,
-    getPlatformsById:(state)=>(id)=>state.plataformas.find(plat=>plat.id_plataforma==id),
+    getTopUsers: (state) => state.users.length >= 10 ? [...state.users].sort((a, b) => (a.xp > b.xp) ? -1 : (a.xp < b.xp) ? 1 : 0).slice(0, 10) : [...state.users].sort((a, b) => (a.xp > b.xp) ? -1 : (a.xp < b.xp) ? 1 : 0),
+    getNextAvailablePrizeID: (state) => state.premios.length > 0 ? Math.max.apply(null, state.premios.map(premio => premio.id_premio)) + 1 : 0,
+    getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id),
+    getAllPlatforms:(state)=> state.plataformas,
+    getPlatformsById:(state)=> (id) => state.plataformas.find(plat=>plat.id_plataforma==id),
   },
   actions:{
-    // async loadMovies(context) {
-    //   for (let i=0; i<25; i++) {
-    //     console.log("Série nmr. " + (i + 1));
-    //     console.log("A ir buscar info de:" + this.state.tempSeries[i].title);
-    //     let wasfound=false;
-    //     for (let j=0; j<this.state.obra.length; j++) {
-    //       if(this.state.tempSeries[i].id==this.state.obra[j].id_imdb){
-    //         wasfound=true;
-    //         console.log(this.state.tempSeries[i].title + " already exists, skipping");
-    //       }
-    //     }
-    //     if(!wasfound){
-    //       const response = await fetch(
-    //         `https://imdb-api.com/en/API/Title/${this.state.api_keys[this.state.cur_api]}/${this.state.tempSeries[i].id}/FullCast,Posters,Trailer`
-    //       );
-    //       this.state.quant_calls += 3;
-    //       if (response.ok) {
-    //         console.log("à espera da response")
-    //         const beSure = await response.json();
-    //         console.log("recebeu response")
-    //         if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
-    //           console.log("a dar set à obra")
-    //           context.commit("SET_OBRA", beSure);
-    //           console.log(this.state.tempSeries[i].title + ": a gurdar a informação");
-    //           if (beSure.tvSeriesInfo || beSure.tvSeriesInfo != null || beSure.tvSeriesInfo != "null") {
-    //             console.log(this.state.tempSeries[i].title + ": a ir buscar as temporadas (" + beSure.tvSeriesInfo.seasons.length +")");
-    //             await this.dispatch('loadSeriesSeason', beSure);
-    //           }
-    //         } else {
-    //           console.log("api was changed check logs");
-    //           console.log("next index was supposed to be: " + i);
-    //           console.log("but now we are going to repeat: " + (i - 1));
-    //           i--;
-    //           localStorage.setItem(this.state.cur_api + '_exceeded', new Date());
-    //           this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
-    //         }
-    //       } else {
-    //         console.log("api was changed check logs");
-    //         console.log("next index was supposed to be: " + i);
-    //         console.log("but now we are going to repeat: " + (i - 1));
-    //         i--;
-    //         localStorage.setItem(this.state.cur_api + '_exceeded', new Date());
-    //         this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
-    //         // throw new Error(response.status);
-    //       }
-    //     }
-    //   }
-    // },
-    // async loadMovies(context) {
-    //   console.log("starting...")
-    //   for(let i=0; i<25; i++) {
-    //     let wasfound=false;
-    //     for (let j=0; j<this.state.obra.length; j++) {
-    //       if(this.state.movies[i].id==this.state.obra[j].id_imdb){
-    //         console.log("já tem");
-    //         wasfound=true;
-    //       }
-    //     }
-    //     if(!wasfound){
-    //       const response = await fetch(
-    //         `https://imdb-api.com/en/API/Title/k_82n08589/${this.state.movies[i].id}/FullCast,Posters,Trailer`
-    //       );
-    //       if (response.ok) {
-    //         context.commit("SET_OBRA", await response.json());
-    //       } else {
-    //         throw new Error(response.status);
-    //       }
-    //     }
-    //   }
-    // },
-    // async loadSeriesSeason(context, payload) {
-    //   for (let j = 0; j < payload.tvSeriesInfo.seasons.length; j++) {
-    //     console.log("A ir buscar temporada " + (j + 1) + " de " + payload.title);
-    //     const response = await fetch(
-    //       `https://imdb-api.com/en/API/SeasonEpisodes/${this.state.api_keys[this.state.cur_api]}/${payload.id}/${j + 1}`
-    //     );
-    //     this.state.quant_calls += 1;
-    //     if (response.ok) {
-    //       const beSure = await response.json();
-    //       if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
-    //         context.commit("SET_SEASON", beSure);
-    //       } else {
-    //         console.log("SEASONS: api was changed check logs");
-    //         console.log("SEASONS: next index was supposed to be: " + j);
-    //         console.log("SEASONS: but now we are going to repeat: " + (j - 1));
-    //         j--;
-    //         localStorage.setItem('SEASONS_' + this.state.cur_api + '_exceeded', new Date());
-    //         this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
-    //       }
-    //     } else {
-    //       console.log("SEASONS: api was changed check logs");
-    //       console.log("SEASONS: next index was supposed to be: " + j);
-    //       console.log("SEASONS: but now we are going to repeat: " + (j - 1));
-    //       j--;
-    //       localStorage.setItem('SEASONS_' + this.state.cur_api + '_exceeded', new Date());
-    //       this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = 7;
-    //       // throw new Error(response.status);
-    //     }
-    //   }
-    // }
+    async saveNewTitle(context, payload) {
+      // Verificar se o filme a tentar ser adicionado/editado está na base de dados
+      if (this.state.obra.some(title => title.id_imdb == payload[0])) {
+        throw new Error("The title you're trying to add already exists in the platform");
+      } else {
+        // O título não existe portanto realizar a call à API (https://imdb-api.com/) para obter as informações
+        const response = await fetch(`https://imdb-api.com/en/API/Title/${this.state.api_keys[this.state.cur_api]}/${payload[0]}/FullCast,Posters,Trailer`);
+        if (response.ok) {
+          this.tries_main = 0;
+          const beSure = await response.json();
+          // Há a possibilidade de ter havido um erro na call mas mesmo assim a API devolver um objeto a descrever o erro, lidar com isso
+          if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
+            // A informação veio correta
+            // Adicionar a informação principal à base de dados
+            beSure.plataformas = payload[1];
+            context.commit("SET_OBRA", beSure);
+            // Se o título for uma série, obter os episódios todos da mesma
+            if (beSure.tvSeriesInfo) {
+              await this.dispatch('getSeriesEpisodes', beSure);
+            }
+          } else {
+            // Deu erro, mudar a key e tentar novamente
+            console.log("Error happened.");
+            this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
+            // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
+            this.tries_main += 1;
+            if (this.tries_main >= this.state.cur_api.length + 1) {
+              throw new Error("The API service is down, please try again later");
+            } else {
+              // Recursive magic
+              this.dispatch('saveNewTitle', payload[0]);
+            }
+          }
+        } else {
+          console.log("Error happened.");
+          // Se ocorreu algum erro na call à API mudar a key e tentar novamente
+          this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
+          // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
+          this.tries_main += 1;
+          if (this.tries_main >= this.state.cur_api.length + 1) {
+            throw new Error("The API service is down, please try again later");
+          } else {
+            // Recursive magic
+            this.dispatch('saveNewTitle', payload[0]);
+          }
+        }
+      }
+    },
+    async getSeriesEpisodes(context, new_title) {
+      for (let i = 0; i < new_title.tvSeriesInfo.seasons.length; i++) {
+        // Fazer uma call à api por cada temporada que houver
+        const response = await fetch(`https://imdb-api.com/en/API/SeasonEpisodes/${this.state.api_keys[this.state.cur_api]}/${new_title.id}/${i + 1}`);
+        if (response.ok) {
+          const beSure = await response.json();
+          // Há a possibilidade de ter havido um erro na call mas mesmo assim a API devolver um objeto a descrever o erro, lidar com isso
+          if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
+            // A informação veio correta
+            this.tries_eps = 0;
+            // Introduzir a informação da temporada na base de dados
+            context.commit("SET_SEASON", beSure);
+          } else {
+            console.log("Error happened.");
+             // Se ocorreu algum erro na call à API mudar a key e tentar novamente
+             this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
+             // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
+             this.tries_eps += 1;
+             if (this.tries_eps >= this.state.cur_api.length + 1) {
+               throw new Error("The API service is down, please try again later");
+             } else {
+               // Recursive magic
+               this.dispatch('getSeriesEpisodes', new_title);
+             }
+          }
+        } else {
+          console.log("Error happened.");
+           // Se ocorreu algum erro na call à API mudar a key e tentar novamente
+           this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
+           // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
+           this.tries_eps += 1;
+           if (this.tries_eps >= this.state.cur_api.length + 1) {
+             throw new Error("The API service is down, please try again later");
+           } else {
+             // Recursive magic
+             this.dispatch('getSeriesEpisodes', new_title);
+           }
+        }
+      }
+    }
   },
   mutations: {
     SET_SEASON: (state, payload) => {
@@ -178,14 +172,10 @@ export default new Vuex.Store({
           });
         }
       } catch (e) {
-        alert("STOP!!!!! " + e)
+        throw new Error(e)
       }
 
       localStorage.obra = JSON.stringify(state.obra);
-      console.log("Temporada " + payload.episodes[0].seasonNumber + " de " + payload.title + " obtida com sucesso");
-      if (payload.episodes[0].seasonNumber == state.obra[state.obra.length - 1].total_temporadas) {
-        console.log("Série foi obtida completamente com sucesso");
-      }
     },
     SET_OBRA: (state, payload) => {
       try {
@@ -208,10 +198,11 @@ export default new Vuex.Store({
           produtores: [],
           diretores: payload.directorList,
           escritores: !payload.tvSeriesInfo ? payload.writerList : null,
-          pontuacao_imdb:payload.imDbRating
+          pontuacao_imdb:payload.imDbRating,
+          plataformas: payload.plataformas
         });
       } catch (e) {
-        alert("Error: " + e)
+        throw new Error(e)
       }
 
       // Géneros
@@ -254,9 +245,7 @@ export default new Vuex.Store({
         // Diretores (manter um cap de 5 diretores - os principais - para não encher a localstorage)
         state.obra[state.obra.length - 1].diretores = payload.fullCast.directors.items.length > 5 ? payload.fullCast.directors.items.slice(0, 5) : payload.fullCast.directors.items;
       }
-
       localStorage.obra = JSON.stringify(state.obra);
-      console.log(payload.title + " obtido com sucesso");
     },
     SET_MOVIES: (state, payload) => {
       state.movies = payload
@@ -281,6 +270,7 @@ export default new Vuex.Store({
         state.users[payload.index].email = payload.email;
         state.users[payload.index].password = payload.password;
         state.users[payload.index].data_nascimento = payload.data_nascimento;
+        state.users[payload.index].is_admin = payload.is_admin;
         localStorage.users = JSON.stringify(state.users);
       } else {
         state.users[payload.index].avatar = payload.avatar;
@@ -332,27 +322,27 @@ export default new Vuex.Store({
       
     },
     REMOVE_QUIZ_RATING(state, payload){
-      state.classificacao_quiz = state.classificacao_quiz.filter(rate=>(rate.id_quiz != payload && rate.id_utilizador==state.loggedUser.id) || rate.id_utilizador != state.loggedUser.id);
+      state.classificacao_quiz = state.classificacao_quiz.filter(rate=>(rate.id_quiz != payload.id_quiz && rate.id_utilizador==payload.id_user) || rate.id_utilizador != payload.id_user);
       localStorage.classificacao_quiz = JSON.stringify(state.classificacao_quiz);
     },
     REMOVE_HAS_SEEN(state,payload){
-      state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
+      state.vistos= state.vistos.filter(filme=>(filme.id_imdb!=payload.id_imdb && filme.id_utilizador==payload.id_user) || filme.id_utilizador!=payload.id_user);
       localStorage.vistos = JSON.stringify(state.vistos);
     },
     REMOVE_LIKE(state,payload){
-      state.obras_gosto= state.obras_gosto.filter(filme=>(filme.id_imdb!=payload && filme.id_utilizador==state.loggedUser.id) || filme.id_utilizador!=state.loggedUser.id);
+      state.obras_gosto= state.obras_gosto.filter(filme => (filme.id_imdb != payload.id_imdb && filme.id_utilizador == payload.id_user) || filme.id_utilizador != payload.id_user);
       localStorage.obras_gosto = JSON.stringify(state.obras_gosto);
     },
     REMOVE_TITLE_RATING(state,payload){
-      state.classificacao_obra= state.classificacao_obra.filter(rate=>(rate.id_imdb!=payload && rate.id_utilizador==state.loggedUser.id) || rate.id_utilizador!=state.loggedUser.id);
+      state.classificacao_obra= state.classificacao_obra.filter(rate=>(rate.id_imdb!=payload.id_imdb && rate.id_utilizador==payload.id_user) || rate.id_utilizador!=payload.id_user);
       localStorage.classificacao_obra = JSON.stringify(state.classificacao_obra);
     },
     REMOVE_TITLE_COMMENT(state,payload){
-      state.comentarios_obra = state.comentarios_obra.filter(comment=>(comment.id_comentario!=payload && comment.id_utilizador==state.loggedUser.id) || comment.id_utilizador!=state.loggedUser.id);
+      state.comentarios_obra = state.comentarios_obra.filter(comment=>(comment.id_comentario!=payload.id_comment && comment.id_utilizador==payload.id_user) || comment.id_utilizador!=payload.id_user);
       localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
     },
     REMOVE_QUIZ_COMMENT(state,payload){
-      state.comentarios_quiz = state.comentarios_quiz.filter(comment=>(comment.id_comentario != payload && comment.id_utilizador == state.loggedUser.id) || comment.id_utilizador != state.loggedUser.id);
+      state.comentarios_quiz = state.comentarios_quiz.filter(comment=>(comment.id_comentario != payload.id_comment && comment.id_utilizador == payload.id_user) || comment.id_utilizador != payload.id_user);
       localStorage.comentarios_quiz = JSON.stringify(state.comentarios_quiz);
     },
     SET_NEW_BUY(state,payload){
@@ -391,15 +381,19 @@ export default new Vuex.Store({
       state.loggedUser = state.users.find((user) => user.email === state.loggedUser.email);
       localStorage.loggedUser = JSON.stringify(state.loggedUser);
     },
-    SET_NEW_QUIZ(state,payload) {
+    SET_BLOCKED_STATE(state, payload) {
+      state.users[state.users.findIndex(user => user.id == payload.id_user)].is_locked = payload.is_locked;
+      localStorage.users = JSON.stringify(state.users);
+    },
+    SET_NEW_PRIZE(state,payload) {
       state.premios.push(payload);
       localStorage.premios = JSON.stringify(state.premios);
     },
-    REMOVE_QUIZ(state,payload) {
+    REMOVE_PRIZE(state,payload) {
       state.premios = state.premios.filter(premio=>(premio.id_premio != payload));
       localStorage.premios = JSON.stringify(state.premios);
     },
-    UPDATE_QUIZ(state,payload) {
+    UPDATE_PRIZE(state,payload) {
       state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].id_premio = payload.id_premio;
       state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].nome = payload.nome;
       state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].img = payload.img;
@@ -419,6 +413,22 @@ export default new Vuex.Store({
     REMOVE_TITLE(state,payload){
       state.obra = state.obra.filter(obra=>(obra.id_imdb != payload));
       localStorage.obra= JSON.stringify(state.obra);
-    },
+
+      // Remover os comentários que pertencem a este titulo
+      state.comentarios_obra = state.comentarios_obra.filter(comentario => comentario.id_imdb != payload);
+      localStorage.comentarios_obra = JSON.stringify(state.comentarios_obra);
+
+      // Remover os ratings que pertencem a este titulo
+      state.classificacao_obra = state.classificacao_obra.filter(classificacao => classificacao.id_imdb != payload);
+      localStorage.classificacao_obra = JSON.stringify(state.classificacao_obra);
+
+      // Remover os likes que pertencem a este titulo
+      state.obras_gosto = state.obras_gosto.filter(gosto => gosto.id_imdb != payload);
+      localStorage.obras_gosto = JSON.stringify(state.obras_gosto);
+
+      // Remover os vistos que pertencem a este titulo
+      state.vistos = state.vistos.filter(visto => visto.id_imdb != payload);
+      localStorage.vistos = JSON.stringify(state.vistos);
+    }
   }
 });

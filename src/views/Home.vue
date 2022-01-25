@@ -5,48 +5,27 @@
       <span style="border-right: 3px solid var(--verde); font-weight: bold; color: var(--verde); font-size: 1.5em;"
         class="pe-2 d-flex align-items-center text-end">Movizz<br>Hall of Fame</span>
       <div class="top-3 d-flex align-items-end" style="gap: 15px;">
-        <div class="member d-flex flex-column align-items-center">
+
+        <div class="member d-flex flex-column align-items-center" style="cursor: pointer;" v-for="i in (getTopUsers.length > 3) ? 3 : getTopUsers.length" :key="i" @click="$router.push({ name: 'Profile', params: { id: getTopUsers[i - 1].id }})">
           <div style="position: relative;">
-            <img src="https://thispersondoesnotexist.com/image" width="50px" height="50px" style="border-radius: 50%;">
-            <img src="../assets/images/crown_gold_icon.svg" width="35px"
+            <img :src="getTopUsers[i - 1].avatar" width="50px" height="50px" style="border-radius: 50%; object-fit: cover; object-position: center top;">
+            <img :src="crowns[i - 1]" width="35px"
               style="position: absolute; top: -18px; left: 23px; transform: rotate(30deg);">
-            <p class="member-level big">44</p>
+            <p class="member-level big">{{ getTopUsers[i - 1].nivel }}</p>
           </div>
-          <p class="m-0 mt-2 text-center" style="color: white;">Gonçalo</p>
-          <p style="color: var(--cinza2);" class="m-0 text-center">Director</p>
-        </div>
-
-        <div class="member d-flex flex-column align-items-center">
-          <div style="position: relative;">
-            <img src="https://thispersondoesnotexist.com/image" width="40px" height="40px" style="border-radius: 50%;">
-            <img src="../assets/images/crown_silver_icon.svg" width="30px"
-              style="position: absolute; top: -16px; left: 16px; transform: rotate(25deg);">
-            <p class="member-level small">39</p>
-          </div>
-          <p class="m-0 mt-2 text-center" style="color: white;">Diogo</p>
-          <p style="color: var(--cinza2);" class="m-0 text-center">Producer</p>
-        </div>
-
-        <div class="member d-flex flex-column align-items-center">
-          <div style="position: relative;">
-            <img src="https://thispersondoesnotexist.com/image" width="40px" height="40px" style="border-radius: 50%;">
-            <img src="../assets/images/crown_bronze_icon.svg" width="30px"
-              style="position: absolute; top: -16px; left: 16px; transform: rotate(25deg);">
-            <p class="member-level small">26</p>
-          </div>
-          <p class="m-0 mt-2 text-center" style="color: white;">Carlos</p>
-          <p style="color: var(--cinza2);" class="m-0 text-center">Apprentice</p>
+          <p class="m-0 mt-2 text-center" style="color: white;">{{ getTopUsers[i - 1].primeiro_nome }}</p>
+          <p style="color: var(--cinza2);" class="m-0 text-center">{{ getBadges[getTopUsers[i - 1].id_badge].name }}</p>
         </div>
       </div>
     </div>
     <!-- Banner -->
-    <div style="height:425px;">
+    <div style="height:425px;" @click="$router.push({ name: 'Quiz', params: { id: 6 }})">
       <div class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5" style=" height:100% ; background-position: center; border-radius: 10px;">
         <div class="container for-about">
           <p style="color: var(--cinza2); font-weight: 500;">Quiz of the day</p>
           <h3 style="font-weight: bold;">Stranger Things</h3>
           <h5>Think you know about the upside down? Think again.</h5>
-          <p style="color: var(--cinza2); font-weight: bold;">10 questions • Normal difficulty</p>
+          <p style="color: var(--cinza2); font-weight: bold;">5 questions • Normal difficulty</p>
           <br>
           <div>
             <router-link :to="{name:''}"><img src="../assets/images/play_icon.png" width="25px"
@@ -69,122 +48,14 @@
     <div class="carousel-wrapper" style="position: relative;">
       <div class="row-carousel disable-scrollbars">
         <div class="row__inner p-0">
-          <div class="tile">
+          <div class="tile" v-for="i in 10" :key="i">
             <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
+              <img class="tile__img" :src="getAllQuizzes[i - 1].poster" />
             </div>
             <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img" src="http://ae01.alicdn.com/kf/H82dbacf2a86942828898af5d5c75704dM.jpg" alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://upload.wikimedia.org/wikipedia/pt/e/e1/Breaking_bad_5_temporada_%28parte_1%29_poster.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile__media">
-              <img class="tile__img"
-                src="https://musicnonstop.uol.com.br/wp-content/uploads/2021/08/PT-BR_LCDP_S5_Main_Vertical_RGB_PRE.jpg"
-                alt="" />
-            </div>
-            <div class="tile__details p-2">
-              <p class="quiz-card-title">Quiz about Prison Break</p>
-              <p class="quiz-card-play">▶</p>
-              <p class="quiz-card-rating">4.7</p>
+              <p class="quiz-card-title">{{ getAllQuizzes[i - 1].titulo }}</p>
+              <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: getAllQuizzes[i - 1].id_quiz } })">▶</p>
+              <p class="quiz-card-rating">{{ getQuizRating(getAllQuizzes[i - 1].id_quiz) }}</p>
             </div>
           </div>
         </div>
@@ -251,8 +122,13 @@
 <script>
 import { mapGetters } from "vuex";
   export default {
+    data() {
+      return {
+        crowns: [require("../assets/images/crown_gold_icon.svg"), require("../assets/images/crown_silver_icon.svg"), require("../assets/images/crown_bronze_icon.svg")],
+      }
+    },
     computed: {
-      ...mapGetters(["getAllTitles"]),
+      ...mapGetters(["getAllTitles", "getAllQuizzes", "getQuizRating", "getTopUsers", "getBadges"]),
     },
     methods: {
       simulateScroll(dir, target) {

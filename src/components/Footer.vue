@@ -42,6 +42,7 @@ export default {};
     background-color: #151E2E;
     padding: 40px;
     gap: 25px;
+    width: 100%;
   }
 
   #social {

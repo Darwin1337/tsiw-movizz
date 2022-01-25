@@ -114,17 +114,24 @@ export default {
         num_quizzes: 0,
         num_certas: 0,
         num_erradas: 0,
-        num_ajudas: 0
+        num_ajudas: 0,
+		    is_admin: true, 
+        data_registo: new Date(),
+        played: [],
+        is_locked: false
       }
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGGED_USER"]),
-    ...mapMutations(["SET_NEW_USER"]),
+    ...mapMutations(["SET_LOGGED_USER", "SET_NEW_USER"]),
     loginUser() {
       if (this.isUser(this.old_user.email, this.old_user.password)) {
-        this.SET_LOGGED_USER(this.old_user.email);
-        this.$router.push({ name: "Home" });
+        if (!this.isLocked(this.old_user.email)) {
+          this.SET_LOGGED_USER(this.old_user.email);
+          this.$router.push({ name: "Home" });
+        } else {
+          this.$swal('Error!', 'Your account has been locked.', 'error');
+        }
       } else {
         this.$swal('Error!', 'The data entered is not in our system.', 'error');
       }
@@ -134,16 +141,14 @@ export default {
         this.new_user.id = this.getNextAvailableUserID;
         this.new_user.data_registo = new Date();
         this.SET_NEW_USER(this.new_user);
-        this.$swal('Success!', 'The sign in was successful.', 'success');
+        this.$swal('Success!', 'The sign up was successful.', 'success');
       } else {
         this.$swal('Error!', 'The e-mail entered is already being used.', 'error');
       }
     }
   },
   computed: {
-    ...mapGetters(["isEmailAvailable"]),
-    ...mapGetters(["isUser"]),
-    ...mapGetters(["getNextAvailableUserID"])
+    ...mapGetters(["isEmailAvailable", "isUser", "getNextAvailableUserID", "isLocked"])
   }
 }
 </script>

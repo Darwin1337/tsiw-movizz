@@ -138,7 +138,7 @@
   </div>
 </template>
 <script>
- import { mapActions, mapGetters } from "vuex";
+ import { mapGetters } from "vuex";
   export default {
     data() {
       return {
@@ -160,7 +160,7 @@
     created () {
       this.titles = this.selectedType == 1 ? this.getAllTitles.filter(title => title.total_temporadas == 0) : this.getAllTitles.filter(title => title.total_temporadas > 0);
       this.generos = this.getAllGenres.map(genre => genre.descricao);
-      this.titles.map(title => {
+      this.getAllTitles.map(title => {
         // Pré carregar anos para o select
         if (!this.anos.some(ano => ano == title.ano)) {
           this.anos.push(title.ano);

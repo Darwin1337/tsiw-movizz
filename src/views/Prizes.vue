@@ -40,7 +40,7 @@
             <img class="w-100 h-100" :src="getAllPrizes[index].img" alt="Card image cap">
           </div>
           <div class="card-body text-center">
-            <h5 class="card-title">{{getAllPrizes[index].nome}}</h5>
+            <h5 class="card-title" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{getAllPrizes[index].nome}}</h5>
             <p class="card-text">{{getAllPrizes[index].valor}} pontos</p>
             <button :disabled="getAllPrizes[index].valor>getLoggedUser.pontos" :class="{noPoints:getAllPrizes[index].valor>getLoggedUser.pontos}" class="orange-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openModal(index)" style="max-width: 150px; width: 100%;">Buy</button>
           </div>

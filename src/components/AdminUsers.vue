@@ -1,47 +1,72 @@
 <template>
-  <div class="container ">
-    <div class="navigation d-flex flex-wrap mt-5">
-      <a @click="tab='users'" :class="{ active: tab == 'users'}" >Users</a>
-      <a @click="tab='quizzes'" :class="{ active: tab == 'quizzes'}" >Quizzes</a>
-      <a @click="tab='movie'" :class="{ active: tab == 'movie'}">Movie/Series</a>
-      <a @click="tab='prizes'" :class="{ active: tab == 'prizes'}" >Prizes</a>
-    </div>
-    <div v-if="tab=='users'">
-      <AdminUsers />
-    </div>
-    <div id="section2">
-      <div v-if="tab=='quizzes'">
-        <AdminQuizzes />
+    <div>
+      <!-- filtros -->
+      <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-5 mb-3">
+        <div class="col-md-12 col-lg-3 col-sm-12">
+          <form class="d-flex">
+            <div class="input-group">
+              <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
+              <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-md-3 col-lg-2 col-sm-6">
+          <select id="order" style="height: 40px;">
+            <option disabled selected>Order by</option>
+            <option :value=filter v-for="(filter,index) in filters" :key="index">{{filter}}</option>
+          </select>
+        </div>
       </div>
-      <div v-if="tab=='movie'">
-        <AdminTitles />
-      </div>
-      <div v-if="tab=='prizes'">
-        <AdminPrizes />
+      <div>
+        <div class="row g-3">
+          <div class="col-md-12 col-lg-6 col-sm-12 d-flex" v-for="i in (getAllUsers.length >= mostrar ? mostrar : getAllUsers.length)" :key="i">
+            <div class="member d-flex align-items-center cardUser w-100 justify-content-between">
+              <div style="position: relative;" class="padding-10" >
+                <img :src="getAllUsers[i - 1].avatar" width="50px" height="50px" style="border-radius: 50%; object-fit: cover; object-position: center top;">
+                <p class="member-level big">{{ getAllUsers[i - 1].nivel }}</p>
+              </div>
+              <div class="padding-10">
+                <b>{{ getAllUsers[i - 1].primeiro_nome + " " + getAllUsers[i - 1].ultimo_nome }}</b><span style="color:var(--cinza-claro);"> {{ getBadges[getAllUsers[i - 1].id_badge].name }}</span>
+                <p class="m-0" style="color:var(--cinza-claro);"><b>Registered since</b> {{ new Date(getAllUsers[i - 1].data_registo).getDate() + "/" + (parseInt(new Date(getAllUsers[i - 1].data_registo).getMonth()) + 1) + "/" + new Date(getAllUsers[i - 1].data_registo).getFullYear() }}</p>
+              </div>
+              <div class="padding-10">
+                <p class="m-0" style="color:var(--cinza-claro);"><b>{{ getAllUsers[i - 1].is_locked ? "Blocked" : "Not blocked" }}</b></p>
+              </div>
+              <span v-if="getLoggedUser.id != getAllUsers[i - 1].id" class="unblock-button" @click="blockUser(getAllUsers[i - 1])"><i class="fas fa-ban"></i></span>
+              <div class="padding-10">
+                <button class="detailsButton" @click="$router.push({ name: 'Profile', params: { id: getAllUsers[i - 1].id } })">Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="mostrar < getAllUsers.length" class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar = mostrar + 12 <= getAllUsers.length ? mostrar + 12 : getAllUsers.length">Load More</button>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
-import AdminPrizes from '../components/AdminPrizes.vue'
-import AdminTitles from '../components/AdminTitles.vue'
-import AdminUsers from '../components/AdminUsers.vue'
-import AdminQuizzes from '../components/AdminQuizzes.vue'
+import { mapGetters, mapMutations } from "vuex";
 
-  export default {
-    components: {
-      AdminPrizes,
-      AdminTitles,
-      AdminUsers,
-      AdminQuizzes
-    },
+export default ({
     data() {
-      return {
-        tab: "users"
-      }
+        return {
+            mostrar: 12,
+            filters: ["All", "Blocked", "Not blocked"],
+        }
+    },
+    computed: {
+      ...mapGetters(["getAllUsers", "getBadges", "getLoggedUser"])
+    },
+    methods: {
+      ...mapMutations(["SET_BLOCKED_STATE"]),
+      blockUser(user) {
+          this.SET_BLOCKED_STATE({ id_user: user.id, is_locked: !user.is_locked });
+      },
     }
-  }
+});
 </script>
 
 <style scoped>
@@ -515,3 +540,4 @@ import AdminQuizzes from '../components/AdminQuizzes.vue'
     }
   }
 </style>
+

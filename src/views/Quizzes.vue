@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="row m-0 mt-4">
-      <div class="col-lg-8" style="max-height: 425px;">
+      <div class="col-lg-8" style="max-height: 425px;" @click="$router.push({ name: 'Quiz', params: { id: 6 }})">
         <div class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5"
           style=" height:100% ; background-position: center; border-radius: 10px;">
           <div class="container for-about">
             <p style="color: var(--cinza2); font-weight: 500;">Quiz of the day</p>
             <h3 style="font-weight: bold;">Stranger Things</h3>
             <h5>Think you know about the upside down? Think again.</h5>
-            <p style="color: var(--cinza2); font-weight: bold;">10 questions • Normal difficulty</p>
+            <p style="color: var(--cinza2); font-weight: bold;">5 questions • Normal difficulty</p>
             <br>
             <div>
               <router-link :to="{name:''}"><img src="../assets/images/play_icon.png" width="25px"
@@ -18,21 +18,21 @@
         </div>
       </div>
       <div class="col-lg-4 p-3" style="background: var(--azul-escuro); border-radius: 10px; max-height: 425px;">
-        <h5 class="text-center">Top 10 Leaderboard</h5>
+        <h5 class="text-center">Top {{ getTopUsers.length }} Leaderboard</h5>
         <div style="overflow-y: scroll; overflow-x: hidden; max-height: 300px;" id="leaderboardBar">
-          <div class="row leaderboard-card m-0 mt-2 me-2 pt-2 pb-2 pe-1 ps-1" v-for="i in 10" :key="i">
+          <div style="cursor: pointer;" class="row leaderboard-card m-0 mt-2 me-2 pt-2 pb-2 pe-1 ps-1" v-for="i in getTopUsers.length" :key="i" @click="$router.push({ name: 'Profile', params: { id: getTopUsers[i - 1].id }})">
             <div class="col-2 d-flex justify-content-center align-items-center">
               <div class="position-relative">
                 <img v-if="i <= 3" :src="crowns[i - 1]" width="25px"
                   style="position: absolute; top: -11px; left: -7px; transform: rotate(-30deg);">
-                <img class="avatar" src="https://thispersondoesnotexist.com/image">
+                <img class="avatar" style="object-fit: cover; object-position: center top;" :src="getTopUsers[i - 1].avatar">
               </div>
             </div>
-            <div class="col-4 d-flex justify-content-center align-items-center">Albertino</div>
-            <div class="col-4 d-flex justify-content-center align-items-center"><strong>4500 points</strong></div>
+            <div class="col-4 d-flex justify-content-center align-items-center">{{ getTopUsers[i - 1].primeiro_nome }}</div>
+            <div class="col-4 d-flex justify-content-center align-items-center"><strong>{{ getTopUsers[i - 1].xp }} XP</strong></div>
             <div class="col-2 d-flex justify-content-center align-items-center">
               <span class="d-flex justify-content-center align-items-center"
-                style="font-size: .85em; background-color: var(--azul-claro); color: var(--bg); font-weight: bold; border-radius: 50%; min-width: 25px; min-height: 25px;">23</span>
+                style="font-size: .85em; background-color: var(--azul-claro); color: var(--bg); font-weight: bold; border-radius: 50%; min-width: 25px; min-height: 25px;">{{ getTopUsers[i - 1].nivel }}</span>
             </div>
           </div>
         </div>
@@ -52,13 +52,12 @@
             <div class="row__inner p-0">
               <div class="tile" v-for="i in 10" :key="i">
                 <div class="tile__media">
-                  <img class="tile__img" src="http://ae01.alicdn.com/kf/H82dbacf2a86942828898af5d5c75704dM.jpg"
-                    alt="" />
+                  <img class="tile__img" :src="shuffleTop[i - 1].poster" />
                 </div>
                 <div class="tile__details p-2">
-                  <p class="quiz-card-title">Quiz about Prison Break</p>
-                  <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: '0' } })">▶</p>
-                  <p class="quiz-card-rating">4.7</p>
+                  <p class="quiz-card-title">{{ shuffleTop[i - 1].titulo }}</p>
+                  <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: shuffleTop[i - 1].id_quiz } })">▶</p>
+                  <p class="quiz-card-rating">{{ getQuizRating(shuffleTop[i - 1].id_quiz) }}</p>
                 </div>
               </div>
             </div>
@@ -69,38 +68,42 @@
     <!-- filtros -->
     <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-5 mb-3">
       <div class="col-md-12 col-lg-3 col-sm-12">
-        <form class="d-flex">
+        <form @submit.prevent="" class="d-flex">
           <div class="input-group">
-            <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-            <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+            <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters.search">
+            <button type="button"><i class="fas fa-search"></i></button>
           </div>
         </form>
       </div>
 
       <div class="col-md-3 col-lg-2 col-sm-6">
-        <select id="difficulty" style="height: 40px;">
-          <option disabled selected>Difficulty</option>
-          <option :value=difficulty v-for="(difficulty, index) in difficulties" :key="index">{{ difficulty }}</option>
+        <select id="difficulty" style="height: 40px;" v-model="filters.difficulty">
+          <option disabled value="Difficulty">Difficulty</option>
+          <option value="All">All</option>
+          <option :value=difficulty.key v-for="(difficulty, index) in difficulties" :key="index">{{ difficulty.value }}</option>
         </select>
       </div>
 
       <div class="col-md-3 col-lg-2 col-sm-6">
-        <select id="theme" style="height: 40px;">
-          <option disabled selected>Theme</option>
+        <select id="theme" style="height: 40px;" v-model="filters.theme">
+          <option disabled value="Theme">Theme</option>
+          <option value="All">All</option>
           <option :value=theme v-for="(theme, index) in themes" :key="index">{{ theme }}</option>
         </select>
       </div>
 
       <div class="col-md-3 col-lg-2 col-sm-6">
-        <select id="type" style="height: 40px;">
-          <option disabled selected>Type</option>
-          <option :value=type v-for="(type, index) in types" :key="index">{{ type }}</option>
+        <select id="type" style="height: 40px;" v-model="filters.type">
+          <option disabled value="Type">Type</option>
+          <option value="All">All</option>
+          <option :value=type.key v-for="(type, index) in types" :key="index">{{ type.value }}</option>
         </select>
       </div>
 
       <div class="col-md-3 col-lg-3 col-sm-6">
-        <select id="order" style="height: 40px;">
-          <option disabled selected>Order by</option>
+        <select id="order" style="height: 40px;" v-model="filters.orderby">
+          <option disabled value="Order by">Order by</option>
+          <option value="Recently added">Recently added</option>
           <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
           <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
           <option value="Best rated">Best rated</option>
@@ -113,37 +116,70 @@
     <!-- mostrar todos os quizzes -->
     <div>
       <div class="row g-3">
-        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in mostrar" :key="index">
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredQuizzes.length >= mostrar ? mostrar : filteredQuizzes.length)" :key="i">
           <div class="tile-custom">
             <div class="tile__media-custom">
               <img class="tile__img"
-                src="https://media.comicbook.com/2019/05/marvel-comics-1000-clayton-crain-1172440.jpeg" alt="" />
+                :src="filteredQuizzes[i - 1].poster" />
             </div>
             <div class="tile__details-custom p-2 text-center">
-              <p class="quiz-card-title">Quiz about Marvel Universe</p>
-              <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: '0' } })">▶</p>
-              <p class="quiz-card-rating">5.0</p>
+              <p class="quiz-card-title">{{ filteredQuizzes[i - 1].titulo }}</p>
+              <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: filteredQuizzes[i - 1].id_quiz } })">▶</p>
+              <p class="quiz-card-rating">{{ getQuizRating(filteredQuizzes[i - 1].id_quiz) }}</p>
             </div>
           </div>
         </div>
+        <div v-if="filteredQuizzes.length == 0">
+          <p>No results were found for the filters applied.</p>
+        </div>
       </div>
-      <div class="w-100 d-flex justify-content-center mt-4">
-        <button class="rounded-btn" @click="mostrar+=12">Load More</button>
+      <div v-if="mostrar < filteredQuizzes.length" class="w-100 d-flex justify-content-center mt-4">
+        <button class="rounded-btn" @click="mostrar = mostrar + 12 <= filteredQuizzes.length ? mostrar + 12 : filteredQuizzes.length">Load More</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
   export default {
     data() {
       return {
-        mostrar: 6,
+        mostrar: 12,
         themes : ["Movie", "Series", "Actors", "Universes", "Anual", "Platform"],
-        types:["Normal", "Long"],
-        difficulties: ["Normal", "Hard"],
-        crowns: [require("../assets/images/crown_gold_icon.svg"), require("../assets/images/crown_silver_icon.svg"), require("../assets/images/crown_bronze_icon.svg")]
+        types: [
+          { 
+            key: "curto",
+            value: "Short"
+          },
+          { 
+            key: "longo",
+            value: "Long"
+          }
+        ],
+        difficulties: [
+          { 
+            key: "normal",
+            value: "Normal"
+          },
+          { 
+            key: "dificil",
+            value: "Hard"
+          }
+        ],
+        crowns: [require("../assets/images/crown_gold_icon.svg"), require("../assets/images/crown_silver_icon.svg"), require("../assets/images/crown_bronze_icon.svg")],
+        quizzes: [],
+        filters: {
+          search: "",
+          difficulty: "Difficulty",
+          theme: "Theme",
+          type: "Type",
+          orderby: "Order by"
+        }
       }
+    },
+    created () {
+      this.quizzes = this.getAllQuizzes;
     },
     methods: {
       simulateScroll(dir, target) {
@@ -165,10 +201,70 @@
           }
         }
       }
+    },
+    computed: {
+      ...mapGetters(["getAllQuizzes", "getQuizRating", "getQuizRating", "getAllUsers", "getTopUsers"]),
+      filteredQuizzes() {
+        this.mostrar = 12;
+        let filterResult = [...this.quizzes];
+        
+        // Barra de pesquisa
+        if (this.filters.search != "") {
+          filterResult = filterResult.filter(quiz => quiz.titulo.toLowerCase().includes(this.filters.search.toLowerCase()));
+        }
+
+        // Dificuldade
+        if (this.filters.difficulty != "All" && this.filters.difficulty != "Difficulty") {
+          filterResult = filterResult.filter(quiz => quiz.dificuldade.descricao == this.filters.difficulty);
+        }
+
+        // Theme
+        if (this.filters.theme != "All" && this.filters.theme != "Theme") {
+          filterResult = filterResult.filter(quiz => quiz.tema == this.filters.theme);
+        }
+
+        // Type
+        if (this.filters.type != "All" && this.filters.type != "Type") {
+          filterResult = filterResult.filter(quiz => quiz.tipo.descricao == this.filters.type);
+        }
+
+        if (this.filters.orderby != "Recently added" && this.filters.orderby != "Order by") {
+          if (this.filters.orderby == "Alphabetic (A-Z)") {
+            filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
+          } else if (this.filters.orderby == "Alphabetic (Z-A)") {
+            filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
+          } else if (this.filters.orderby == "Best rated") {
+            filterResult.map(quiz => quiz.rating = this.getQuizRating(quiz.id_quiz));
+            filterResult = filterResult.sort((a, b) => (parseFloat(a.rating) > parseFloat(b.rating)) ? -1 : ((parseFloat(a.rating) < parseFloat(b.rating)) ? 1 : 0));
+          } else if (this.filters.orderby == "Worst rated") {
+            filterResult.map(quiz => quiz.rating = this.getQuizRating(quiz.id_quiz));
+            filterResult = filterResult.sort((a, b) => (parseFloat(a.rating) < parseFloat(b.rating)) ? -1 : ((parseFloat(a.rating) > parseFloat(b.rating)) ? 1 : 0));
+          } else if (this.filters.orderby == "Most played") {
+            filterResult.map(c_quiz => c_quiz.qnt_plays = this.getAllUsers.map(user => user.played.filter(quiz => quiz.id_quiz == c_quiz.id_quiz)).reduce((acc, curr) => acc + curr.length, 0));
+            filterResult = filterResult.sort((a, b) => (parseFloat(a.qnt_plays) > parseFloat(b.qnt_plays)) ? -1 : ((parseFloat(a.qnt_plays) < parseFloat(b.qnt_plays)) ? 1 : 0));
+          } else if (this.filters.orderby == "Least played") {
+            filterResult.map(c_quiz => c_quiz.qnt_plays = this.getAllUsers.map(user => user.played.filter(quiz => quiz.id_quiz == c_quiz.id_quiz)).reduce((acc, curr) => acc + curr.length, 0));
+            filterResult = filterResult.sort((a, b) => (parseFloat(a.qnt_plays) < parseFloat(b.qnt_plays)) ? -1 : ((parseFloat(a.qnt_plays) > parseFloat(b.qnt_plays)) ? 1 : 0));
+          }  
+        }
+
+        return filterResult;
+      },
+      shuffleTop() {
+        let array = [...this.quizzes];
+        let currentIndex = array.length,  randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
     }
   }
 
 </script>
+
 <style scoped>
   select {
     /* Reset */

@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="mt-5 mb-5 navigation d-flex flex-wrap">
-      <p :class="{ active: selectedTab == 'profile'}" class="m-0" @click="selectedTab ='profile'">Profile</p>
+      <p v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" :class="{ active: selectedTab == 'profile'}" class="m-0" @click="selectedTab ='profile'">Profile</p>
       <p :class="{ active: selectedTab == 'favorites'}" class="m-0" @click="selectedTab ='favorites'">Favorites</p>
       <p :class="{ active: selectedTab == 'seen'}" class="m-0" @click="selectedTab ='seen'">Seen</p>
-      <p :class="{ active: selectedTab == 'history'}" class="m-0" @click="selectedTab ='history'">History</p>
+      <p v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" :class="{ active: selectedTab == 'history'}" class="m-0" @click="selectedTab ='history'">History</p>
       <p :class="{ active: selectedTab == 'statistics'}" class="m-0" @click="selectedTab ='statistics'">Statistics</p>
       <button class="ms-auto logout-btn" @click="logoutUser()">Logout</button>
     </div>
@@ -15,11 +15,11 @@
           <div class="img-profile row g-3">
             <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
               <div class="d-flex align-items-center position-relative">
-                <img :src="this.getAllUsers[$route.params.id].avatar"
+                <img :src="getAllUsers.find(user => user.id == $route.params.id).avatar"
                   style="border-radius: 50%; min-width: 50px; min-height: 50px; object-fit: cover; object-position: center top;" alt="Avatar" width="80px"
                   height="80px" />
                 <div
-                  v-if="this.getAllUsers[$route.params.id].avatar != 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"
+                  v-if="getAllUsers.find(user => user.id == $route.params.id).avatar != 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"
                   id="remove-picture" @click="editUser($event, true)">
                   <span style="cursor: pointer;"><i class="fas fa-trash"></i></span>
                 </div>
@@ -31,45 +31,46 @@
             </div>
             <div class="col-md-10 col-lg-9">
               <div class="p-info d-flex align-items-center flex-wrap" style="gap: 5px;">
-                <img :src="this.getBadges[this.getAllUsers[$route.params.id].id_badge].icon" alt="Badge" width="15px"
+                <img :src="this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].icon" alt="Badge" width="15px"
                   height="15px" />
                 <p class="m-0">
-                  {{ this.getAllUsers[$route.params.id].primeiro_nome + ' ' + this.getAllUsers[$route.params.id].ultimo_nome }}
+                  {{ getAllUsers.find(user => user.id == $route.params.id).primeiro_nome + ' ' + getAllUsers.find(user => user.id == $route.params.id).ultimo_nome }}
                 </p>
                 <p class="m-0" style="color: var(--cinza-claro); font-size: .85em;">
-                  {{ this.getBadges[this.getAllUsers[$route.params.id].id_badge].name }}</p>
-                <button class="edit-btn ms-auto"><strong>{{ this.getAllUsers[$route.params.id].pontos }}</strong>
+                  {{ this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].name }}</p>
+                <button class="edit-btn ms-auto"><strong>{{ getAllUsers.find(user => user.id == $route.params.id).pontos }}</strong>
                   points</button>
               </div>
               <p style="color: var(--cinza-claro)" class="m-0"><strong>Member since:</strong>
-                {{ new Date(this.getAllUsers[$route.params.id].data_registo).getDate() + "/" + (parseInt(new Date(this.getAllUsers[$route.params.id].data_registo).getMonth()) + 1) + "/" + new Date(this.getAllUsers[$route.params.id].data_registo).getFullYear() }}
+                {{ new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getDate() + "/" + (parseInt(new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getMonth()) + 1) + "/" + new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getFullYear() }}
               </p>
               <div class="level-info d-flex align-items-center mt-4" style="gap: 15px;">
                 <p class="m-0 d-flex justify-content-center align-items-center"
                   style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                  {{ Math.floor(this.getAllUsers[$route.params.id].xp / 150) }}</p>
+                  {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) }}</p>
                 <div class="d-flex flex-column w-100" style="gap: 10px;">
                   <div
                     style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
                     <div
                       style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;"
-                      :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp - (this.getAllUsers[$route.params.id].nivel * 150)) * 100) / (((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150) - (this.getAllUsers[$route.params.id].nivel * 150)).toFixed(2) + '%' }">
+                      :style="{ width: parseFloat((getAllUsers.find(user => user.id == $route.params.id).xp - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)) * 100) / (((Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150) - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)).toFixed(2) + '%' }">
                     </div>
                   </div>
                   <div class="d-flex justify-content-between">
-                    <p class="m-0">Current XP <strong>{{ this.getAllUsers[$route.params.id].xp }}</strong></p>
+                    <p class="m-0">Current XP <strong>{{ getAllUsers.find(user => user.id == $route.params.id).xp }}</strong></p>
                     <p class="m-0">Next level
-                      <strong>{{ (Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150 }}</strong></p>
+                      <strong>{{ (Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150 }}</strong></p>
                   </div>
                 </div>
                 <p class="m-0 d-flex justify-content-center align-items-center"
                   style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                  {{ Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1 }}</p>
+                  {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1 }}</p>
               </div>
             </div>
           </div>
         </div>
-        <p class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">Misspelt something?</span> Edit your profile</p>
+        <p v-if="(getLoggedUser.id != $route.params.id && getLoggedUser.is_admin)" class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">You got special privileges.</span> Edit anything</p>
+        <p v-else class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">Misspelt something?</span> Edit your profile</p>
         <form id="register" @submit.prevent="editUser($event, false)">
           <div class="row g-4">
             <div class="col-sm-6">
@@ -83,7 +84,7 @@
           </div>
           <br>
           <div class="input-group">
-            <input type="email" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required
+            <input type="text" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required
               v-model="edit_user.email">
             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
           </div>
@@ -100,6 +101,14 @@
               v-model="edit_user.data_nascimento">
             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
           </div>
+          <div v-if="getLoggedUser.is_admin && ($route.params.id != getLoggedUser.id)">
+            <br>
+            <label class="cbox">Is an admin?
+              <input v-model="edit_user.is_admin" type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+
           <div>
             <button type="submit" class="mt-4 orange-btn">Edit profile</button>
           </div>
@@ -200,18 +209,18 @@
         <div class="row g-3">
           <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in infoLikes" :key="index">
             <div class="tile-custom" >
-              <div class="tile__media-custom">
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: infoLikes[index].id_imdb}})">
                 <img class="tile__img" :src=infoLikes[index].poster alt="" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;" @click="$router.push({ name: 'Title', params: { imdbid: infoLikes[index].id_imdb}})">{{infoLikes[index].titulo}}</p>
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{infoLikes[index].titulo}}</p>
               </div>
-              <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
+              <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
                 <button @click="removeLike(infoLikes[index].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
               </div>
             </div>
             
           </div>
           <div v-if="infoLikes.length==0">
-            <p>You haven't added any movies or series to your favorites.</p> 
+            <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
           </div>
         </div>
         <div v-if="mostrar < infoLikes.length" class="w-100 d-flex justify-content-center mt-4">
@@ -272,17 +281,17 @@
         <div class="row g-3">
           <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in infoViwed" :key="index" >
             <div class="tile-custom">
-              <div class="tile__media-custom" @click="$router.push({ name: 'Title', params: { imdbid: infoViwed[index].id_imdb}})">
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: infoViwed[index].id_imdb}})">
                 <img class="tile__img" :src=infoViwed[index].poster alt="" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;" @click="$router.push({ name: 'Title', params: { imdbid: infoViwed[index].id_imdb}})">{{infoViwed[index].titulo}}</p>
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{infoViwed[index].titulo}}</p>
               </div>
-              <div class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
+              <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
                 <button @click="removeSeen(infoViwed[index].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
               </div>
             </div>
           </div>
           <div v-if="infoViwed.length==0">
-            <p>You haven't seen any movies nor series.</p> 
+            <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't seen any movies nor series." : "This user hasn't seen any movies nor series." }}</p> 
           </div>
         </div>
         <div v-if="mostrar < infoViwed.length" class="w-100 d-flex justify-content-center mt-4">
@@ -317,18 +326,21 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllCommentsLoggedUser(getLoggedUser.id)" :key="i">
-              <div class="d-flex flex-wrap" style="gap: 5px;">
-                <p style="color: var(--cinza-claro);">{{title.data}}</p>
-                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>{{getTitleInfo(title.id_imdb).titulo}}</strong></p>
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllUserComments($route.params.id)" :key="i">
+              <div >
+                <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
+                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
               </div>
               <div>
                 <p>{{title.comentario}}</p>
               </div>
               <div class="d-flex" style="gap: 10px;">
-                <button class="edit-btn" @click="$router.push({ name: 'Title', params: { imdbid: title.id_imdb} })">See comment</button>
-                <button class="custom-logout-btn" @click="removeComment(title.id_comentario)">Delete</button>
+                <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See comment</button>
+                <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeComment(title.id_comentario, false) : removeComment(title.id_comentario, true)">Delete</button>
               </div>
+            </div>
+            <div v-if="getAllUserComments($route.params.id).length == 0">
+              <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't commented on any title nor quiz." : "This user hasn't commented on any title nor quiz." }}</p> 
             </div>
           </div>
         </div>
@@ -357,24 +369,27 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllRatingsLoggedUser(getLoggedUser.id)" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllUserRatings($route.params.id)" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div class="col-3">
                   <div style="width: 85px; height: 125px; min-width: 85px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="getTitleInfo(title.id_imdb).poster">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).poster : getQuizByID(title.id_quiz).poster">
                   </div>
                 </div>
                 <div class="d-flex flex-column col-8">
-                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">Movie</span>&nbsp;&nbsp;<strong>{{getTitleInfo(title.id_imdb).titulo}}</strong></p>
+                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
                   <div class="stars d-flex" style="gap: 5px; cursor: pointer; color: var(--laranja);">
                     <i class="fas fa-star" v-for="i in title.pontuacao" :key="i"></i>
                   </div>
                   <div class="d-flex mt-auto" style="gap: 10px;">
-                    <button class="edit-btn" @click="$router.push({ name: 'Title', params: { imdbid: title.id_imdb} })">See Rating</button>
-                    <button class="custom-logout-btn" @click="removeRate(title.id_imdb)">Delete</button>
+                    <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See Rating</button>
+                    <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeRate(title.id_imdb, false) : removeRate(title.id_quiz, true)">Delete</button>
                   </div>
                 </div>
               </div>
+            </div>
+            <div v-if="getAllUserRatings($route.params.id).length == 0">
+              <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't rated any titles nor quizzes." : "This user hasn't rated any titles nor quizzes." }}</p> 
             </div>
           </div>
         </div>
@@ -403,19 +418,22 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllPremiosUtilizador" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllUserPrizes($route.params.id)" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div>
                   <div style="width: 125px; height: 125px; min-width: 125px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="getPremioInfo(title.id_premio).img">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="getPrizeInfo(title.id_premio).img">
                   </div>
                 </div>
                 <div class="d-flex flex-column">
-                  <p style="color: var(--laranja);" class="m-0"><strong>{{getPremioInfo(title.id_premio).nome}}</strong></p>
-                  <p style="color: var(--cinza-claro);">{{title.data}}</p>
-                  <p style="color: var(--cinza-claro);"><strong>{{getPremioInfo(title.id_premio).valor}}</strong> points</p>
+                  <p style="color: var(--laranja);" class="m-0"><strong>{{getPrizeInfo(title.id_premio).nome}}</strong></p>
+                  <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
+                  <p style="color: var(--cinza-claro);"><strong>{{getPrizeInfo(title.id_premio).valor}}</strong> points</p>
                 </div>
               </div>
+            </div>
+            <div v-if="getAllUserPrizes($route.params.id).length == 0">
+              <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't claimed any prizes yet." : "This user hasn't claimed any prizes yet." }}</p> 
             </div>
           </div>
         </div>
@@ -427,45 +445,45 @@
         <div class="img-profile row g-3">
           <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
             <div class="d-flex align-items-center position-relative">
-              <img :src="this.getAllUsers[$route.params.id].avatar"
+              <img :src="getAllUsers.find(user => user.id == $route.params.id).avatar"
                 style="border-radius: 50%; min-width: 50px; min-height: 50px; object-fit: cover; object-position: center top;" alt="Avatar" width="80px"
                 height="80px" />
             </div>
           </div>
           <div class="col-md-10 col-lg-9">
             <div class="p-info d-flex align-items-center flex-wrap" style="gap: 5px;">
-              <img :src="this.getBadges[this.getAllUsers[$route.params.id].id_badge].icon" alt="Badge" width="15px"
+              <img :src="this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].icon" alt="Badge" width="15px"
                 height="15px" />
               <p class="m-0">
-                {{ this.getAllUsers[$route.params.id].primeiro_nome + ' ' + this.getAllUsers[$route.params.id].ultimo_nome }}
+                {{ getAllUsers.find(user => user.id == $route.params.id).primeiro_nome + ' ' + getAllUsers.find(user => user.id == $route.params.id).ultimo_nome }}
               </p>
               <p class="m-0" style="color: var(--cinza-claro); font-size: .85em;">
-                {{ this.getBadges[this.getAllUsers[$route.params.id].id_badge].name }}</p>
+                {{ this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].name }}</p>
             </div>
             <p style="color: var(--cinza-claro)" class="m-0"><strong>Member since:</strong>
-              {{ new Date(this.getAllUsers[$route.params.id].data_registo).getDate() + "/" + (parseInt(new Date(this.getAllUsers[$route.params.id].data_registo).getMonth()) + 1) + "/" + new Date(this.getAllUsers[$route.params.id].data_registo).getFullYear() }}
+              {{ new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getDate() + "/" + (parseInt(new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getMonth()) + 1) + "/" + new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getFullYear() }}
             </p>
             <div class="level-info d-flex align-items-center mt-4" style="gap: 15px;">
               <p class="m-0 d-flex justify-content-center align-items-center"
                 style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                {{ Math.floor(this.getAllUsers[$route.params.id].xp / 150) }}</p>
+                {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) }}</p>
               <div class="d-flex flex-column w-100" style="gap: 10px;">
                 <div
                   style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
                   <div
-                    :style="{ width: parseFloat((this.getAllUsers[$route.params.id].xp - (this.getAllUsers[$route.params.id].nivel * 150)) * 100) / (((Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150) - (this.getAllUsers[$route.params.id].nivel * 150)).toFixed(2) + '%' }"
+                    :style="{ width: parseFloat((getAllUsers.find(user => user.id == $route.params.id).xp - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)) * 100) / (((Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150) - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)).toFixed(2) + '%' }"
                     style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;">
                   </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <p class="m-0">Current XP <strong>{{ this.getAllUsers[$route.params.id].xp }}</strong></p>
+                  <p class="m-0">Current XP <strong>{{ getAllUsers.find(user => user.id == $route.params.id).xp }}</strong></p>
                   <p class="m-0">Next level
-                    <strong>{{ (Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1) * 150 }}</strong></p>
+                    <strong>{{ (Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150 }}</strong></p>
                 </div>
               </div>
               <p class="m-0 d-flex justify-content-center align-items-center"
                 style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                {{ Math.floor(this.getAllUsers[$route.params.id].xp / 150) + 1 }}</p>
+                {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1 }}</p>
             </div>
           </div>
         </div>
@@ -474,23 +492,23 @@
       <div class="stats w-100 mt-5" style="max-width: 600px;">
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-globe" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Quizzes completed</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">38</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).length }}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-question-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Questions answered</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">321</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.num_perguntas, 0) }}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-check-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Correct answers</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">54</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.perguntas_certas, 0) }}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-times-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Incorrect answers</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">567</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.perguntas_erradas, 0) }}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-hands-helping" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Times help was needed</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">212</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.ajudas_utilizadas, 0) }}</p>
         </div>
       </div>
     </div>
@@ -526,7 +544,7 @@ export default {
       country_list: ["Portugal", "Spain"],
       generos: ["Action", "Comedy"],
       mostrar: 12,
-      selectedTab: "profile",
+      selectedTab: "statistics",
       edit_user: {
         primeiro_nome: '',
         ultimo_nome: '',
@@ -534,17 +552,18 @@ export default {
         password: '',
         data_nascimento: '',
         avatar: '',
+        is_admin: false
       },
       infoLikes:[],
-      infoViwed:[],
+      infoViwed:[]
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE","REMOVE_LIKE","REMOVE_HAS_SEEN","REMOVE_COMMENT","REMOVE_RATE"]),
+    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE","REMOVE_LIKE","REMOVE_HAS_SEEN","REMOVE_TITLE_COMMENT","REMOVE_QUIZ_COMMENT", "REMOVE_TITLE_RATING", "REMOVE_QUIZ_RATING"]),
     removeLike(id){
       this.$swal({
         title: 'Warning!',
-        text: "Are you sure you want to remove this movie from favourites?",
+        text: "Are you sure you want to remove this movie from favorites?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -552,10 +571,10 @@ export default {
         confirmButtonText: 'Yes'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.REMOVE_LIKE(id);
+          this.REMOVE_LIKE({ id_imdb: id, id_user: this.$route.params.id });
           this.infoLikes=[];
-          for (let i = 0; i < this.getTitleLikes(this.getLoggedUser.id).length; i++) {
-            this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.getLoggedUser.id)[i]))
+          for (let i = 0; i < this.getTitleLikes(this.$route.params.id).length; i++) {
+            this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.$route.params.id)[i]))
           }
         }
       });
@@ -570,10 +589,10 @@ export default {
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.REMOVE_HAS_SEEN(id);
+          this.REMOVE_HAS_SEEN({ id_imdb: id, id_user: this.$route.params.id });
           this.infoViwed=[];
-          for (let i = 0; i < this.getTitlesSeenByUser(this.getLoggedUser.id).length; i++) {
-            this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.getLoggedUser.id)[i]))
+          for (let i = 0; i < this.getTitlesSeenByUser(this.$route.params.id).length; i++) {
+            this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.$route.params.id)[i]))
           }
         }
       });
@@ -591,7 +610,8 @@ export default {
             ultimo_nome: this.edit_user.ultimo_nome,
             email: this.edit_user.email,
             password: this.edit_user.password,
-            data_nascimento: this.edit_user.data_nascimento
+            data_nascimento: this.edit_user.data_nascimento,
+            is_admin: this.edit_user.is_admin
           });
 
           // Se a edição do perfil é feita pelo próprio utilizador e não por um administrador, atualizar o loggedUser para mostrar informação atualizada
@@ -659,57 +679,59 @@ export default {
         this.SET_LOGGED_USER(this.edit_user.email);
       }
     },
-    removeComment(id_comentario){
+    removeComment(id_comentario, tipo){
       this.$swal({
         title: 'Warning!',
-        text: "Are you sure you want to remove this movie from viewed?",
+        text: "Are you sure you want to remove this comment?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.REMOVE_COMMENT(id_comentario);
+          !tipo ? this.REMOVE_TITLE_COMMENT({ id_comment: id_comentario, id_user: this.$route.params.id }) : this.REMOVE_QUIZ_COMMENT({ id_comment: id_comentario, id_user: this.$route.params.id });
         }
       });
     },
-    removeRate(id_imdb){
+    removeRate(id, tipo){
       this.$swal({
         title: 'Warning!',
-        text: "Are you sure you want to remove this movie from viewed?",
+        text: "Are you sure you want to remove this rating?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.REMOVE_RATE(id_imdb);
+          !tipo ? this.REMOVE_TITLE_RATING({ id_imdb: id, id_user: this.$route.params.id}) : this.REMOVE_QUIZ_RATING({ id_quiz: id, id_user: this.$route.params.id});
         }
       });
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUser", "getBadges", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllPremiosUtilizador","getAllCommentsLoggedUser","getAllRatingsLoggedUser", "getPremioInfo"]),
+    ...mapGetters(["getLoggedUser", "getBadges", "getQuizByID", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllUserPrizes","getAllUserComments","getAllUserRatings", "getPrizeInfo"])
   },
   mounted () {
-    this.edit_user.primeiro_nome = this.getLoggedUser.primeiro_nome;
-    this.edit_user.ultimo_nome = this.getLoggedUser.ultimo_nome;
-    this.edit_user.email = this.getLoggedUser.email;
-    this.edit_user.password = this.getLoggedUser.password;
-    this.edit_user.data_nascimento = this.getLoggedUser.data_nascimento;
-    this.edit_user.avatar = this.getLoggedUser.avatar;
-    
-    for (let i = 0; i < this.getTitleLikes(this.getLoggedUser.id).length; i++) {
-      this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.getLoggedUser.id)[i]))
+    this.edit_user.primeiro_nome = this.getAllUsers.find(user => user.id == this.$route.params.id).primeiro_nome;
+    this.edit_user.ultimo_nome = this.getAllUsers.find(user => user.id == this.$route.params.id).ultimo_nome;
+    this.edit_user.email = this.getAllUsers.find(user => user.id == this.$route.params.id).email;
+    this.edit_user.password = this.getAllUsers.find(user => user.id == this.$route.params.id).password;
+    this.edit_user.data_nascimento = this.getAllUsers.find(user => user.id == this.$route.params.id).data_nascimento;
+    this.edit_user.avatar = this.getAllUsers.find(user => user.id == this.$route.params.id).avatar;
+    this.edit_user.is_admin = this.getAllUsers.find(user => user.id == this.$route.params.id).is_admin;
+    this.selectedTab = this.getLoggedUser.id == this.$route.params.id || this.getLoggedUser.is_admin ? "profile" : "statistics";
+
+    for (let i = 0; i < this.getTitleLikes(this.$route.params.id).length; i++) {
+      this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.$route.params.id)[i]))
     }
-    for (let i = 0; i < this.getTitlesSeenByUser(this.getLoggedUser.id).length; i++) {
-      this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.getLoggedUser.id)[i]))
+    for (let i = 0; i < this.getTitlesSeenByUser(this.$route.params.id).length; i++) {
+      this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.$route.params.id)[i]))
     }
   }
 }
 </script>
-<style scoped>
 
+<style scoped>
   .title {
     font-size: 1.25em;
     font-weight: bold;

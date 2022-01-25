@@ -60,7 +60,8 @@ const routes = [
     name: "Admin",
     component: Admin,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      onlyAdmin: true
     }
   },
   {
@@ -109,7 +110,17 @@ router.beforeEach((to, from, next) => {
   } else if (!to.meta.requiresAuth && store.getters.getLoggedUser) {
     next({ name: "Home" });
   } else {
-    next();
+    if (from.name == "Profile" && to.name == "Profile") {
+      // Se o utilizador vier de um perfil diferente do dele e quiser ver o próprio, forçar a atualização da página
+      next();
+      router.go(0);
+    } else {
+      if (to.meta.onlyAdmin && !store.getters.getLoggedUser.is_admin) {
+        next({ name: "Home" });
+      } else {
+        next();
+      }
+    }
   }
 });
 
