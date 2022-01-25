@@ -95,17 +95,23 @@
             <div class="modal-body row m-0 gy-3">
               <div class="d-flex h-100 flex-column justify-content-between">
                 <h5>Edit Movie/Series</h5>
-                <form action="" id="addNewQuizModal">
+                <form @submit.prevent="add()">
                   <p class="m-0 mt-3 colorOrange">General</p> 
                   <div class="mt-3">
-                    <input type="text" class="w-100" placeholder="IMDb ID" required>
+                    <input type="text" class="w-100" v-model="title.titleId" required>
                   </div>
-                  <p class="m-0 mt-3 colorOrange">Avaliable at</p> 
-                  <p class="m-0" style="color: var(--cinza);">Please add at least 1 platform.</p>
-                  <button data-bs-toggle="modal" data-bs-target="#addPlatformNewMovie" class="uploadButton mt-3">Add platform</button>
+                  <p class="m-0 mt-3 colorOrange">Avaliable at</p>
+                  <div v-for="(plat,i) in title.titlePlatforms" :key="i">
+                    <input type="text" class="w-100 mt-3" disabled :value="plat.nome">
+                    <div style="position: relative;">
+                      <span><i style="right: 10px;" class="fas fa-trash removeIcon" @click="newRemovePlatform(plat.id_plataforma)"></i></span>
+                    </div>
+                  </div>
+                  <p v-if="title.titlePlatforms.length == 0" class="m-0" style="color: var(--cinza);">Please add at least 1 platform.</p>
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#addPlatformNewMovie" class="uploadButton mt-3">Add platform</button>
                   <div class="ms-auto mt-5 d-flex" style="gap: 15px;">
-                      <input class="addQuestionButton" type="submit" data-bs-dismiss="modal" value="Add movie/series">
-                      <input class="close-btn" type="button" data-bs-dismiss="modal" value="Close"/>
+                    <input class="addQuestionButton" type="submit" value="Add movie/series">
+                    <input class="close-btn" type="button" id="close-add-title" data-bs-dismiss="modal" value="Close"/>
                   </div>
                 </form>
               </div>
@@ -121,12 +127,15 @@
               <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
                 <label for="url-pic">Name of the platform:</label>
                 <div class="input-group">
-                  <input type="text" class="form-control bg-inputs" aria-label="Name" required placeholder="Name">
-                  <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
+                  <select id="platformSelect" class="form-control bg-inputs" v-model="title.selectedPlatform">
+                    <option :value="opt.id_plataforma" v-for="(opt,i) in getAllPlatforms" :key="i">
+                      {{opt.nome}}
+                    </option>
+                  </select>
                 </div>
                 <div class="d-flex" style="gap: 15px;">
-                  <button type="submit" class="orange-btn" data-bs-target="#addMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Add platform</button>
-                  <button class="red-btn" type="button" data-bs-target="#addMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+                  <button type="submit" class="orange-btn" @click="newAddPlatform()">Add platform</button>
+                  <button class="red-btn" type="button" id="new-addplatform-back" data-bs-target="#addMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                 </div>
               </form>
             </div>
@@ -141,15 +150,15 @@
               <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
                 <label for="url-pic">Name of the platform:</label>
                 <div class="input-group">
-                  <select id="platformSelect" class="form-control bg-inputs">
+                  <select id="platformSelect" class="form-control bg-inputs" v-model="editTitle.selectedPlatform">
                     <option :value="opt.id_plataforma" v-for="(opt,i) in getAllPlatforms" :key="i">
                       {{opt.nome}}
                     </option>
                   </select>
                 </div>
                 <div class="d-flex" style="gap: 15px;">
-                  <button type="submit" class="orange-btn" data-bs-target="#editMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal" @click="addPlatform()">Add platform</button>
-                  <button class="red-btn" type="button" data-bs-target="#editMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+                  <button type="submit" class="orange-btn" @click="addPlatform()">Add platform</button>
+                  <button class="red-btn" type="button" id="edit-addplatform-back" data-bs-target="#editMovieModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                 </div>
               </form>
             </div>
@@ -163,7 +172,7 @@
             <div class="modal-body row m-0 gy-3">
               <div class="d-flex h-100 flex-column justify-content-between">
                 <h5>Edit Movie/Series</h5>
-                <form @submit.prevent="edit()" id="addNewQuizModal">
+                <form @submit.prevent="edit()">
                   <p class="m-0 mt-3 colorOrange">General</p>
                   <div class="mt-3">
                     <input type="text" class="w-100" v-model="editTitle.titleId" required>
@@ -175,6 +184,7 @@
                       <span><i style="right: 10px;" class="fas fa-trash removeIcon" @click="removePlatform(plat.id_plataforma)"></i></span>
                     </div>
                   </div>
+                  <p v-if="editTitle.titlePlatforms.length == 0" class="m-0" style="color: var(--cinza);">Please add at least 1 platform.</p>
                   <button type="button" data-bs-toggle="modal" data-bs-target="#addPlatform" class="uploadButton mt-3">Add platform</button>
                   <div class="ms-auto mt-5 d-flex" style="gap: 15px;">
                       <input class="addQuestionButton" type="submit" value="Edit movie/series" >
@@ -200,9 +210,15 @@ export default ({
         mostrar: 12,
         editID: null,
         editTitle:{
-          titleName:"",
-          titleId:null,
-          titlePlatforms:[],
+          selectedPlatform: 0,
+          titleId: null,
+          titlePlatforms: [],
+        },
+        addID: null,
+        title: {
+          selectedPlatform: 0,
+          titleId: null,
+          titlePlatforms: [],
         }
       }
     },
@@ -210,9 +226,56 @@ export default ({
       ...mapGetters(["getAllTitles","getTitleInfo","getAllPlatforms","getPlatformsById"])
     },
     methods: {
-      ...mapMutations(["UPDATE_TITLE_PLATFORM","REMOVE_PLATFORM","REMOVE_TITLE"]),
+      ...mapMutations(["UPDATE_TITLE_PLATFORM","REMOVE_TITLE"]),
       ...mapActions(["saveNewTitle"]),
+      add() {
+        let errorHappened = false;
+        // Verificar se há plataformas inseridas
+        if (this.title.titlePlatforms.length > 0) {
+          // Verificar se o id imdb mudou para evitar fazer calls à api desnecessariamente
+          if (this.title.titleId != this.addID) {
+            // Verificar se o id tem os caracteres 'tt'
+            if (this.title.titleId.toLowerCase().includes("tt")) {
+              // Adicionamos o novo
+              this.saveNewTitle([this.title.titleId, this.title.titlePlatforms])
+              .catch((err) => {
+                this.$swal({
+                  title: 'Error!',
+                  text: err,
+                  icon: 'error',
+                });
+                errorHappened = true;
+              });
+            } else {
+              this.$swal({
+                title: 'Error!',
+                text: "Wrong IMDb ID!",
+                icon: 'error',
+              });
+              errorHappened = true;
+            }
+          }
+          if (!errorHappened) {
+            this.$swal({
+              title: 'Success!',
+              text: "The title has been successfully edited!",
+              icon: 'success',
+            });
+            document.querySelector("#close-add-title").click();
+            this.title.selectedPlatform = 0;
+            this.title.titleId = null;
+            this.title.titlePlatforms = [];
+          }
+        } else {
+          this.$swal({
+            title: 'Error!',
+            text: "Please add at least one platform!",
+            icon: 'error',
+          });
+        }
+      },
       edit() {
+        let errorHappened = false, addedNew = false;
         // Verificar se há plataformas inseridas
         if (this.editTitle.titlePlatforms.length > 0) {
           // Verificar se o id imdb mudou para evitar fazer calls à api desnecessariamente
@@ -223,47 +286,93 @@ export default ({
               this.saveNewTitle([this.editTitle.titleId, this.editTitle.titlePlatforms])
               .then(() => {
                 this.REMOVE_TITLE(this.editID);
-                alert("Adicionado com sucesso")
+                addedNew = true;
               })
-              .catch((err) => alert(`Problem handling something: ${err}.`));
+              .catch((err) => {
+                this.$swal({
+                  title: 'Error!',
+                  text: err,
+                  icon: 'error',
+                });
+                errorHappened = true;
+              });
             } else {
               this.$swal({
                 title: 'Error!',
                 text: "Wrong IMDb ID!",
                 icon: 'error',
-              })
+              });
+              errorHappened = true;
             }
           }
-          document.querySelector("#close-edit-title").click();
+          if (!addedNew) this.UPDATE_TITLE_PLATFORM([this.editID, this.editTitle.titlePlatforms]);
+          if (!errorHappened) {
+            this.$swal({
+              title: 'Success!',
+              text: "The title has been successfully edited!",
+              icon: 'success',
+            });
+            document.querySelector("#close-edit-title").click();
+          }
         } else {
           this.$swal({
             title: 'Error!',
             text: "Please add at least one platform!",
             icon: 'error',
-          })
+          });
         }
       },
       listTitleInfo(id){
-        this.editTitle.titleId=null;
-        this.editTitle.titleId=id;
-        this.editTitle.titlePlatforms = this.getTitleInfo(id).plataformas;
+        this.editTitle.titleId = id;
+        this.editTitle.titlePlatforms = [...this.getTitleInfo(id).plataformas];
+        this.editTitle.selectedPlatform = 0;
         this.editID = id;
       },
       addPlatform(){
-        if(!this.getAllTitles[this.getAllTitles.findIndex(ob=>ob.id_imdb==this.editID)].plataformas.find(plat=>plat.id_plataforma==document.querySelector("#platformSelect").value)){
-          this.UPDATE_TITLE_PLATFORM({id_imdb:this.editID, id_plataforma:document.querySelector("#platformSelect").value, nome:this.getPlatformsById(document.querySelector("#platformSelect").value).nome})
-        }
-        else{
+        if (this.editTitle.titlePlatforms.some(platform => platform.id_plataforma == this.editTitle.selectedPlatform)) {
           this.$swal({
-            title: 'Oops...',
-            text: "This platform already registed in this title",
+            title: 'Error!',
+            text: "This platform is already registered in this title!",
             icon: 'error',
           })
+        } else {
+          this.editTitle.titlePlatforms.push({ id_plataforma: this.editTitle.selectedPlatform, nome: this.getPlatformsById(this.editTitle.selectedPlatform).nome });
+          this.performClick("#edit-addplatform-back");
         }
       },
       removePlatform(id){
-        this.REMOVE_PLATFORM({id_imdb: this.editID, id_plataforma: id})
-        this.listTitleInfo(this.editID)
+        if (this.editTitle.titlePlatforms.length > 1) {
+          this.editTitle.titlePlatforms = this.editTitle.titlePlatforms.filter(plat => plat.id_plataforma != id);
+        } else {
+          this.$swal({
+            title: 'Error!',
+            text: 'Each title has to have at least 1 platform.',
+            icon: 'error',
+          });
+        }
+      },
+      newAddPlatform(){
+        if (this.title.titlePlatforms.some(platform => platform.id_plataforma == this.title.selectedPlatform)) {
+          this.$swal({
+            title: 'Error!',
+            text: "This platform is already registered in this title!",
+            icon: 'error',
+          })
+        } else {
+          this.title.titlePlatforms.push({ id_plataforma: this.title.selectedPlatform, nome: this.getPlatformsById(this.title.selectedPlatform).nome });
+          this.performClick("#new-addplatform-back");
+        }
+      },
+      newRemovePlatform(id){
+        if (this.title.titlePlatforms.length > 1) {
+          this.title.titlePlatforms = this.title.titlePlatforms.filter(plat => plat.id_plataforma != id);
+        } else {
+          this.$swal({
+            title: 'Error!',
+            text: 'Each title has to have at least 1 platform.',
+            icon: 'error',
+          });
+        }
       },
       removeTitle(id){
         this.$swal({
@@ -280,7 +389,7 @@ export default ({
         });
       },
       performClick(name) {
-          document.querySelector(name).click();
+        document.querySelector(name).click();
       }
     }
 });

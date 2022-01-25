@@ -26,13 +26,14 @@ export default new Vuex.Store({
     classificacao_quiz: localStorage.classificacao_quiz ? JSON.parse(localStorage.classificacao_quiz) : [],
     comentarios_obra: localStorage.comentarios_obra ? JSON.parse(localStorage.comentarios_obra) : [{ id_comentario: 0, id_imdb: "tt0366551", id_utilizador: 1, comentario: "Bom filme!", data: "2022-01-20T18:06:43.231Z" }],
     comentarios_quiz: localStorage.comentarios_quiz ? JSON.parse(localStorage.comentarios_quiz) : [],
-    cur_api: 0,
-    api_keys: ["k_bxe02t9j", "k_82n08589", "k_z0rw7im2", "k_ysbktlgy", "k_z0rw7im2", "k_n116qcbn", "k_h21sbegj", "k_utdlvs0n", "k_14iolt3q", "k_p9fk9brd", "k_3gpl3mmq", "k_23fa7215", "k_08fh2pq9", "k_8luslxgk", "k_zhzvooqo", "k_o6h8ohp8"],
-    tries_main: 0,
-    tries_eps: 0,
     quiz: localStorage.quiz ? JSON.parse(localStorage.quiz) : dataQuiz,
     premios:localStorage.premios?JSON.parse(localStorage.premios) : dataPremios,
     premios_utilizador:localStorage.premios_utilizador?JSON.parse(localStorage.premios_utilizador) : dataPremioUtilizador,
+    // Variáveis para controlar o acesso à API
+    api_keys: ["k_bxe02t9j", "k_82n08589", "k_z0rw7im2", "k_ysbktlgy", "k_z0rw7im2", "k_n116qcbn", "k_h21sbegj", "k_utdlvs0n", "k_14iolt3q", "k_p9fk9brd", "k_3gpl3mmq", "k_23fa7215", "k_08fh2pq9", "k_8luslxgk", "k_zhzvooqo", "k_o6h8ohp8"],
+    cur_api: 0,
+    tries_main: 0,
+    tries_eps: 0,
   },
   getters: {
     isEmailAvailable: (state) => (email) => state.users.every((user) => user.email !== email),
@@ -78,10 +79,10 @@ export default new Vuex.Store({
         // O título não existe portanto realizar a call à API (https://imdb-api.com/) para obter as informações
         const response = await fetch(`https://imdb-api.com/en/API/Title/${this.state.api_keys[this.state.cur_api]}/${payload[0]}/FullCast,Posters,Trailer`);
         if (response.ok) {
-          this.tries_main = 0;
           const beSure = await response.json();
           // Há a possibilidade de ter havido um erro na call mas mesmo assim a API devolver um objeto a descrever o erro, lidar com isso
           if (!beSure.errorMessage || beSure.errorMessage == null || beSure.errorMessage == "null") {
+            this.tries_main = 0;
             // A informação veio correta
             // Adicionar a informação principal à base de dados
             beSure.plataformas = payload[1];
@@ -92,19 +93,17 @@ export default new Vuex.Store({
             }
           } else {
             // Deu erro, mudar a key e tentar novamente
-            console.log("Error happened.");
             this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
             // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
             this.tries_main += 1;
             if (this.tries_main >= this.state.cur_api.length + 1) {
-              throw new Error("The API service is down, please try again later");
+              throw new Error(beSure.errorMessage);
             } else {
               // Recursive magic
               this.dispatch('saveNewTitle', payload[0]);
             }
           }
         } else {
-          console.log("Error happened.");
           // Se ocorreu algum erro na call à API mudar a key e tentar novamente
           this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
           // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
@@ -131,20 +130,18 @@ export default new Vuex.Store({
             // Introduzir a informação da temporada na base de dados
             context.commit("SET_SEASON", beSure);
           } else {
-            console.log("Error happened.");
              // Se ocorreu algum erro na call à API mudar a key e tentar novamente
              this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
              // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
              this.tries_eps += 1;
              if (this.tries_eps >= this.state.cur_api.length + 1) {
-               throw new Error("The API service is down, please try again later");
+               throw new Error(beSure.errorMessage);
              } else {
                // Recursive magic
-               this.dispatch('getSeriesEpisodes', new_title);
+               i--;
              }
           }
         } else {
-          console.log("Error happened.");
            // Se ocorreu algum erro na call à API mudar a key e tentar novamente
            this.state.cur_api = this.state.cur_api < (this.state.api_keys.length - 1) ? this.state.cur_api += 1 : this.state.cur_api = this.state.api_keys.length - 1;
            // Como não queremos estar sempre a tentar de novo mesmo que todas as keys não dêm, se as tries ultrapassarem o numero de keys + 1, paramos e damos erro
@@ -153,7 +150,7 @@ export default new Vuex.Store({
              throw new Error("The API service is down, please try again later");
            } else {
              // Recursive magic
-             this.dispatch('getSeriesEpisodes', new_title);
+             i--;
            }
         }
       }
@@ -400,17 +397,12 @@ export default new Vuex.Store({
       state.premios[state.premios.findIndex(premio=>premio.id_premio==payload.id_premio)].valor = payload.valor;
       localStorage.premios = JSON.stringify(state.premios);
     },
-    UPDATE_TITLE_PLATFORM(state,payload){
-      if(!state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas.find(plat=>plat.id_plataforma==payload.id_plataforma)){
-        state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas.push({id_plataforma:payload.id_plataforma, nome:payload.nome})
-        localStorage.obra = JSON.stringify(state.obra);
-      }
+    UPDATE_TITLE_PLATFORM(state, payload){
+      state.obra[state.obra.findIndex(ob => ob.id_imdb == payload[0])].plataformas = payload[1];
+      localStorage.obra = JSON.stringify(state.obra);
     },
-    REMOVE_PLATFORM(state,payload){
-      state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas = state.obra[state.obra.findIndex(ob=>ob.id_imdb==payload.id_imdb)].plataformas.filter(plat=>(plat.id_plataforma != payload.id_plataforma));
-      localStorage.obra= JSON.stringify(state.obra);
-    },
-    REMOVE_TITLE(state,payload){
+    REMOVE_TITLE(state,payload) {
+      // Remover título
       state.obra = state.obra.filter(obra=>(obra.id_imdb != payload));
       localStorage.obra= JSON.stringify(state.obra);
 
