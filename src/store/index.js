@@ -18,7 +18,7 @@ export default new Vuex.Store({
     plataformas: localStorage.plataformas ? JSON.parse(localStorage.plataformas) : dataPlatforms,
     genero: localStorage.genero ? JSON.parse(localStorage.genero) : dataGenero,
     users: localStorage.users ? JSON.parse(localStorage.users) : dataUsers,
-    badges: localStorage.badges ? JSON.parse(localStorage.badges) : [{"icon":require("../assets/images/badges/0.svg"),"name":"Freshman","xp_min":0,"xp_max":749,"level":0},{"icon":require("../assets/images/badges/1.svg"),"name":"Sophomore","xp_min":750,"xp_max":1499,"level":5},{"icon":require("../assets/images/badges/2.svg"),"name":"Junior","xp_min":1500,"xp_max":2249,"level":10},{"icon":require("../assets/images/badges/3.svg"),"name":"Senior","xp_min":2250,"xp_max":2999,"level":15},{"icon":require("../assets/images/badges/4.svg"),"name":"Graduated","xp_min":3000,"xp_max":3749,"level":20},{"icon":require("../assets/images/badges/5.svg"),"name":"Apprentice","xp_min":3750,"xp_max":4499,"level":25},{"icon":require("../assets/images/badges/6.svg"),"name":"Extra","xp_min":4500,"xp_max":5249,"level":30},{"icon":require("../assets/images/badges/7.svg"),"name":"Producer","xp_min":5250,"xp_max":5999,"level":35},{"icon":require("../assets/images/badges/8.svg"),"name":"Expert","xp_min":6000,"xp_max":6749,"level":40},{"icon":require("../assets/images/badges/9.svg"),"name":"Cinema God","xp_min":6750,"xp_max":7499,"level":45},{"icon":require("../assets/images/badges/10.svg"),"name":"Freshman","xp_min":7500,"xp_max":999999999,"level":50}],
+    badges: localStorage.badges ? JSON.parse(localStorage.badges) : [{"icon":require("../assets/images/badges/0.svg"),"id_badge":0,"name":"Freshman","xp_min":0,"xp_max":749,"level":0},{"icon":require("../assets/images/badges/1.svg"),"id_badge":1,"name":"Sophomore","xp_min":750,"xp_max":1499,"level":5},{"icon":require("../assets/images/badges/2.svg"),"id_badge":2,"name":"Junior","xp_min":1500,"xp_max":2249,"level":10},{"icon":require("../assets/images/badges/3.svg"),"id_badge":3,"name":"Senior","xp_min":2250,"xp_max":2999,"level":15},{"icon":require("../assets/images/badges/4.svg"),"id_badge":4,"name":"Graduated","xp_min":3000,"xp_max":3749,"level":20},{"icon":require("../assets/images/badges/5.svg"),"id_badge":5,"name":"Apprentice","xp_min":3750,"xp_max":4499,"level":25},{"icon":require("../assets/images/badges/6.svg"),"id_badge":6,"name":"Extra","xp_min":4500,"xp_max":5249,"level":30},{"icon":require("../assets/images/badges/7.svg"),"id_badge":7,"name":"Producer","xp_min":5250,"xp_max":5999,"level":35},{"icon":require("../assets/images/badges/8.svg"),"id_badge":8,"name":"Director","xp_min":6000,"xp_max":6749,"level":40},{"icon":require("../assets/images/badges/9.svg"),"id_badge":9,"name":"Expert","xp_min":6750,"xp_max":7499,"level":45},{"icon":require("../assets/images/badges/10.svg"),"id_badge":10,"name":"Cinema God","xp_min":7500,"xp_max":999999999,"level":50}],
     loggedUser: localStorage.loggedUser ? JSON.parse(localStorage.loggedUser) : null,
     obras_gosto: localStorage.obras_gosto ? JSON.parse(localStorage.obras_gosto) : [],
     vistos: localStorage.vistos ? JSON.parse(localStorage.vistos) : [],
@@ -66,9 +66,9 @@ export default new Vuex.Store({
     getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id),
     getTopUsers: (state) => state.users.length >= 10 ? [...state.users].sort((a, b) => (a.xp > b.xp) ? -1 : (a.xp < b.xp) ? 1 : 0).slice(0, 10) : [...state.users].sort((a, b) => (a.xp > b.xp) ? -1 : (a.xp < b.xp) ? 1 : 0),
     getNextAvailablePrizeID: (state) => state.premios.length > 0 ? Math.max.apply(null, state.premios.map(premio => premio.id_premio)) + 1 : 0,
-    getQuizByID: (state) => (id) => state.quiz.find(quiz => quiz.id_quiz == id),
     getAllPlatforms:(state)=> state.plataformas,
     getPlatformsById:(state)=> (id) => state.plataformas.find(plat=>plat.id_plataforma==id),
+    getNextAvailableQuizID: (state) => state.quiz.length > 0 ? Math.max.apply(null, state.quiz.map(qz => qz.id_quiz)) + 1 : 0,
   },
   actions:{
     async saveNewTitle(context, payload) {
@@ -421,6 +421,27 @@ export default new Vuex.Store({
       // Remover os vistos que pertencem a este titulo
       state.vistos = state.vistos.filter(visto => visto.id_imdb != payload);
       localStorage.vistos = JSON.stringify(state.vistos);
+    },
+    EDIT_QUIZ(state, payload) {
+      const QUIZ_IDX = state.quiz.findIndex(quiz => quiz.id_quiz == payload.id_quiz);
+      state.quiz[QUIZ_IDX].tipo = JSON.parse(JSON.stringify(payload.tipo));
+      state.quiz[QUIZ_IDX].dificuldade = JSON.parse(JSON.stringify(payload.dificuldade));
+      state.quiz[QUIZ_IDX].especifico = payload.especifico;
+      state.quiz[QUIZ_IDX].titulo = payload.titulo;
+      state.quiz[QUIZ_IDX].tema = payload.tema;
+      state.quiz[QUIZ_IDX].descricao = payload.descricao;
+      state.quiz[QUIZ_IDX].poster = payload.poster;
+      state.quiz[QUIZ_IDX].banner = payload.banner;
+      state.quiz[QUIZ_IDX].perguntas = JSON.parse(JSON.stringify(payload.perguntas));
+      localStorage.quiz = JSON.stringify(state.quiz);
+    },
+    SET_NEW_QUIZ(state, payload) {
+      state.quiz.push(payload);
+      localStorage.quiz = JSON.stringify(state.quiz);
+    },
+    REMOVE_QUIZ(state, payload) {
+      state.quiz = state.quiz.filter(qz => qz.id_quiz != payload);
+      localStorage.quiz = JSON.stringify(state.quiz);
     }
   }
 });

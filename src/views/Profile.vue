@@ -118,18 +118,17 @@
         <p class="m-0" style="color: var(--azul-claro); font-weight: bold; font-size: 1.25em;">Badges</p>
         <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-3 mb-3">
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            <form class="d-flex">
+            <form class="d-flex" @submit.prevent="">
               <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search"
-                  aria-label="Search">
-                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_badge.search">
+                <button type="submit"><i class="fas fa-search"></i></button>
               </div>
             </form>
           </div>
 
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            <select id="order" style="height: 40px;">
-              <option disabled selected>Order by</option>
+            <select id="order" style="height: 40px;" v-model="filters_badge.orderby">
+              <option disabled value="Order by">Order by</option>
               <option value="All">All</option>
               <option value="Unlocked">Unlocked</option>
               <option value="Locked">Locked</option>
@@ -140,7 +139,7 @@
         <div style="background-color: var(--azul-escuro2); border-radius: 10px;" class="p-3">
           <div class="leaderboardBar" style="max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
             <div class="row g-3 pe-2">
-              <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in getBadges" :key="index">
+              <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in filteredBadges" :key="index">
                 <div class="badge-card d-flex flex-column align-items-center p-2">
                   <p style="color: var(--cinza-claro)">Level {{ badge.level }}</p>
                   <img :src="badge.icon" alt="Badge" width="50px" height="50px" />
@@ -149,7 +148,7 @@
                   <p class="m-0">{{ badge.name }}</p>
                 </div>
                 <div class="mt-2">
-                  <button @click="changeBadge(index)" :disabled="(getAllUsers[$route.params.id].xp < badge.xp_min)" class="logout-btn w-100" :style="{ backgroundColor: getAllUsers[$route.params.id].id_badge == index ? 'var(--verde)' : (getAllUsers[$route.params.id].xp >= badge.xp_min ? 'var(--laranja)' : 'var(--cinza-claro)') }" style="font-size: 1rem; color: var(--bg); border-radius: 5px; font-weight: bold;">{{ (getAllUsers[$route.params.id].id_badge == index) ? ('Selected') : ((getAllUsers[$route.params.id].xp >= badge.xp_min) ? ('Select') : ('Locked')) }}</button>
+                  <button @click="changeBadge(badge.id_badge)" :disabled="(getAllUsers[$route.params.id].xp < badge.xp_min)" class="logout-btn w-100" :style="{ backgroundColor: getAllUsers[$route.params.id].id_badge == badge.id_badge ? 'var(--verde)' : (getAllUsers[$route.params.id].xp >= badge.xp_min ? 'var(--laranja)' : 'var(--cinza-claro)') }" style="font-size: 1rem; color: var(--bg); border-radius: 5px; font-weight: bold;">{{ (getAllUsers[$route.params.id].id_badge == index) ? ('Selected') : ((getAllUsers[$route.params.id].xp >= badge.xp_min) ? ('Select') : ('Locked')) }}</button>
                 </div>
               </div>
             </div>
@@ -160,40 +159,44 @@
 
     <div class="filtros row gy-5" v-if="selectedTab == 'favorites'">
       <div>
-        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row m-0 g-3 pb-3">
+        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-2 mb-3">
           <div class="col-md-12 col-lg-3 col-sm-12">
-            <form class="d-flex">
+            <form @submit.prevent="" class="d-flex">
               <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_liked.search">
+                <button type="button"><i class="fas fa-search"></i></button>
               </div>
             </form>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="genre" style="height: 40px;">
-              <option disabled selected>Genre</option>
-              <option :value=genero v-for="(genero,index) in generos" :key="index">{{genero}}</option>
+            <select id="genre" style="height: 40px;" v-model="filters_liked.genre">
+              <option disabled value="Genre">Genre</option>
+              <option value="All">All</option>
+              <option :value=genero v-for="(genero, index) in generos" :key="index">{{ genero }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="year" style="height: 40px;">
-              <option disabled selected>Year</option>
-              <option :value="i + 1979" v-for="i in 43" :key="i">{{ i + 1979 }}</option>
+            <select id="year" style="height: 40px;" v-model="filters_liked.year">
+              <option disabled value="Year">Year</option>
+              <option value="All">All</option>
+              <option :value=ano v-for="(ano, index) in anos" :key="index">{{ ano }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="country" style="height: 40px;">
-              <option disabled selected>Country</option>
-              <option :value=pais v-for="(pais,index) in country_list" :key="index">{{pais}}</option>
+            <select id="country" style="height: 40px;" v-model="filters_liked.country">
+              <option disabled value="Country">Country</option>
+              <option value="All">All</option>
+              <option :value=pais v-for="(pais, index) in paises" :key="index">{{ pais }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-3 col-sm-6">
-            <select id="order" style="height: 40px;">
-              <option disabled selected>Order by</option>
+            <select id="order" style="height: 40px;" v-model="filters_liked.orderby">
+              <option disabled value="Order by">Order by</option>
+              <option value="Recently added">Recently added</option>
               <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
               <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
               <option value="Most recent">Most recent</option>
@@ -201,30 +204,31 @@
               <option value="Best rated">Best rated</option>
               <option value="Worst rated">Worst rated</option>
               <option value="Most viewed">Most viewed</option>
+              <option value="Least viewed">Least viewed</option>
             </select>
           </div>
         </div>
       </div>
       <div id="likesSection">
         <div class="row g-3">
-          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in infoLikes" :key="index">
+          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitles.length >= mostrar.liked ? mostrar.liked : filteredTitles.length)" :key="i">
             <div class="tile-custom" >
-              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: infoLikes[index].id_imdb}})">
-                <img class="tile__img" :src=infoLikes[index].poster alt="" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{infoLikes[index].titulo}}</p>
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitles[i - 1].id_imdb}})">
+                <img class="tile__img" :src="filteredTitles[i - 1].poster" alt="" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitles[i - 1].titulo}}</p>
               </div>
               <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
-                <button @click="removeLike(infoLikes[index].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
+                <button @click="removeLike(filteredTitles[i - 1].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
               </div>
             </div>
             
           </div>
-          <div v-if="infoLikes.length==0">
+          <div v-if="filteredTitles.length==0">
             <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
           </div>
         </div>
-        <div v-if="mostrar < infoLikes.length" class="w-100 d-flex justify-content-center mt-4">
-          <button class="rounded-btn" @click="mostrar = mostrar + 12 <= infoLikes.length ? mostrar + 12 : infoLikes.length">Load More</button>
+        <div v-if="mostrar.liked < filteredTitles.length" class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar.liked = mostrar.liked + 12 <= filteredTitles.length ? mostrar.liked + 12 : filteredTitles.length">Load More</button>
         </div>
 
       </div>
@@ -232,40 +236,44 @@
 
     <div class="filtros row gy-5" v-if="selectedTab == 'seen'">
       <div>
-        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
+        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-2 mb-3">
           <div class="col-md-12 col-lg-3 col-sm-12">
-            <form class="d-flex">
+            <form @submit.prevent="" class="d-flex">
               <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_seen.search">
+                <button type="button"><i class="fas fa-search"></i></button>
               </div>
             </form>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="genre" style="height: 40px;">
-              <option disabled selected>Genre</option>
-              <option :value=genero v-for="(genero,index) in generos" :key="index">{{genero}}</option>
+            <select id="genre" style="height: 40px;" v-model="filters_seen.genre">
+              <option disabled value="Genre">Genre</option>
+              <option value="All">All</option>
+              <option :value=genero v-for="(genero, index) in generos" :key="index">{{ genero }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="year" style="height: 40px;">
-              <option disabled selected>Year</option>
-              <option :value="i + 1979" v-for="i in 43" :key="i">{{ i + 1979 }}</option>
+            <select id="year" style="height: 40px;" v-model="filters_seen.year">
+              <option disabled value="Year">Year</option>
+              <option value="All">All</option>
+              <option :value=ano v-for="(ano, index) in anos" :key="index">{{ ano }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="country" style="height: 40px;">
-              <option disabled selected>Country</option>
-              <option :value=pais v-for="(pais,index) in country_list" :key="index">{{pais}}</option>
+            <select id="country" style="height: 40px;" v-model="filters_seen.country">
+              <option disabled value="Country">Country</option>
+              <option value="All">All</option>
+              <option :value=pais v-for="(pais, index) in paises" :key="index">{{ pais }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-3 col-sm-6">
-            <select id="order" style="height: 40px;">
-              <option disabled selected>Order by</option>
+            <select id="order" style="height: 40px;" v-model="filters_seen.orderby">
+              <option disabled value="Order by">Order by</option>
+              <option value="Recently added">Recently added</option>
               <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
               <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
               <option value="Most recent">Most recent</option>
@@ -273,29 +281,30 @@
               <option value="Best rated">Best rated</option>
               <option value="Worst rated">Worst rated</option>
               <option value="Most viewed">Most viewed</option>
+              <option value="Least viewed">Least viewed</option>
             </select>
           </div>
         </div>
       </div>
       <div>
         <div class="row g-3">
-          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="(filme, index) in infoViwed" :key="index" >
+          <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitlesSeen.length >= mostrar.seen ? mostrar.seen : filteredTitlesSeen.length)" :key="i" >
             <div class="tile-custom">
-              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: infoViwed[index].id_imdb}})">
-                <img class="tile__img" :src=infoViwed[index].poster alt="" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{infoViwed[index].titulo}}</p>
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitlesSeen[i - 1].id_imdb}})">
+                <img class="tile__img" :src="filteredTitlesSeen[i - 1].poster" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitlesSeen[i - 1].titulo}}</p>
               </div>
               <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
-                <button @click="removeSeen(infoViwed[index].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
+                <button @click="removeSeen(filteredTitlesSeen[i - 1].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
               </div>
             </div>
           </div>
-          <div v-if="infoViwed.length==0">
+          <div v-if="filteredTitlesSeen.length==0">
             <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't seen any movies nor series." : "This user hasn't seen any movies nor series." }}</p> 
           </div>
         </div>
-        <div v-if="mostrar < infoViwed.length" class="w-100 d-flex justify-content-center mt-4">
-          <button class="rounded-btn" @click="mostrar = mostrar + 12 <= infoViwed.length ? mostrar + 12 : infoViwed.length">Load More</button>
+        <div v-if="mostrar.seen < filteredTitlesSeen.length" class="w-100 d-flex justify-content-center mt-4">
+          <button class="rounded-btn" @click="mostrar.seen = mostrar.seen + 12 <= filteredTitlesSeen.length ? mostrar.seen + 12 : filteredTitlesSeen.length">Load More</button>
         </div>
       </div>
       
@@ -541,10 +550,32 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      country_list: ["Portugal", "Spain"],
-      generos: ["Action", "Comedy"],
-      mostrar: 12,
+      mostrar: {
+        liked: 12,
+        seen: 12
+      },
       selectedTab: "statistics",
+      anos: [],
+      generos: [],
+      paises: [],
+      filters_badge: {
+        search: "",
+        orderby: "Order by"
+      },
+      filters_liked: {
+        search: "",
+        genre: "Genre",
+        year: "Year",
+        country: "Country",
+        orderby: "Order by"
+      },
+      filters_seen: {
+        search: "",
+        genre: "Genre",
+        year: "Year",
+        country: "Country",
+        orderby: "Order by"
+      },
       edit_user: {
         primeiro_nome: '',
         ultimo_nome: '',
@@ -706,10 +737,129 @@ export default {
           !tipo ? this.REMOVE_TITLE_RATING({ id_imdb: id, id_user: this.$route.params.id}) : this.REMOVE_QUIZ_RATING({ id_quiz: id, id_user: this.$route.params.id});
         }
       });
+    },
+    resetMostrar(which) {
+      if (which == "liked") this.mostrar.liked = 12;
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUser", "getBadges", "getQuizByID", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllUserPrizes","getAllUserComments","getAllUserRatings", "getPrizeInfo"])
+    ...mapGetters(["getLoggedUser", "getAllGenres", "getAllViewsByTitle", "getAllTitles", "getBadges", "getQuizByID", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllUserPrizes","getAllUserComments","getAllUserRatings", "getPrizeInfo"]),
+    filteredBadges() {
+      let filterResult = [...this.getBadges];
+
+      // Barra de pesquisa
+      if (this.filters_badge.search != "") {
+        filterResult = filterResult.filter(badge => badge.name.toLowerCase().includes(this.filters_badge.search.toLowerCase()));
+      }
+
+      if (this.filters_badge.orderby != "All" && this.filters_badge.orderby != "Order by") {
+        if (this.filters_badge.orderby == "Unlocked") {
+          filterResult.map(badge => badge.locked = JSON.parse(JSON.stringify(this.getAllUsers[this.$route.params.id])).xp < badge.xp_min)
+          filterResult = filterResult.sort((a, b) => (a.locked < b.locked) ? -1 : ((a.locked > b.locked) ? 1 : 0));
+        } else if (this.filters_badge.orderby == "Locked") {
+          filterResult.map(badge => badge.locked = JSON.parse(JSON.stringify(this.getAllUsers[this.$route.params.id])).xp < badge.xp_min)
+          filterResult = filterResult.sort((a, b) => (a.locked > b.locked) ? -1 : ((a.locked < b.locked) ? 1 : 0));
+        }
+      }
+
+      return filterResult;
+    },
+    filteredTitles() {
+      this.resetMostrar('liked');
+      let filterResult = [...this.infoLikes];
+
+      // Barra de pesquisa
+      if (this.filters_liked.search != "") {
+        filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.filters_liked.search.toLowerCase()));
+      }
+
+      // Géneros
+      if (this.filters_liked.genre != "All" && this.filters_liked.genre != "Genre") {
+        filterResult = filterResult.filter(title => title.genero.some(genero => genero == this.filters_liked.genre));
+      }
+
+      // Anos
+      if (this.filters_liked.year != "All" && this.filters_liked.year != "Year") {
+        filterResult = filterResult.filter(title => title.ano == this.filters_liked.year);
+      }
+      
+      // Países
+      if (this.filters_liked.country != "All" && this.filters_liked.country != "Country") {
+        filterResult = filterResult.filter(title => this.filters_liked.country == title.pais);
+      }
+
+      if (this.filters_liked.orderby != "Recently added" && this.filters_liked.orderby != "Order by") {
+        if (this.filters_liked.orderby == "Alphabetic (A-Z)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Alphabetic (Z-A)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.ano > b.ano) ? -1 : ((a.ano < b.ano) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Oldest") {
+          filterResult = filterResult.sort((a, b) => (a.ano < b.ano) ? -1 : ((a.ano > b.ano) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Best rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb > b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb < b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Worst rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Most viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Least viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
+        }    
+      }
+      
+      return filterResult;
+    },
+    filteredTitlesSeen() {
+      this.resetMostrar('seen');
+      let filterResult = [...this.infoViwed];
+
+      // Barra de pesquisa
+      if (this.filters_seen.search != "") {
+        filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.filters_seen.search.toLowerCase()));
+      }
+
+      // Géneros
+      if (this.filters_seen.genre != "All" && this.filters_seen.genre != "Genre") {
+        filterResult = filterResult.filter(title => title.genero.some(genero => genero == this.filters_seen.genre));
+      }
+
+      // Anos
+      if (this.filters_seen.year != "All" && this.filters_seen.year != "Year") {
+        filterResult = filterResult.filter(title => title.ano == this.filters_seen.year);
+      }
+      
+      // Países
+      if (this.filters_seen.country != "All" && this.filters_seen.country != "Country") {
+        filterResult = filterResult.filter(title => this.filters_seen.country == title.pais);
+      }
+
+      if (this.filters_seen.orderby != "Recently added" && this.filters_seen.orderby != "Order by") {
+        if (this.filters_seen.orderby == "Alphabetic (A-Z)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Alphabetic (Z-A)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.ano > b.ano) ? -1 : ((a.ano < b.ano) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Oldest") {
+          filterResult = filterResult.sort((a, b) => (a.ano < b.ano) ? -1 : ((a.ano > b.ano) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Best rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb > b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb < b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Worst rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Most viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Least viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
+        }    
+      }
+      
+      return filterResult;
+    }
   },
   mounted () {
     this.edit_user.primeiro_nome = this.getAllUsers.find(user => user.id == this.$route.params.id).primeiro_nome;
@@ -727,7 +877,22 @@ export default {
     for (let i = 0; i < this.getTitlesSeenByUser(this.$route.params.id).length; i++) {
       this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.$route.params.id)[i]))
     }
-  }
+  },
+  created () {
+    this.generos = this.getAllGenres.map(genre => genre.descricao);
+    this.getAllTitles.map(title => {
+      // Pré carregar anos para o select
+      if (!this.anos.some(ano => ano == title.ano)) {
+        this.anos.push(title.ano);
+      }
+      // Pré carregar países para o select
+      if (!this.paises.some(pais => pais == title.pais)) {
+        this.paises.push(title.pais);
+      }
+    });
+    this.anos.sort();
+    this.paises.sort();
+  },
 }
 </script>
 

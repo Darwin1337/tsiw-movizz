@@ -200,12 +200,16 @@ import { mapGetters } from "vuex";
             document.querySelector(target + " .row-carousel").scrollLeft -= (parseInt(document.querySelector(target + " .row-carousel").querySelector(".tile").offsetWidth) + 10);
           }
         }
+      },
+      resetMostrar() {
+        this.mostrar = 12;
       }
     },
     computed: {
       ...mapGetters(["getAllQuizzes", "getQuizRating", "getQuizRating", "getAllUsers", "getTopUsers"]),
       filteredQuizzes() {
-        this.mostrar = 12;
+        this.resetMostrar();
+
         let filterResult = [...this.quizzes];
         
         // Barra de pesquisa

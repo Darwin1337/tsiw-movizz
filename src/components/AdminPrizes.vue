@@ -215,19 +215,18 @@ export default ({
             }
         },
         removePrize(id){
-        this.$swal({
-        title: 'Warning!',
-        text: "Are you sure you want to remove this prize?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.REMOVE_PRIZE(id)
-        }
-      });
-        
+          this.$swal({
+            title: 'Warning!',
+            text: "Are you sure you want to remove this prize?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.REMOVE_PRIZE(id)
+            }
+          });
         },
         listInfo(id){
             this.editID = id;

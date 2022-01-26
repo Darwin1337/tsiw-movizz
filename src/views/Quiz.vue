@@ -205,7 +205,6 @@ import { mapGetters, mapMutations } from "vuex";
                     this.warningMessage = `You have already played a long quiz that allowed points in the last 24h.<br><br>Finishing this game will get you XP but <strong>NOT</strong> points.<br><br>Leaving mid-game will cause you to lose the opportunity to get it.`;
                 } else {
                     if (CURTOS_LAST24.length == 1) {
-                        console.log(CURTOS_LAST24[0].dificuldade)
                         if ((CURTOS_LAST24[0].dificuldade == "normal" && this.quizContent.dificuldade.descricao == "normal") || (CURTOS_LAST24[0].dificuldade == "dificil" && this.quizContent.dificuldade.descricao == "dificil")) {
                             this.allowsPoints = false;
                             this.warningMessage = `You have played a short <strong>${ this.quizContent.dificuldade.descricao == "dificil" ? "hard" : "normal" }</strong> quiz that allowed points in the last 24h.<br><br>To have the ability of winning points please choose a short <strong>${ this.quizContent.dificuldade.descricao == "normal" ? "hard" : "normal" }</strong> quiz.<br><br>Finishing this game will get you XP but <strong>NOT</strong> points.<br><br>Leaving mid-game will cause you to lose the opportunity to get it.`;

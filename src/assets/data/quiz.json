@@ -602,7 +602,7 @@
 		},
 		"dificuldade":{
 		   "descricao":"normal",
-		   "pontos_pergunta":10
+		   "pontos_pergunta":75
 		},
 		"especifico":true,
 		"titulo":"Stranger Things Quiz",

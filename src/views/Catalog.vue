@@ -176,7 +176,7 @@
     computed: {
       ...mapGetters(["getAllTitles", "getAllGenres", "getAllViewsByTitle", "getTitleMovizzRating"]),
       filteredTitles() {
-        this.mostrar = 12;
+        this.resetMostrar();
         let filterResult = [...this.titles];
 
         // Barra de pesquisa
@@ -213,10 +213,10 @@
           } else if (this.filters.orderby == "Worst rated") {
             filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
           } else if (this.filters.orderby == "Most viewed") {
-            filterResult.map(res => res.visualizacoes = this.getAllViewsByTitle.find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+            filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
             filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
           } else if (this.filters.orderby == "Least viewed") {
-            filterResult.map(res => res.visualizacoes = this.getAllViewsByTitle.find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+            filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
             filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
           }    
         }
@@ -253,6 +253,9 @@
             document.querySelector(target + " .row-carousel").scrollLeft -= (parseInt(document.querySelector(target + " .row-carousel").querySelector(".tile").offsetWidth) + 10);
           }
         }
+      },
+      resetMostrar() {
+        this.mostrar = 12;
       }
     },
     watch: {

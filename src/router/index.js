@@ -110,8 +110,7 @@ router.beforeEach((to, from, next) => {
   } else if (!to.meta.requiresAuth && store.getters.getLoggedUser) {
     next({ name: "Home" });
   } else {
-    if (from.name == "Profile" && to.name == "Profile") {
-      // Se o utilizador vier de um perfil diferente do dele e quiser ver o próprio, forçar a atualização da página
+    if ((from.name == "Profile" && to.name == "Profile") || (from.name == "Title" && to.name == "Title")) {
       next();
       router.go(0);
     } else {
