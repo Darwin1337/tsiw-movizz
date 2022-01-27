@@ -2,6 +2,16 @@
     {
         "id_utilizador":1,
         "id_premio":0,
-        "data":"2022-01-20T18:06:43.231Z"
+        "data":"2022-01-13T18:06:43.231Z"
+    },
+    {
+        "id_utilizador":1,
+        "id_premio":2,
+        "data":"2022-01-15T18:02:44.231Z"
+    },
+    {
+        "id_utilizador":1,
+        "id_premio":3,
+        "data":"2022-01-22T18:06:32.231Z"
     }
 ]

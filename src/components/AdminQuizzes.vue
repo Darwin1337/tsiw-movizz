@@ -1,42 +1,5 @@
 <template>
-    <div>
-      <!-- filtros -->
-        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-5 mb-3 filters">
-          <div class="col-md-12 col-lg-3 col-sm-12">
-            <form class="d-flex">
-              <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
-              </div>
-            </form>
-          </div>
-
-          <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="type" style="height: 40px;">
-              <option disabled selected>Type</option>
-              <option :value=type v-for="(type, index) in types" :key="index">{{ type }}</option>
-            </select>
-          </div>
-
-          <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="theme" style="height: 40px;">
-              <option disabled selected>Theme</option>
-              <option :value=theme v-for="(theme, index) in themes" :key="index">{{ theme }}</option>
-            </select>
-          </div>
-
-          <div class="col-md-3 col-lg-3 col-sm-6">
-            <select id="order" style="height: 40px;">
-              <option disabled selected>Order by</option>
-              <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
-              <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
-              <option value="Best rated">Best rated</option>
-              <option value="Worst rated">Worst rated</option>
-              <option value="Most played">Most played</option>
-              <option value="Least played">Least played</option>
-            </select>
-          </div>
-        </div>
+    <div class="mt-3">
         <div class="mt-3 mb-3">
           <button class="addNewQuizButton" data-bs-toggle="modal" data-bs-target="#addQuizModal">Add new quiz</button>
         </div>

@@ -316,26 +316,25 @@
           <p style="color: var(--azul-claro); font-weight: 500;">Comments</p>
           <div>
             <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
-              <div class="col-lg-6">
-                <form class="d-flex">
-                  <div class="input-group">
-                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                    <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
-                  </div>
-                </form>
-              </div>
-
-              <div class="col-lg-6">
-                <select id="orderby" style="height: 40px;">
-                  <option disabled selected>Order by</option>
-                  <option value="Most recent">Most recent</option>
-                  <option value="Oldest">Oldest</option>
-                </select>
-              </div>
+            <div class="col-lg-6">
+              <form @submit.prevent="" class="d-flex">
+                <div class="input-group">
+                  <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_comments.search">
+                  <button type="button"><i class="fas fa-search"></i></button>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-6">
+              <select id="orderby" style="height: 40px;" v-model="filters_comments.orderby">
+                <option disabled value="Order by">Order by</option>
+                <option value="Most recent">Most recent</option>
+                <option value="Oldest">Oldest</option>
+              </select>
+            </div>
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllUserComments($route.params.id)" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
               <div >
                 <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
                 <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
@@ -358,19 +357,17 @@
           <div>
             <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
               <div class="col-lg-6">
-                <form class="d-flex">
+                <form @submit.prevent="" class="d-flex">
                   <div class="input-group">
-                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                    <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_ratings.search">
+                    <button type="button"><i class="fas fa-search"></i></button>
                   </div>
                 </form>
               </div>
 
               <div class="col-lg-6">
-                <select id="orderby" style="height: 40px;">
-                  <option disabled selected>Order by</option>
-                  <option value="Most recent">Most recent</option>
-                  <option value="Oldest">Oldest</option>
+                <select id="orderby" style="height: 40px;" v-model="filters_ratings.orderby">
+                  <option disabled value="Order by">Order by</option>
                   <option value="Best">Best</option>
                   <option value="Worst">Worst</option>
                 </select>
@@ -378,7 +375,7 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllUserRatings($route.params.id)" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredRatings" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div class="col-3">
                   <div style="width: 85px; height: 125px; min-width: 85px; min-height: 125px;">
@@ -407,17 +404,17 @@
           <div>
             <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3">
               <div class="col-lg-6">
-                <form class="d-flex">
+                <form @submit.prevent="" class="d-flex">
                   <div class="input-group">
-                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                    <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
+                    <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_prizes.search">
+                    <button type="button"><i class="fas fa-search"></i></button>
                   </div>
                 </form>
               </div>
 
               <div class="col-lg-6">
-                <select id="orderby" style="height: 40px;">
-                  <option disabled selected>Order by</option>
+                <select id="orderby" style="height: 40px;" v-model="filters_prizes.orderby">
+                  <option disabled value="Order by">Order by</option>
                   <option value="Most recent">Most recent</option>
                   <option value="Oldest">Oldest</option>
                   <option value="Most expensive">Most expensive</option>
@@ -427,7 +424,7 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in getAllUserPrizes($route.params.id)" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredPrizes" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div>
                   <div style="width: 125px; height: 125px; min-width: 125px; min-height: 125px;">
@@ -574,6 +571,18 @@ export default {
         genre: "Genre",
         year: "Year",
         country: "Country",
+        orderby: "Order by"
+      },
+      filters_comments: {
+        search: "",
+        orderby: "Order by"
+      },
+      filters_ratings: {
+        search: "",
+        orderby: "Order by"
+      },
+      filters_prizes: {
+        search: "",
         orderby: "Order by"
       },
       edit_user: {
@@ -858,6 +867,61 @@ export default {
         }    
       }
       
+      return filterResult;
+    },
+    filteredComments() {
+      let filterResult = [...this.getAllUserComments(this.$route.params.id)];
+
+      // Barra de pesquisa
+      if (this.filters_comments.search != "") {
+        filterResult = filterResult.filter(comentario => comentario.comentario.toLowerCase().includes(this.filters_comments.search.toLowerCase()));
+      }
+
+      // Ordenação
+      if (this.filters_comments.orderby != "Oldest" && this.filters_comments.orderby != "Order by") {
+        filterResult = filterResult.sort((a, b) => (a.data > b.data) ? -1 : ((a.data < b.data) ? 1 : 0));
+      }
+
+      return filterResult;
+    },
+    filteredRatings() {
+      let filterResult = [...this.getAllUserRatings(this.$route.params.id)];
+
+      // Barra de pesquisa
+      if (this.filters_ratings.search != "") {
+        filterResult = filterResult.filter(rating => rating.hasOwnProperty('id_imdb') ? this.getTitleInfo(rating.id_imdb).titulo.toLowerCase().includes(this.filters_ratings.search.toLowerCase()) : this.getQuizByID(rating.id_quiz).titulo.toLowerCase().includes(this.filters_ratings.search.toLowerCase()));
+      }
+
+      // Ordenação
+      if (this.filters_ratings.orderby != "Order by") {
+        if (this.filters_ratings.orderby == "Best") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao > b.pontuacao) ? -1 : ((a.pontuacao < b.pontuacao) ? 1 : 0));
+        } else if (this.filters_ratings.orderby == "Worst") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao < b.pontuacao) ? -1 : ((a.pontuacao > b.pontuacao) ? 1 : 0));
+        }
+      }
+
+      return filterResult;
+    },
+    filteredPrizes() {
+      let filterResult = [...this.getAllUserPrizes(this.$route.params.id)];
+
+      // Barra de pesquisa
+      if (this.filters_prizes.search != "") {
+        filterResult = filterResult.filter(prize => this.getPrizeInfo(prize.id_premio).nome.toLowerCase().includes(this.filters_prizes.search.toLowerCase()));
+      }
+
+      // Ordenação
+      if (this.filters_prizes.orderby != "Oldest" && this.filters_prizes.orderby != "Order by") {
+        if (this.filters_prizes.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.data > b.data) ? -1 : ((a.data < b.data) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Most expensive") {
+          filterResult = filterResult.sort((a, b) => (this.getPrizeInfo(a.id_premio).valor > this.getPrizeInfo(b.id_premio).valor) ? -1 : ((this.getPrizeInfo(a.id_premio).valor < this.getPrizeInfo(b.id_premio).valor) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Cheapest") {
+          filterResult = filterResult.sort((a, b) => (this.getPrizeInfo(a.id_premio).valor < this.getPrizeInfo(b.id_premio).valor) ? -1 : ((this.getPrizeInfo(a.id_premio).valor > this.getPrizeInfo(b.id_premio).valor) ? 1 : 0));
+        }
+      }
+
       return filterResult;
     }
   },

@@ -1,52 +1,5 @@
 <template>
-    <div>
-      <!-- filtros -->
-      <div class="mt-5 mb-3">
-        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row m-0 g-3 pb-3 filters">
-          <div class="col-md-12 col-lg-3 col-sm-12">
-            <form class="d-flex">
-              <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-                <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
-              </div>
-            </form>
-          </div>
-
-          <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="genre" style="height: 40px;">
-              <option disabled selected>Genre</option>
-              <option :value=genero v-for="(genero,index) in generos" :key="index">{{genero}}</option>
-            </select>
-          </div>
-
-          <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="year" style="height: 40px;">
-              <option disabled selected>Year</option>
-              <option :value="i + 1979" v-for="i in 43" :key="i">{{ i + 1979 }}</option>
-            </select>
-          </div>
-
-          <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="country" style="height: 40px;">
-              <option disabled selected>Country</option>
-              <option :value=pais v-for="(pais,index) in country_list" :key="index">{{pais}}</option>
-            </select>
-          </div>
-
-          <div class="col-md-3 col-lg-3 col-sm-6">
-            <select id="order" style="height: 40px;">
-              <option disabled selected>Order by</option>
-              <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
-              <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
-              <option value="Most recent">Most recent</option>
-              <option value="Oldest">Oldest</option>
-              <option value="Best rated">Best rated</option>
-              <option value="Worst rated">Worst rated</option>
-              <option value="Most viewed">Most viewed</option>
-            </select>
-          </div>
-        </div>
-      </div>
+    <div class="mt-3">
       <div class="mt-3 mb-3">
         <button class="addNewQuizButton" data-bs-toggle="modal" data-bs-target="#addMovieModal">Add new movie/series</button>
       </div>

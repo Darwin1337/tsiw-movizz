@@ -1,23 +1,5 @@
 <template>
-    <div>
-      <!-- filtros -->
-      <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-5 mb-3">
-        <div class="col-md-12 col-lg-3 col-sm-12">
-          <form class="d-flex">
-            <div class="input-group">
-              <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search">
-              <button type="submit" @submit.prevent=""><i class="fas fa-search"></i></button>
-            </div>
-          </form>
-        </div>
-
-        <div class="col-md-3 col-lg-2 col-sm-6">
-          <select id="order" style="height: 40px;">
-            <option disabled selected>Order by</option>
-            <option :value=filter v-for="(filter,index) in filters" :key="index">{{filter}}</option>
-          </select>
-        </div>
-      </div>
+    <div class="mt-3">
       <div>
         <div class="row g-3">
           <div class="col-md-12 col-lg-6 col-sm-12 d-flex" v-for="i in (getAllUsers.length >= mostrar ? mostrar : getAllUsers.length)" :key="i">
