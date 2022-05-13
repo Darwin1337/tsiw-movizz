@@ -14,7 +14,15 @@ export default {
   components: {
     Navbar,
     Footer
-  }
+  },
+  mounted () {
+    document.title = "Movizz - " + this.$route.name;
+  },
+  watch: {
+    '$route.name'() {
+      document.title = "Movizz - " + this.$route.name;
+    }
+  },
 }
 </script>
 

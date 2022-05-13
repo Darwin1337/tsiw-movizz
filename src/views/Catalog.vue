@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Banner -->
     <div class="jumbo-wrapper mt-4" style="height: 425px;">
-      <div class="jumbotron d-flex align-items-end p-5"
+      <div :class="!webpSupported ? '' : 'webp'" class="jumbotron d-flex align-items-end p-5"
         style="height:100% ; background-position: center; border-radius:10px;">
         <div class="container for-about" id="banner">
           <p>Movie of the moment </p>
@@ -43,7 +43,7 @@
             <div class="row__inner p-0">
               <div class="tile" v-for="i in 10" :key="i" :set="topTitles = shuffleTop" @click="$router.push({ name: 'Title', params: { imdbid: topTitles[i - 1].id_imdb} })">
                 <div class="tile__media">
-                  <img class="tile__img" :src="topTitles[i - 1].poster"
+                  <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + topTitles[i - 1].poster_webp) : topTitles[i - 1].poster"
                     rel="preload" />
                 </div>
                 <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
@@ -116,7 +116,7 @@
             <div class="tile-custom">
               <div class="tile__media-custom">
                 <img class="tile__img"
-                  :src="filteredTitles[i - 1].poster"
+                  :src="webpSupported ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster"
                   rel="preload" />
               </div>
               <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
@@ -142,6 +142,7 @@
   export default {
     data() {
       return {
+        webpSupported: true,
         selectedType: 1,
         mostrar: 12,
         anos: [],
@@ -172,6 +173,15 @@
       });
       this.anos.sort();
       this.paises.sort();
+
+      // Verificar se o browser suporta WebP
+      const elem = document.createElement('canvas');
+      if (!!(elem.getContext && elem.getContext('2d'))) {
+        this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+      } else{
+        this.webpSupported = false;
+      }
+      console.log("WebP supported: " + this.webpSupported);
     },
     computed: {
       ...mapGetters(["getAllTitles", "getAllGenres", "getAllViewsByTitle", "getTitleMovizzRating"]),
@@ -324,6 +334,11 @@
 
   .jumbotron {
     background-image: url("../assets/images/catalog_banner.png");
+    background-size: cover;
+  }
+
+  .jumbotron.webp {
+    background-image: url("../assets/images/catalog_banner.webp");
     background-size: cover;
   }
 

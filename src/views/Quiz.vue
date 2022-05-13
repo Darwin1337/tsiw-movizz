@@ -3,7 +3,7 @@
         <div class="row mt-4 gy-2">
             <div class="col-lg-6 h-100">
                 <div class="jumbotron d-flex align-items-center p-5" style="max-height: 386px; height: 100%; background-position: center;"
-                    :style="'background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.65)), url(' + quizContent.banner  + ');'">
+                    :style="'background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.65)), url(' + (webpSupported ? require('../assets/images/content/quiz/' + quizContent.banner_webp) : quizContent.banner)  + ');'">
                     <div id="banner" class="w-100 h-100">
                         <h3 class="quiz-title">{{ quizContent.titulo }}</h3>
                         <h5 class="quiz-description">{{ quizContent.descricao }}</h5>
@@ -155,6 +155,7 @@ import { mapGetters, mapMutations } from "vuex";
     export default {
         data() {
             return {
+                webpSupported: true,
                 savedStars: 0,
                 hasQuizStarted: false,
                 hasQuizFinished: false,
@@ -223,6 +224,15 @@ import { mapGetters, mapMutations } from "vuex";
                     }
                 }
             }
+
+            // Verificar se o browser suporta WebP
+            const elem = document.createElement('canvas');
+            if (!!(elem.getContext && elem.getContext('2d'))) {
+                this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+            } else{
+                this.webpSupported = false;
+            }
+            console.log("WebP supported: " + this.webpSupported);
         },
         methods: {
             ...mapMutations(["SET_QUIZ_ATTEMPT", "UPDATE_QUIZ_ATTEMPT", "UPDATE_USER_POINTS", "UPDATE_USER_XP", "UPDATE_USER_LEVEL", "SET_NEW_QUIZ_RATING", "REMOVE_QUIZ_RATING", "REMOVE_QUIZ_COMMENT", "SET_NEW_QUIZ_COMMENT"]),

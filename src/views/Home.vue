@@ -20,7 +20,7 @@
     </div>
     <!-- Banner -->
     <div style="height:425px;" @click="$router.push({ name: 'Quiz', params: { id: 6 }})">
-      <div class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5" style=" height:100% ; background-position: center; border-radius: 10px;">
+      <div :class="!webpSupported ? '' : 'webp'" class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5" style=" height:100% ; background-position: center; border-radius: 10px;">
         <div class="container for-about">
           <p style="color: var(--cinza2); font-weight: 500;">Quiz of the day</p>
           <h3 style="font-weight: bold;">Stranger Things</h3>
@@ -50,7 +50,7 @@
         <div class="row__inner p-0">
           <div class="tile" v-for="i in 10" :key="i">
             <div class="tile__media">
-              <img class="tile__img" :src="getAllQuizzes[i - 1].poster" />
+              <img class="tile__img" :src="require('../assets/images/content/quiz/' + getAllQuizzes[i - 1].poster_webp)" />
             </div>
             <div class="tile__details p-2">
               <p class="quiz-card-title">{{ getAllQuizzes[i - 1].titulo }}</p>
@@ -77,8 +77,8 @@
         <div class="row__inner p-0">
           <div class="tile" v-for="i in 10" :key="i" :set="topMovies = getAllTitles.filter(title => title.total_temporadas == 0)" @click="$router.push({ name: 'Title', params: { imdbid: topMovies[i].id_imdb} })">
             <div class="tile__media">
-              <img class="tile__img" :src="topMovies[i].poster"
-                alt="" />
+              <img class="tile__img" :src="require('../assets/images/content/' + topMovies[i].poster_webp)"
+                alt="Movie Cover" />
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
               <p class="quiz-card-title">{{topMovies[i].titulo}}</p>
@@ -104,8 +104,8 @@
         <div class="row__inner p-0">
           <div class="tile" v-for=" i in 10" :key="i" :set="topSeries = getAllTitles.filter(title => title.total_temporadas > 0)" @click="$router.push({ name: 'Title', params: { imdbid: topSeries[i].id_imdb } })">
             <div class="tile__media">
-              <img class="tile__img" :src="topSeries[i].poster"
-                alt="" />
+              <img class="tile__img" :src="require('../assets/images/content/' + topSeries[i].poster_webp)"
+                alt="Series Cover" />
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
               <p class="quiz-card-title">{{topSeries[i].titulo}}</p>
@@ -124,8 +124,19 @@ import { mapGetters } from "vuex";
   export default {
     data() {
       return {
+        webpSupported: true,
         crowns: [require("../assets/images/crown_gold_icon.svg"), require("../assets/images/crown_silver_icon.svg"), require("../assets/images/crown_bronze_icon.svg")],
       }
+    },
+    created () {
+      // Verificar se o browser suporta WebP
+      const elem = document.createElement('canvas');
+      if (!!(elem.getContext && elem.getContext('2d'))) {
+        this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+      } else{
+        this.webpSupported = false;
+      }
+      console.log("WebP supported: " + this.webpSupported);
     },
     computed: {
       ...mapGetters(["getAllTitles", "getAllQuizzes", "getQuizRating", "getTopUsers", "getBadges"]),
@@ -160,6 +171,10 @@ import { mapGetters } from "vuex";
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+  }
+
+  .jumbotron.webp {
+    background-image: url("../assets/images/home_banner.webp");
   }
 
   a {

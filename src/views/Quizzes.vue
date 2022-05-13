@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row m-0 mt-4">
       <div class="col-lg-8" style="max-height: 425px;" @click="$router.push({ name: 'Quiz', params: { id: 6 }})">
-        <div class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5"
+        <div :class="!webpSupported ? '' : 'webp'" class="jumbotron d-flex align-items-end ps-3 pe-3 pb-5"
           style=" height:100% ; background-position: center; border-radius: 10px;">
           <div class="container for-about">
             <p style="color: var(--cinza2); font-weight: 500;">Quiz of the day</p>
@@ -52,7 +52,7 @@
             <div class="row__inner p-0">
               <div class="tile" v-for="i in 10" :key="i">
                 <div class="tile__media">
-                  <img class="tile__img" :src="shuffleTop[i - 1].poster" />
+                  <img class="tile__img" :src="webpSupported ? require('../assets/images/content/quiz/' + shuffleTop[i - 1].poster_webp) : shuffleTop[i - 1].poster" />
                 </div>
                 <div class="tile__details p-2">
                   <p class="quiz-card-title">{{ shuffleTop[i - 1].titulo }}</p>
@@ -120,7 +120,7 @@
           <div class="tile-custom">
             <div class="tile__media-custom">
               <img class="tile__img"
-                :src="filteredQuizzes[i - 1].poster" />
+                :src="webpSupported ? require('../assets/images/content/quiz/' + filteredQuizzes[i - 1].poster_webp) : filteredQuizzes[i - 1].poster" />
             </div>
             <div class="tile__details-custom p-2 text-center">
               <p class="quiz-card-title">{{ filteredQuizzes[i - 1].titulo }}</p>
@@ -145,6 +145,7 @@ import { mapGetters } from "vuex";
   export default {
     data() {
       return {
+        webpSupported: true,
         mostrar: 12,
         themes : ["Movie", "Series", "Actors", "Universes", "Anual", "Platform"],
         types: [
@@ -180,6 +181,15 @@ import { mapGetters } from "vuex";
     },
     created () {
       this.quizzes = this.getAllQuizzes;
+
+      // Verificar se o browser suporta WebP
+      const elem = document.createElement('canvas');
+      if (!!(elem.getContext && elem.getContext('2d'))) {
+        this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+      } else{
+        this.webpSupported = false;
+      }
+      console.log("WebP supported: " + this.webpSupported);
     },
     methods: {
       simulateScroll(dir, target) {
@@ -378,6 +388,11 @@ import { mapGetters } from "vuex";
 
   .jumbotron {
     background-image: url("../assets/images/home_banner.png");
+    background-size: cover;
+  }
+
+  .jumbotron.webp {
+    background-image: url("../assets/images/home_banner.webp");
     background-size: cover;
   }
 

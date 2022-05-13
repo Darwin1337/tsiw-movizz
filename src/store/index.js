@@ -296,7 +296,7 @@ export default new Vuex.Store({
     },
     SET_NEW_TITLE_RATING(state,payload){
       const idx=state.classificacao_obra.findIndex(rate=>rate.id_utilizador==payload.id_utilizador && rate.id_imdb==payload.id_imdb)
-      if (idx == -1){
+      if (id== -1){
          state.classificacao_obra.push(payload);
       } else {
          state.classificacao_obra[idx].id_imdb=payload.id_imdb;
@@ -308,7 +308,7 @@ export default new Vuex.Store({
     },
     SET_NEW_QUIZ_RATING(state,payload){
       const idx=state.classificacao_quiz.findIndex(rate=>rate.id_utilizador==payload.id_utilizador && rate.id_quiz==payload.id_quiz)
-      if (idx == -1){
+      if (id== -1){
          state.classificacao_quiz.push(payload);
       } else {
          state.classificacao_quiz[idx].id_quiz=payload.id_quiz;
@@ -423,7 +423,7 @@ export default new Vuex.Store({
       localStorage.vistos = JSON.stringify(state.vistos);
     },
     EDIT_QUIZ(state, payload) {
-      const QUIZ_IDX = state.quiz.findIndex(quiz => quiz.id_quiz == payload.id_quiz);
+      const QUIZ_ID= state.quiz.findIndex(quiz => quiz.id_quiz == payload.id_quiz);
       state.quiz[QUIZ_IDX].tipo = JSON.parse(JSON.stringify(payload.tipo));
       state.quiz[QUIZ_IDX].dificuldade = JSON.parse(JSON.stringify(payload.dificuldade));
       state.quiz[QUIZ_IDX].especifico = payload.especifico;

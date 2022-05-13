@@ -5,7 +5,7 @@
         <div class="row h-100 w-100 pt-5 pb-5 m-0">
           <div class="poster col-lg-4 m-auto">
             <div class="w-100 poster-wrapper">
-              <img id="title-poster" :src="title.poster"
+              <img id="title-poster" :src="webpSupported ? require('../assets/images/content/' + title.poster_webp) : title.poster"
                 alt="Title cover" />
             </div>
           </div>
@@ -92,7 +92,8 @@
           <template v-for="i in title.elenco.length">
             <div v-show="(i - 1) > 5 ? (showFullCast ? true : false) : true" class="cast-card col-lg-2 col-md-3 col-sm-4 col-6 g-2" :key="i">
               <div style="background-color: var(--azul-escuro2); border-radius: 10px; w-100">
-                <div class="cast-photo" :style="{ backgroundImage: 'url(' + title.elenco[i - 1].image + ')' }" style="
+                <div class="cast-photo" :style="{ backgroundImage: 'url(' + (webpSupported ? require('../assets/images/content/' + title.elenco[i - 1].image_webp) : title.elenco[i - 1].image) + ')' }"
+                  style="
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center center;
@@ -152,7 +153,7 @@
               <div class="row__inner p-0">
               <div class="tile" v-for="(episodio, i) in title.episodios.filter(ep => ep.num_temporada == selectedSeason)" :key="i">
                 <div class="tile__media">
-                  <img class="tile__img" :src="episodio.banner" />
+                  <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + episodio.banner_webp) : episodio.banner" />
                 </div>
                 <div class="tile__details">
                   <div class="tile__title">
@@ -202,8 +203,7 @@
             <section id="quizzes">
               <p class="subtitle">Find this show in these quizzes</p>
               <div class="related-card d-flex mb-3" v-for="i in relatedQuizzes.length" :key="i">
-                <div class="related-image"
-                :style="'background-image: url(' + relatedQuizzes[i - 1].banner + ');'"></div>
+                <div class="related-image" :style="{ backgroundImage: 'url(' + (webpSupported ? require('../assets/images/content/quiz/' + relatedQuizzes[i - 1].banner_webp) : relatedQuizzes[i - 1].banner) + ')' }"></div>
                 <div class="related-info d-flex flex-column p-2">
                   <p id="related-quiz-title">{{ relatedQuizzes[i - 1].titulo }}</p>
                   <p id="related-quiz-description">{{ relatedQuizzes[i - 1].descricao }}</p>
@@ -230,6 +230,7 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      webpSupported: true,
       showFullCast: false,
       selectedSeason: 1,
       showStars: false,
@@ -249,7 +250,7 @@ export default {
       ...mapGetters(["getTitleInfo", "getAllQuizzes", "getTitleLikes", "getLoggedUser", "getTitlesSeenByUser", "getTitleComments", "getAllUsers", "getNextAvailableTitleCommentID", "getUserTitleRating", "getTitleMovizzRating"]),
   },
   mounted () {
-    document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.title.banner})`;
+    document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${ this.webpSupported ? require('../assets/images/content/' + this.title.banner_webp) : this.title.banner})`;
     this.verifyLike();
     this.verifySeen();
     this.verifyRating();
@@ -262,6 +263,15 @@ export default {
     this.userRatings.pontuacao = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) ? this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid).pontuacao : 0;
     this.movizzRating = this.getTitleMovizzRating(this.$route.params.imdbid);
     this.relatedQuizzes = this.getAllQuizzes.filter(quiz => quiz.perguntas.some(pergunta => pergunta.id_imdb == this.$route.params.imdbid));
+
+    // Verificar se o browser suporta WebP
+    const elem = document.createElement('canvas');
+    if (!!(elem.getContext && elem.getContext('2d'))) {
+      this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+    } else{
+      this.webpSupported = false;
+    }
+    console.log("WebP supported: " + this.webpSupported);
   },
   methods: {
     ...mapMutations(["SET_NEW_LIKE", "SET_HAS_SEEN", "REMOVE_HAS_SEEN", "REMOVE_LIKE","SET_NEW_TITLE_COMMENT","SET_NEW_TITLE_RATING","REMOVE_TITLE_RATING","REMOVE_TITLE_COMMENT"]),
@@ -675,14 +685,6 @@ a {
   background-size: cover;
   background-position: center;
   border-radius: 50%;
-}
-
-.card-comment #comment-photo1 {
-  background-image: url("https://thispersondoesnotexist.com/image");
-}
-
-.card-comment #comment-photo2 {
-  background-image: url("https://cdn.discordapp.com/attachments/819526744419598356/916005827469512764/netflix.png");
 }
 
 #comment-author {
