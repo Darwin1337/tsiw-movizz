@@ -23,13 +23,11 @@
             <li class="nav-item">
               <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
             </li>
-            <li class="nav-item" v-if="loading.user ? false: data.user.is_admin">
+            <li class="nav-item" v-if="getLoggedUser.is_admin">
               <router-link class="nav-link" :to="{ name: 'Admin' }">Admin</router-link>
             </li>
           </ul>
           <div class="d-flex">
-
-            
             <form @submit.prevent="" class="me-4 position-relative">
               <div class="input-group">
                 <input id="search-bar" type="search" placeholder="Search anything" aria-label="Search" v-model="search">
@@ -46,38 +44,33 @@
                   z-index: 1;
                   border-radius: 5px;
                   overflow-y: auto;">
-
-                <div v-if="!loading.titles && !loading.quizzes">
-                  <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
-                    <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
-                      <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
-                        <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : require('../assets/images/content/' + filteredTitles[i - 1].poster_webp)) : filteredTitles[i - 1].poster">
-                      </div>
-                      <div class="d-flex flex-column">
-                        <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('imdb_id') ? (filteredTitles[i - 1].seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
-                        <p style="color: var(--laranja); font-size: 0.9rem;" class="m-0"><strong>{{ filteredTitles[i - 1].title }}</strong></p>
-                      </div>
+                <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
+                  <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
+                    <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
+                      <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster">
+                    </div>
+                    <div class="d-flex flex-column">
+                      <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('id_imdb') ? (getTitleInfo(filteredTitles[i - 1].id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
+                      <p style="color: var(--laranja); font-size: 0.9rem;" class="m-0"><strong>{{ filteredTitles[i - 1].titulo }}</strong></p>
                     </div>
                   </div>
-                  <div class="card-comment p-3 me-1" v-if="filteredTitles.length == 0">
-                    <p style="color: white; font-size: 0.9rem;" class="m-0"><strong>No results were found.</strong></p>
-                  </div>
                 </div>
-
+                <div class="card-comment p-3 me-1" v-if="filteredTitles.length == 0">
+                  <p style="color: white; font-size: 0.9rem;" class="m-0"><strong>No results were found.</strong></p>
+                </div>
               </div>
             </form>
-
             <div class="d-flex align-items-center">
-              <img :src="loading.user ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' : data.user.avatar" style="border-radius: 50%; object-fit: cover; object-position: center top;" alt="Avatar" width="40px" height="40px" />
+              <img :src="this.getLoggedUser.avatar" style="border-radius: 50%; object-fit: cover; object-position: center top;" alt="Avatar" width="40px" height="40px" />
               <div id="level">
-                <span>{{ loading.user ? 0 : data.user.stats.level }}</span>
+                <span>{{ this.getLoggedUser.nivel }}</span>
               </div>
             </div>
             <div class="d-flex flex-column justify-content-center align-items-end">
-              <router-link v-if="!loading.user" :to="{ name: 'Profile', params: { id: data.user.id } }" id="username">{{ data.user.first_name }}</router-link>
+              <router-link :to="{ name: 'Profile', params: { id: this.getLoggedUser.id } }" id="username">{{ this.getLoggedUser.primeiro_nome }}</router-link>
               <div id="badge-legend" class="d-flex" style="gap: 5px;">
-                <img :src="loading.user ? '' : require('../assets/images/badges/' + data.user.badge_id.icon)" alt="Badge" width="15px" height="15px" />
-                <span> {{ loading.user ? "Loading" : data.user.badge_id.name }}</span>
+                <img :src="this.getBadges[this.getLoggedUser.id_badge].icon" alt="Badge" width="15px" height="15px" />
+                <span> {{ this.getBadges[this.getLoggedUser.id_badge].name }}</span>
               </div>
             </div>
           </div>
@@ -90,22 +83,22 @@
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" :to="{ name: 'Authentication' }">
-          <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
+          <img src="../assets/images/logo.svg" alt="Logo" />
         </a>
         <button class="nav-btn-toggler navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="user-card mt-3 d-flex m-0 align-items-center">
-            <img :src="loading.user ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' : data.user.avatar" alt="Avatar" style="border-radius: 50%;" width="40px" height="40px" />
+            <img :src="this.getLoggedUser.avatar" alt="Avatar" style="border-radius: 50%;" width="40px" height="40px" />
             <div id="level">
-              <span>{{ loading.user ? 0 : data.user.stats.level }}</span>
+              <span>{{ this.getLoggedUser.nivel }}</span>
             </div>
             <div class="d-flex flex-column align-items-end">
-              <router-link v-if="!loading.user" :to="{ name: 'Profile', params: { id: data.user.id } }" id="username">
-                {{ data.user.first_name }}
-                <img :src="loading.user ? '' : require('../assets/images/badges/' + data.user.badge_id.icon)" alt="Badge" width="15px" height="15px" />
-                <span> {{ loading.user ? "Loading" : data.user.badge_id.name }}</span>
+              <router-link :to="{ name: 'Profile', params: { id: this.getLoggedUser.id } }" id="username">
+                {{ this.getLoggedUser.primeiro_nome }}
+                <img :src="this.getBadges[this.getLoggedUser.id_badge].icon" alt="Badge" width="15px" height="15px" />
+                <span> {{ this.getBadges[this.getLoggedUser.id_badge].name }}</span>
               </router-link>
             </div>
           </div>
@@ -125,23 +118,20 @@
                 z-index: 1;
                 border-radius: 5px;
                 overflow-y: auto;">
-              <div v-if="!loading.titles && !loading.quizzes">
-                <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
-                  <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
-                    <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
-                      <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : require('../assets/images/content/' + filteredTitles[i - 1].poster_webp)) : filteredTitles[i - 1].poster">
-                    </div>
-                    <div class="d-flex flex-column">
-                      <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('imdb_id') ? (filteredTitles[i - 1].seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
-                      <p style="color: var(--laranja); font-size: 0.9rem;" class="m-0"><strong>{{ filteredTitles[i - 1].title }}</strong></p>
-                    </div>
+              <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
+                <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
+                  <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="filteredTitles[i - 1].poster">
+                  </div>
+                  <div class="d-flex flex-column">
+                    <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('id_imdb') ? (getTitleInfo(filteredTitles[i - 1].id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
+                    <p style="color: var(--laranja); font-size: 0.9rem;" class="m-0"><strong>{{ filteredTitles[i - 1].titulo }}</strong></p>
                   </div>
                 </div>
-                <div class="card-comment p-3 me-1" v-if="filteredTitles.length == 0">
-                  <p style="color: white; font-size: 0.9rem;" class="m-0"><strong>No results were found.</strong></p>
-                </div>
               </div>
-
+              <div class="card-comment p-3 me-1" v-if="filteredTitles.length == 0">
+                <p style="color: white; font-size: 0.9rem;" class="m-0"><strong>No results were found.</strong></p>
+              </div>
             </div>
           </form>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -165,146 +155,58 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Navbar',
   data() {
     return {
       webpSupported: true,
       currentWidth: window.innerWidth,
-      isDisplayMobile: false,
-      search: "",
-      loading: {
-        user: true,
-        titles: true,
-        quizzes: true
-      },
-      data: {
-        user: {},
-        titles_quizzes: {}
-      }
+      search: ""
     };
   },
+  created () {
+    // Verificar se o browser suporta WebP
+    const elem = document.createElement('canvas');
+    if (!!(elem.getContext && elem.getContext('2d'))) {
+      this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+    } else{
+      this.webpSupported = false;
+    }
+  },
   mounted() {
-    this.webpSupported = this.isWebpSupported();
     window.addEventListener("resize", this.onResize);
-    this.getUserInfo();
-    this.getSearchContent();
+    this.insertEventListeners();
   },
   methods: {
-    ...mapActions(["getUser", "getAllTitles", "getAllQuizzes"]),
     onResize() {
       this.currentWidth = window.innerWidth;
-
-      if (this.isDisplayMobile && this.currentWidth >= 992) {
-        this.isDisplayMobile = false;
-        if (!this.loading.titles && !this.loading.quizzes) {
-          this.waitForElm('#search-bar').then((elm) => {
-            this.insertEventListeners();
-          });
-        }
-      } else if (!this.isDisplayMobile && this.currentWidth < 992) {
-        this.isDisplayMobile = true;
-        if (!this.loading.titles && !this.loading.quizzes) {
-          this.waitForElm('#search-bar-mobile').then((elm) => {
-            this.insertEventListeners();
-          });
-        }
-      }
+      this.insertEventListeners();
     },
     redirect(obj) {
-      obj.hasOwnProperty('imdb_id') ? this.$router.push({ name: 'Title', params: { imdbid: obj.imdb_id} }) : this.$router.push({ name: 'Quiz', params: { id: obj.quiz_id } });
+      obj.hasOwnProperty('id_imdb') ? this.$router.push({ name: 'Title', params: { imdbid: obj.id_imdb} }) : this.$router.push({ name: 'Quiz', params: { id: obj.id_quiz } });
       document.querySelector("#search-results").style.display = "none";
     },
     insertEventListeners() {
-      if (this.currentWidth >= 992) {
+      try {
         document.querySelector("#search-bar").addEventListener("focusout", (event) =>  document.querySelector("#search-results").style.display = event.relatedTarget != document.querySelector("#search-results") ?  "none" : "block");
         document.querySelector("#search-bar").addEventListener("focusin", () => this.search.length >= 3 ? document.querySelector("#search-results").style.display = "block" : document.querySelector("#search-results").style.display = "none" );
-      } else { 
+      } catch { 
         document.querySelector("#search-bar-mobile").addEventListener("focusout", (event) =>  document.querySelector("#search-results-mobile").style.display = event.relatedTarget != document.querySelector("#search-results-mobile") ?  "none" : "block");
         document.querySelector("#search-bar-mobile").addEventListener("focusin", () => this.search.length >= 3 ? document.querySelector("#search-results-mobile").style.display = "block" : document.querySelector("#search-results-mobile").style.display = "none" );
       };
-    },
-    isWebpSupported() {
-      const elem = document.createElement('canvas');
-      if (!!(elem.getContext && elem.getContext('2d'))) {
-        return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
-      }
-      this.webpSupported = false;
-    },
-    waitForElm(selector) {
-      return new Promise(resolve => {
-        if (document.querySelector(selector)) {
-          return resolve(document.querySelector(selector));
-        }
-        const observer = new MutationObserver(mutations => {
-          if (document.querySelector(selector)) {
-            resolve(document.querySelector(selector));
-            observer.disconnect();
-          }
-        });
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true
-        });
-      });
-    },
-    async getUserInfo() {
-      this.loading.user = true;
-      try {
-        this.data.user = await this.getUser({ id: this.getLoggedUserID });
-        if (this.data.user.success) {
-          this.data.user = this.data.user.msg[0];
-          this.loading.user = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-    },
-    async getSearchContent() {
-      this.loading.titles = true;
-      try {
-        this.data.titles = await this.getAllTitles();
-        if (this.data.titles.success) {
-          this.loading.titles = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-
-      this.loading.quizzes = true;
-      try {
-        this.data.quizzes = await this.getAllQuizzes();
-        if (this.data.quizzes.success) {
-          this.loading.quizzes = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-      
-      if (!this.loading.titles && !this.loading.quizzes) {
-        this.data.titles_quizzes = [...this.data.titles.msg];
-        this.data.titles_quizzes = this.data.titles_quizzes.concat([...this.data.quizzes.msg]);
-        this.insertEventListeners();
-      }
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUserID"]),
+    ...mapGetters(["getLoggedUser", "getBadges", "getAllTitles", "getAllQuizzes", "getTitleInfo"]),
     filteredTitles() {
-      if (!this.loading.titles && !this.loading.quizzes) {
-        let filterResult = [...this.data.titles_quizzes];
-        filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.search.toLowerCase()));
-        return filterResult.length > 5 ? filterResult.slice(0, 5) : filterResult;
-      }
-      return null;
+      let filterResult = [...this.getAllTitles];
+      filterResult = filterResult.concat([...this.getAllQuizzes]);
+
+      // Barra de pesquisa
+      filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.search.toLowerCase()));
+    
+      return filterResult.length > 5 ? filterResult.slice(0, 5) : filterResult;
     }
   },
   watch:{
@@ -316,21 +218,20 @@ export default {
       }
     },
     search() {
-      if (!this.loading.titles && !this.loading.quizzes) {
-        if (this.currentWidth >= 992) {
-          if (this.search.length >= 3) {
-            document.querySelector("#search-results").style.display = "block";
-          } else {
-            document.querySelector("#search-results").style.display = "none";
-          }
+      try {
+        if (this.search.length >= 3) {
+          document.querySelector("#search-results").style.display = "block";
         } else {
-          if (this.search.length >= 3) {
-            document.querySelector("#search-results-mobile").style.display = "block";
-          } else {
-            document.querySelector("#search-results-mobile").style.display = "none";
-          }
-        };
-      }
+          document.querySelector("#search-results").style.display = "none";
+        }
+      } catch {
+        if (this.search.length >= 3) {
+          document.querySelector("#search-results-mobile").style.display = "block";
+        } else {
+          document.querySelector("#search-results-mobile").style.display = "none";
+        }
+      };
+
     }
   } 
 };

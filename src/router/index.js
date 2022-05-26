@@ -10,7 +10,7 @@ import Profile from "../views/Profile.vue";
 import Title from "../views/Title.vue";
 import Quiz from "../views/Quiz.vue";
 import Error from "../views/Error.vue";
-// import Store from "../store/index.js";
+import store from "../store/index.js";
 
 Vue.use(VueRouter);
 
@@ -104,23 +104,23 @@ const router = new VueRouter({
   }
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requiresAuth && !Store.getters.getLoggedUser) {
-//     next({ name: "Authentication" });
-//   } else if (!to.meta.requiresAuth && Store.getters.getLoggedUser) {
-//     next({ name: "Home" });
-//   } else {
-//     if ((from.name == "Profile" && to.name == "Profile") || (from.name == "Title" && to.name == "Title")) {
-//       next();
-//       router.go(0);
-//     } else {
-//       if (to.meta.onlyAdmin && !Store.getters.getLoggedUser.is_admin) {
-//         next({ name: "Home" });
-//       } else {
-//         next();
-//       }
-//     }
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !store.getters.getLoggedUser) {
+    next({ name: "Authentication" });
+  } else if (!to.meta.requiresAuth && store.getters.getLoggedUser) {
+    next({ name: "Home" });
+  } else {
+    if ((from.name == "Profile" && to.name == "Profile") || (from.name == "Title" && to.name == "Title")) {
+      next();
+      router.go(0);
+    } else {
+      if (to.meta.onlyAdmin && !store.getters.getLoggedUser.is_admin) {
+        next({ name: "Home" });
+      } else {
+        next();
+      }
+    }
+  }
+});
 
 export default router;
