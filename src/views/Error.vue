@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h1>Erro!</h1>
-    <h2>Esta página não existe.</h2>
+    <h1>Página: Error</h1>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Error"
+};
+</script>
