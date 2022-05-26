@@ -1,20 +1,20 @@
 <template>
-  <div class="container">
-    <div class="mt-5">
+<div class="container">
+  <div class="mt-5">
     <div class="hall-of-fame d-flex justify-content-center mb-4" style="gap: 15px;">
       <span style="border-right: 3px solid var(--verde); font-weight: bold; color: var(--verde); font-size: 1.5em;"
         class="pe-2 d-flex align-items-center text-end">Movizz<br>Hall of Fame</span>
       <div class="top-3 d-flex align-items-end" style="gap: 15px;">
 
-        <div class="member d-flex flex-column align-items-center" style="cursor: pointer;" >
+        <div class="member d-flex flex-column align-items-center" style="cursor: pointer;" v-for="i in (getTopUsers.length > 3) ? 3 : getTopUsers.length" :key="i" @click="$router.push({ name: 'Profile', params: { id: getTopUsers[i - 1].id }})">
           <div style="position: relative;">
-            <img  width="50px" height="50px" style="border-radius: 50%; object-fit: cover; object-position: center top;">
-            <img  width="35px"
+            <img :src="getTopUsers[i - 1].avatar" width="50px" height="50px" style="border-radius: 50%; object-fit: cover; object-position: center top;">
+            <img :src="crowns[i - 1]" width="35px"
               style="position: absolute; top: -18px; left: 23px; transform: rotate(30deg);">
-            <p class="member-level big"></p>
+            <p class="member-level big">{{ getTopUsers[i - 1].nivel }}</p>
           </div>
-          <p class="m-0 mt-2 text-center" style="color: white;"></p>
-          <p style="color: var(--cinza2);" class="m-0 text-center"></p>
+          <p class="m-0 mt-2 text-center" style="color: white;">{{ getTopUsers[i - 1].primeiro_nome }}</p>
+          <p style="color: var(--cinza2);" class="m-0 text-center">{{ getBadges[getTopUsers[i - 1].id_badge].name }}</p>
         </div>
       </div>
     </div>
@@ -35,6 +35,7 @@
       </div>
     </div>
   </div>
+
   <!-- Top Quizzes -->
   <h4 class="mt-5">Top Quizzes</h4>
   <section class="top-quizzes">
@@ -47,104 +48,101 @@
     <div class="carousel-wrapper" style="position: relative;">
       <div class="row-carousel disable-scrollbars">
         <div class="row__inner p-0">
-          <div class="tile" v-for="(quiz,i) in data.quizzes" :key="i" @click="$router.push({ name: 'Quiz', params: { id: quiz.quiz_id } })">
+          <div class="tile" v-for="i in 10" :key="i">
             <div class="tile__media">
-              <img class="tile__img" :src="require('../assets/images/content/quiz/' + quiz.poster_webp)" />
+              <img class="tile__img" :src="require('../assets/images/content/quiz/' + getAllQuizzes[i - 1].poster_webp)" />
             </div>
             <div class="tile__details p-2">
-              <p class="quiz-card-title">{{ quiz.title }}</p>
-              <p class="quiz-card-play">▶</p>
-              <!-- <p class="quiz-card-rating">{{ getQuizRating(i.id_quiz) }}</p> -->
+              <p class="quiz-card-title">{{ getAllQuizzes[i - 1].titulo }}</p>
+              <p class="quiz-card-play" @click="$router.push({ name: 'Quiz', params: { id: getAllQuizzes[i - 1].id_quiz } })">▶</p>
+              <p class="quiz-card-rating">{{ getQuizRating(getAllQuizzes[i - 1].id_quiz) }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-      <!-- Top Movies -->
-    <h4 class="mt-5">Top Movies</h4>
-    <section class="top-movies">
-      <div class="navigation mb-2">
-        <span class="nav-left me-3" @click="simulateScroll('left', '.top-movies')"><i
-            class="fas fa-chevron-left"></i></span>
-        <span class="nav-right ms-3" @click="simulateScroll('right', '.top-movies')"><i
-            class="fas fa-chevron-right"></i></span>
-      </div>
-      <div class="carousel-wrapper" style="position: relative;">
-        <div class="row-carousel disable-scrollbars">
-          <div class="row__inner p-0">
-            <div class="tile" v-for="(title, i) in data.titles" :key="i" @click="$router.push({ name: 'Title', params: { imdbid: title.imdb_id} })">
-              <div class="tile__media">
-                <img class="tile__img" :src="require('../assets/images/content/' + title.poster_webp)"
-                  alt="Movie Cover" />
-              </div>
-              <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-                <p class="quiz-card-title">{{title.title}}</p>
-                <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(title.imdb_rating).toFixed(1)}}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Top Series -->
-  <h4 class="mt-5">Top Series</h4>
-  <section class="top-series">
+
+  <!-- Top Movies -->
+  <h4 class="mt-5">Top Movies</h4>
+  <section class="top-movies">
     <div class="navigation mb-2">
-      <span class="nav-left me-3" @click="simulateScroll('left', '.top-series')"><i class="fas fa-chevron-left"></i></span>
-      <span class="nav-right ms-3" @click="simulateScroll('right', '.top-series')"><i class="fas fa-chevron-right"></i></span>
+      <span class="nav-left me-3" @click="simulateScroll('left', '.top-movies')"><i
+          class="fas fa-chevron-left"></i></span>
+      <span class="nav-right ms-3" @click="simulateScroll('right', '.top-movies')"><i
+          class="fas fa-chevron-right"></i></span>
     </div>
     <div class="carousel-wrapper" style="position: relative;">
       <div class="row-carousel disable-scrollbars">
         <div class="row__inner p-0">
-          <div class="tile" v-for=" (serie,i) in data.series" :key="i" @click="$router.push({ name: 'Title', params: { imdbid: serie.imdb_id} })">
+          <div class="tile" v-for="i in 10" :key="i" :set="topMovies = getAllTitles.filter(title => title.total_temporadas == 0)" @click="$router.push({ name: 'Title', params: { imdbid: topMovies[i].id_imdb} })">
             <div class="tile__media">
-              <img class="tile__img" :src="require('../assets/images/content/' + serie.poster_webp)"
-                alt="Series Cover" />
+              <img class="tile__img" :src="require('../assets/images/content/' + topMovies[i].poster_webp)"
+                alt="Movie Cover" />
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-              <p class="quiz-card-title">{{serie.title}}</p>
-              <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(serie.imdb_rating).toFixed(1)}}</button>
+              <p class="quiz-card-title">{{topMovies[i].titulo}}</p>
+              <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(topMovies[i].pontuacao_imdb).toFixed(1)}}</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-  </div>
+
+  <!-- Top Series -->
+  <h4 class="mt-5">Top Series</h4>
+  <section class="top-series">
+    <div class="navigation mb-2">
+      <span class="nav-left me-3" @click="simulateScroll('left', '.top-series')"><i
+          class="fas fa-chevron-left"></i></span>
+      <span class="nav-right ms-3" @click="simulateScroll('right', '.top-series')"><i
+          class="fas fa-chevron-right"></i></span>
+    </div>
+    <div class="carousel-wrapper" style="position: relative;">
+      <div class="row-carousel disable-scrollbars">
+        <div class="row__inner p-0">
+          <div class="tile" v-for=" i in 10" :key="i" :set="topSeries = getAllTitles.filter(title => title.total_temporadas > 0)" @click="$router.push({ name: 'Title', params: { imdbid: topSeries[i].id_imdb } })">
+            <div class="tile__media">
+              <img class="tile__img" :src="require('../assets/images/content/' + topSeries[i].poster_webp)"
+                alt="Series Cover" />
+            </div>
+            <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
+              <p class="quiz-card-title">{{topSeries[i].titulo}}</p>
+              <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(topSeries[i].pontuacao_imdb).toFixed(1)}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
-export default {
-  name: "Home",
-  data() {
-    return {
-      webpSupported: true,
-      data: {
-        titles:[],
-        quizzes:[],
-        series:[]
+import { mapGetters } from "vuex";
+  export default {
+    data() {
+      return {
+        webpSupported: true,
+        crowns: [require("../assets/images/crown_gold_icon.svg"), require("../assets/images/crown_silver_icon.svg"), require("../assets/images/crown_bronze_icon.svg")],
       }
-    }
-  },
-  mounted () {
-    this.webpSupported = this.isWebpSupported();
-    this.get10Titles();
-    this.get10Quizzes();
-    this.get10Series();
-  },
-  methods: {
-    ...mapActions(["getUser", "getAllTitles", "getBest10Movies", "getBest10Quizzes","getBest10Series"]),
-    isWebpSupported() {
+    },
+    created () {
+      // Verificar se o browser suporta WebP
       const elem = document.createElement('canvas');
       if (!!(elem.getContext && elem.getContext('2d'))) {
-        return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+        this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+      } else{
+        this.webpSupported = false;
       }
-      this.webpSupported = false;
+      console.log("WebP supported: " + this.webpSupported);
     },
-    simulateScroll(dir, target) {
+    computed: {
+      ...mapGetters(["getAllTitles", "getAllQuizzes", "getQuizRating", "getTopUsers", "getBadges"]),
+    },
+    methods: {
+      simulateScroll(dir, target) {
         if (dir == "right") {
           document.querySelector(target + " .nav-left").style.color = "white";
           if (parseInt(document.querySelector(target + " .row-carousel").scrollLeft) + (parseInt(document.querySelector(target + " .row-carousel").querySelector(".tile").offsetWidth) + 10) >= parseInt(document.querySelector(target + " .row-carousel").scrollWidth) - parseInt(document.querySelector(target + " .row-carousel").clientWidth)) {
@@ -162,48 +160,9 @@ export default {
             document.querySelector(target + " .row-carousel").scrollLeft -= (parseInt(document.querySelector(target + " .row-carousel").querySelector(".tile").offsetWidth) + 10);
           }
         }
-    },
-    async get10Titles() {
-      try {
-        this.data.titles = await this.getBest10Movies();
-        if (this.data.titles.success) {
-          this.data.titles = this.data.titles.msg;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      }catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
       }
-    },
-    async get10Quizzes() {
-      try {
-        this.data.quizzes = await this.getBest10Quizzes();
-        if (this.data.quizzes.success) {
-          this.data.quizzes = this.data.quizzes.msg;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-    },
-    async get10Series() {
-      try {
-        this.data.series = await this.getBest10Series();
-        if (this.data.series.success) {
-          this.data.series = this.data.series.msg;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        } 
-      } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-    },
-  },
-  computed: {
-    ...mapGetters(["getLoggedUserID"])
-  }
-};
+    }
+  };
 </script>
 
 <style scoped>
