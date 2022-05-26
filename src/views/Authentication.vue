@@ -39,7 +39,7 @@
           <p class="seccion-title">No time to waste?</p>
           <p class="login-title">Prove it's really you, <span style="color: #BBE1FA; font-weight: bold;">sign in</span>
           </p>
-          <form id="login" class="mb-5" @submit.prevent="loginUser()">
+          <form id="login" class="mb-5" @submit.prevent="login()">
             <div class="input-group">
               <input type="text" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required v-model="old_user.email">
               <span class="input-group-text"><i class="fas fa-envelope"></i></span>
@@ -55,7 +55,7 @@
           </form>
           <p class="login-title"><span style="color: #BBE1FA; font-weight: bold;">Sign up</span>, we promise we won't
             sell your data</p>
-          <form id="register" @submit.prevent="registerUser()">
+          <form id="register" @submit.prevent="register()">
             <div class="row g-4">
               <div class="col-sm-6">
                 <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name" required v-model="new_user.primeiro_nome">
@@ -80,7 +80,7 @@
               <span class="input-group-text"><i class="fas fa-calendar"></i></span>
             </div>
             <div class="text-center">
-              <button type="submit" class="mt-4 orange-btn">Sign up</button>
+              <button type="button" @click="register()" class="mt-4 orange-btn">Sign up</button>
             </div> 
           </form>
         </div>
@@ -91,9 +91,10 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
+  name: "Authentication",
   data() {
     return {
       old_user: {
@@ -123,34 +124,19 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGGED_USER", "SET_NEW_USER"]),
-    loginUser() {
-      if (this.isUser(this.old_user.email, this.old_user.password)) {
-        if (!this.isLocked(this.old_user.email)) {
-          this.SET_LOGGED_USER(this.old_user.email);
-          this.$router.push({ name: "Home" });
-        } else {
-          this.$swal('Error!', 'Your account has been locked.', 'error');
-        }
-      } else {
-        this.$swal('Error!', 'The data entered is not in our system.', 'error');
-      }
+    ...mapActions(["loginUser", "getAllUsers"]),
+    login() {
+      // Verificar se o utilizador está bloqueado
+      this.loginUser(this.old_user)
+      .then(() => this.$router.push({ name: "Home" }))
+      .catch(err => this.$swal('Error!', err.message, 'error'));
     },
-    registerUser() {
-      if (this.isEmailAvailable(this.new_user.email)) {
-        this.new_user.id = this.getNextAvailableUserID;
-        this.new_user.data_registo = new Date();
-        this.SET_NEW_USER(this.new_user);
-        this.$swal('Success!', 'The sign up was successful.', 'success');
-      } else {
-        this.$swal('Error!', 'The e-mail entered is already being used.', 'error');
-      }
+    register() {
+      this.getAllUsers()
+      .catch(err => console.log(err.message));
     }
-  },
-  computed: {
-    ...mapGetters(["isEmailAvailable", "isUser", "getNextAvailableUserID", "isLocked"])
   }
-}
+};
 </script>
 
 <style scoped>  

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <Navbar v-if="$route.name != 'Authentication'" />
     <router-view />
     <Footer />
@@ -7,23 +7,24 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
+import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
 
 export default {
+  name: "App",
   components: {
     Navbar,
     Footer
   },
   mounted () {
-    document.title = "Movizz - " + this.$route.name;
+    document.title = this.$route.name + " | Movizz";
   },
   watch: {
     '$route.name'() {
-      document.title = "Movizz - " + this.$route.name;
+      document.title = this.$route.name + " | Movizz";
     }
   },
-}
+};
 </script>
 
 <style>
