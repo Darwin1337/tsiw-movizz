@@ -1,14 +1,13 @@
 <template>
    <div class="container">
-    <div v-if="!loading.users" class="mt-5 mb-5 navigation d-flex flex-wrap">
-      <p v-if="data.userLogged.id == $route.params.id || data.userLogged.is_admin" :class="{ active: selectedTab == 'profile'}" class="m-0" @click="selectedTab ='profile'">Profile</p>
+    <div v-if="!loading.users" class="pt-5 mb-5 navigation d-flex flex-wrap">
+      <p v-if="getLoggedUserData.data.id == $route.params.id || getLoggedUserData.data.is_admin" :class="{ active: selectedTab == 'profile'}" class="m-0" @click="selectedTab ='profile'">Profile</p>
       <p :class="{ active: selectedTab == 'favorites'}" class="m-0" @click="selectedTab ='favorites'">Favorites</p>
       <p :class="{ active: selectedTab == 'seen'}" class="m-0" @click="selectedTab ='seen'">Seen</p>
-      <p v-if="data.userLogged.id == $route.params.id || data.userLogged.is_admin" :class="{ active: selectedTab == 'history'}" class="m-0" @click="selectedTab ='history'">History</p>
+      <p v-if="getLoggedUserData.data.id == $route.params.id || getLoggedUserData.data.is_admin" :class="{ active: selectedTab == 'history'}" class="m-0" @click="selectedTab ='history'">History</p>
       <p :class="{ active: selectedTab == 'statistics'}" class="m-0" @click="selectedTab ='statistics'">Statistics</p>
-      <!-- <button class="ms-auto logout-btn" @click="logoutUser()">Logout</button> -->
+      <button class="ms-auto logout-btn" @click="logoutUser()">Logout</button>
     </div>
-
     <div v-if="!loading.user">
       <div class="row gy-5" v-if="selectedTab == 'profile'">
         <div class="col-lg-6">
@@ -21,7 +20,7 @@
                     height="80px" />
                   <div
                     v-if="data.user.avatar != 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"
-                    id="remove-picture" @click="editUser($event, true)">
+                    id="remove-picture" @click="changeAvatar('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')">
                     <span style="cursor: pointer;"><i class="fas fa-trash"></i></span>
                   </div>
                 </div>
@@ -70,9 +69,9 @@
               </div>
             </div>
           </div>
-          <p v-if="(data.userLogged.id != $route.params.id && data.userLogged.is_admin)" class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">You got special privileges.</span> Edit anything</p>
+          <p v-if="(getLoggedUserData.data.id != $route.params.id && getLoggedUserData.data.is_admin)" class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">You got special privileges.</span> Edit anything</p>
           <p v-else class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">Misspelt something?</span> Edit your profile</p>
-          <form id="register" @submit.prevent="editUser($event, false)">
+          <form id="register" @submit.prevent="editUserInfo()">
             <div class="row g-4">
               <div class="col-sm-6">
                 <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name"
@@ -101,20 +100,19 @@
                 v-model="edit_user.data_nascimento">
               <span class="input-group-text"><i class="fas fa-calendar"></i></span>
             </div>
-            <div v-if="data.userLogged.is_admin && ($route.params.id != data.userLogged.id)">
+            <div v-if="getLoggedUserData.data.is_admin && ($route.params.id != getLoggedUserData.data.id)">
               <br>
               <label class="cbox">Is an admin?
                 <input v-model="edit_user.is_admin" type="checkbox">
                 <span class="checkmark"></span>
               </label>
             </div>
-
             <div>
               <button type="submit" class="mt-4 orange-btn">Edit profile</button>
             </div>
           </form>
         </div>
-        <!-- <div class="col-lg-6 filtros">
+        <div class="col-lg-6 filtros">
           <p class="m-0" style="color: var(--azul-claro); font-weight: bold; font-size: 1.25em;">Badges</p>
           <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-3 mb-3">
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -125,7 +123,6 @@
                 </div>
               </form>
             </div>
-
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
               <select id="order" style="height: 40px;" v-model="filters_badge.orderby">
                 <option disabled value="Order by">Order by</option>
@@ -135,26 +132,25 @@
               </select>
             </div>
           </div>
-
           <div style="background-color: var(--azul-escuro2); border-radius: 10px;" class="p-3">
             <div class="leaderboardBar" style="max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
-              <div class="row g-3 pe-2">
+              <div class="row g-3 pe-2" v-if="!loading.badges">
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in filteredBadges" :key="index">
                   <div class="badge-card d-flex flex-column align-items-center p-2">
                     <p style="color: var(--cinza-claro)">Level {{ badge.level }}</p>
-                    <img :src="badge.icon" alt="Badge" width="50px" height="50px" />
+                    <img :src="require('../assets/images/badges/' + badge.icon)" alt="Badge" width="50px" height="50px" />
                   </div>
                   <div style="background-color: var(--bg); border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" class="text-center p-2">
                     <p class="m-0">{{ badge.name }}</p>
                   </div>
                   <div class="mt-2">
-                    <button @click="changeBadge(badge.id_badge)" :disabled="(getAllUsers[$route.params.id].xp < badge.xp_min)" class="logout-btn w-100" :style="{ backgroundColor: getAllUsers[$route.params.id].id_badge == badge.id_badge ? 'var(--verde)' : (getAllUsers[$route.params.id].xp >= badge.xp_min ? 'var(--laranja)' : 'var(--cinza-claro)') }" style="font-size: 1rem; color: var(--bg); border-radius: 5px; font-weight: bold;">{{ (getAllUsers[$route.params.id].id_badge == index) ? ('Selected') : ((getAllUsers[$route.params.id].xp >= badge.xp_min) ? ('Select') : ('Locked')) }}</button>
+                    <button @click="changeBadge(badge._id, badge)" :disabled="(data.user.xp < badge.xp_min)" class="logout-btn w-100" :style="{ backgroundColor: data.user.badge_id._id == badge._id ? 'var(--verde)' : (data.user.xp >= badge.xp_min ? 'var(--laranja)' : 'var(--cinza-claro)') }" style="font-size: 1rem; color: var(--bg); border-radius: 5px; font-weight: bold;">{{ (data.user.badge_id.badge_id == index) ? ('Selected') : ((data.user.xp >= badge.xp_min) ? ('Select') : ('Locked')) }}</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
 
@@ -520,14 +516,14 @@
           <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.ajudas_utilizadas, 0) }}</p>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <div class="modal fade backgroundBlur" id="modal-change-picture" ref="modal-change-picture" tabindex="-1"
       aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
         <div class="modal-content" style="background-color: var(--bg);">
           <div>
-            <form @submit.prevent="editUser($event, true)" class="modal-body d-flex flex-column" style="gap: 20px;">
+            <form @submit.prevent="changeAvatar()" class="modal-body d-flex flex-column" style="gap: 20px;">
               <label for="url-pic">URL for your new avatar:</label>
               <div class="input-group">
                 <input type="text" class="form-control bg-inputs" aria-label="URL" required v-model="edit_user.avatar">
@@ -541,12 +537,12 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "Profile",
@@ -554,68 +550,188 @@ export default {
     return {
       selectedTab: "profile",
       loading: {
-        userLogged: true,
         user: true,
         badges: true
       },
       data: {
-        userLogged: {},
         user: {},
-        badges: {}
+        badges: {},
+        randomPassword: ""
       },
       edit_user: {},
+      filters_badge: {
+        search: "",
+        orderby: "Order by"
+      },
     }
   },
   mounted () {
     this.getUserInfo();
+    this.getBadgesInfo();
   },
   methods: {
-    ...mapActions(["getAllMedals", "getUser"]),
+    ...mapActions(["getAllBadges", "getUser", "changeUserBadge", "editUser", "changeUserAvatar"]),
+    ...mapMutations(["LOGOUT_USER"]),
     async getUserInfo() {
       this.loading.user = true;
-      this.loading.userLogged = true;
       try {
         this.data.user = await this.getUser({ id: this.$route.params.id });
         if (this.data.user.success) {
           this.data.user = this.data.user.msg[0];
+          this.data.randomPassword = (Math.random() + 1).toString(36).substring(2);
           this.edit_user = {
+            avatar: this.data.user.avatar,
             primeiro_nome: this.data.user.first_name,
             ultimo_nome: this.data.user.last_name,
             email: this.data.user.email,
-            password: this.data.user.password,
+            password: this.data.randomPassword,
             data_nascimento: new Date(this.data.user.dob).toISOString().split('T')[0],
             avatar: this.data.user.avatar,
             is_admin: this.data.user.is_admin
           };
-
           this.loading.user = false;
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-        this.data.userLogged = await this.getUser({ id: this.getLoggedUserID });
-        if (this.data.userLogged.success) {
-          this.data.userLogged = this.data.userLogged.msg[0];
-          this.loading.userLogged = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
       } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
+    },
+    async getBadgesInfo() {
+      this.loading.badges = true;
+      try {
+        this.data.badges = await this.getAllBadges();
+        if (this.data.badges.success) {
+          this.data.badges = this.data.badges.msg;
+          this.loading.badges = false;
+        } else {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      } catch (e) {
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
+      }
+    },
+    async changeBadge(badge_id, new_badge) {
+      try {
+        let response = await this.changeUserBadge({ id: this.$route.params.id, badge_id: badge_id});
+        if (response.success) {
+          this.data.user.badge_id = new_badge;
+          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
+          if (this.getLoggedUserData.data.id == this.$route.params.id) {
+            this.$store.state.loggedUserData.data.badge_id = new_badge;
+            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+          }
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
+    },
+    async editUserInfo() {
+      try {
+        let response = await this.editUser({
+          id: this.$route.params.id,
+          first_name: this.edit_user.primeiro_nome,
+          last_name: this.edit_user.ultimo_nome,
+          email: this.edit_user.email,
+          password: (this.edit_user.password == this.data.randomPassword) ? "" : this.edit_user.password,
+          dob: String(this.edit_user.data_nascimento),
+          is_admin: this.edit_user.is_admin,
+          is_locked: this.data.user.is_locked
+        });
+
+        if (response.success) {
+          // Atualizar o array local
+          this.data.user.first_name = this.edit_user.primeiro_nome;
+          this.data.user.last_name = this.edit_user.ultimo_nome;
+          this.data.user.email = this.edit_user.email;
+          this.data.user.password = this.edit_user.password;
+          this.data.user.dob = this.edit_user.data_nascimento;
+          this.data.user.is_admin = this.edit_user.is_admin;
+
+          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
+          if (this.getLoggedUserData.data.id == this.$route.params.id) {
+            this.$store.state.loggedUserData.data.first_name = this.data.user.first_name;
+            this.$store.state.loggedUserData.data.last_name = this.data.user.last_name;
+            this.$store.state.loggedUserData.data.email = this.data.user.email;
+            this.$store.state.loggedUserData.data.password = this.data.user.password;
+            this.$store.state.loggedUserData.data.dob = this.data.user.dob;
+            this.$store.state.loggedUserData.data.is_admin = this.data.user.is_admin;
+            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+          }
+          
+          this.$swal('Success!', 'The data has been successfully updated.', 'success');
+          this.edit_user.password = this.data.randomPassword;
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
+    },
+    async changeAvatar(ava) {
+      try {
+        let response = await this.changeUserAvatar({ id: this.$route.params.id, avatar: ava ? ava : this.edit_user.avatar });
+
+        if (response.success) {
+          this.data.user.avatar = ava ? ava : this.edit_user.avatar;
+          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
+          if (this.getLoggedUserData.data.id == this.$route.params.id) {
+            this.$store.state.loggedUserData.data.avatar = ava ? ava : this.edit_user.avatar;
+            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+          }
+          this.edit_user.avatar = this.data.user.avatar;
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
+    },
+    logoutUser() {
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to logout?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.LOGOUT_USER();
+          this.$router.push({ name: 'Authentication' });
+        }
+      });
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUserID"]),
-    name() {
-      return this.data 
+    ...mapGetters(["getLoggedUserID", "getLoggedUserData"]),
+    filteredBadges() {
+      if (!this.loading.badges) {
+        let filterResult = [...this.data.badges];
+        // Barra de pesquisa
+        if (this.filters_badge.search != "") {
+          filterResult = filterResult.filter(badge => badge.name.toLowerCase().includes(this.filters_badge.search.toLowerCase()));
+        }
+        if (this.filters_badge.orderby != "All" && this.filters_badge.orderby != "Order by") {
+          if (this.filters_badge.orderby == "Unlocked") {
+            filterResult.map(badge => badge.locked = this.data.user.xp < badge.xp_min)
+            filterResult = filterResult.sort((a, b) => (a.locked < b.locked) ? -1 : ((a.locked > b.locked) ? 1 : 0));
+          } else if (this.filters_badge.orderby == "Locked") {
+            filterResult.map(badge => badge.locked = this.data.user.xp < badge.xp_min)
+            filterResult = filterResult.sort((a, b) => (a.locked > b.locked) ? -1 : ((a.locked < b.locked) ? 1 : 0));
+          }
+        }
+        return filterResult;
+      }
+      return null;
     }
   },
   watch: {
-    'loading.user'() {
-      console.log(this.data.user);
-    },
-    'data.user'(){
-      console.log(this.data.user);
+    '$route.params.id'() {
+      this.getUserInfo();
     }
   },
 };

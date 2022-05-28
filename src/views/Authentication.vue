@@ -106,34 +106,52 @@ export default {
         ultimo_nome: '',
         email: '',
         password: '',
-        data_nascimento: '',
-        avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-        id_badge: 0,
-        pontos: 0,
-        xp: 0,
-        nivel: 0,
-        num_quizzes: 0,
-        num_certas: 0,
-        num_erradas: 0,
-        num_ajudas: 0,
-		    is_admin: true, 
-        data_registo: new Date(),
-        played: [],
-        is_locked: false
+        data_nascimento: ''
       }
     }
   },
   methods: {
-    ...mapActions(["loginUser", "getAllUsers"]),
-    login() {
-      // Verificar se o utilizador está bloqueado
-      this.loginUser(this.old_user)
-      .then(() => this.$router.push({ name: "Home" }))
-      .catch(err => this.$swal('Error!', err.message, 'error'));
+    ...mapActions(["loginUser", "registerUser"]),
+    async login() {
+      try {
+        let response = await this.loginUser(this.old_user);
+        if (response.success) {
+          this.$swal({
+            title: 'Success',
+            text: 'You are being redirected to the home page',
+            icon: 'success',
+            timer: 1500
+          });
+          setTimeout(() => this.$router.push({ name: "Home" }), 1500);
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
     },
-    register() {
-      this.getAllUsers()
-      .catch(err => console.log(err.message));
+    async register() {
+      try {
+        let response = await this.registerUser({
+          first_name: this.new_user.primeiro_nome,
+          last_name: this.new_user.ultimo_nome,
+          dob: this.new_user.data_nascimento,
+          email: this.new_user.email,
+          password: this.new_user.password
+        });
+        if (response.success) {
+          this.$swal({
+            title: 'Success',
+            text: 'Register successfully completed!',
+            icon: 'success',
+            timer: 1500
+          });
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
     }
   }
 };

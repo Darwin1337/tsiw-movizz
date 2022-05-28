@@ -169,10 +169,10 @@ export default {
         if (this.data.titles.success) {
           this.data.titles = this.data.titles.msg;
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
       }catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
     },
     async get10Quizzes() {
@@ -181,10 +181,10 @@ export default {
         if (this.data.quizzes.success) {
           this.data.quizzes = this.data.quizzes.msg;
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
       } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
     },
     async get10Series() {
@@ -193,10 +193,10 @@ export default {
         if (this.data.series.success) {
           this.data.series = this.data.series.msg;
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         } 
       } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
     },
   },

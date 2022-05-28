@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Navbar v-if="$route.name != 'Authentication'" />
-    <router-view />
-    <Footer />
+    <Navbar v-if="['Authentication', 'Error'].indexOf($route.name) == -1" />
+    <router-view class="view"/>
+    <Footer v-if="$route.name != 'Error'" />
   </div>
 </template>
 
@@ -33,5 +33,15 @@ export default {
   body {
     background: #020916;
     color: #fffffF;
+  }
+
+  .view {
+    min-height: calc(100vh - 265px);
+  }
+
+  @media (max-width: 991px) {
+    .view {
+      min-height: calc(100vh - 241px);
+    }
   }
 </style>

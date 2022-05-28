@@ -1,41 +1,116 @@
 <template>
-  <div v-if="currentWidth >= 992" id="desktop">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container">
-        <a class="navbar-brand" :to="{ name: 'Authentication' }">
-          <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto ms-3 mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link class="nav-link active" :to="{ name: 'Home' }">Home</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Catalog' }">Catalog</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Quizzes' }">Quizzes</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
-            </li>
-            <li class="nav-item" v-if="loading.user ? false: data.user.is_admin">
-              <router-link class="nav-link" :to="{ name: 'Admin' }">Admin</router-link>
-            </li>
-          </ul>
-          <div class="d-flex">
-
-            
-            <form @submit.prevent="" class="me-4 position-relative">
-              <div class="input-group">
-                <input id="search-bar" type="search" placeholder="Search anything" aria-label="Search" v-model="search">
-                <button type="submit" ><i class="fas fa-search"></i></button>
+  <div>
+    <div v-if="currentWidth >= 992 && !getLoggedUserData.loading" id="desktop">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" :to="{ name: 'Authentication' }">
+            <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto ms-3 mb-2 mb-lg-0">
+              <li class="nav-item">
+                <router-link class="nav-link active" :to="{ name: 'Home' }">Home</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Catalog' }">Catalog</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Quizzes' }">Quizzes</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
+              </li>
+              <li class="nav-item" v-if="getLoggedUserData.data.is_admin">
+                <router-link class="nav-link" :to="{ name: 'Admin' }">Admin</router-link>
+              </li>
+            </ul>
+            <div class="d-flex">  
+              <form @submit.prevent="" class="me-4 position-relative">
+                <div class="input-group">
+                  <input id="search-bar" type="search" placeholder="Search anything" aria-label="Search" v-model="search">
+                  <button type="submit" ><i class="fas fa-search"></i></button>
+                </div>
+                <div tabindex="0" class="leaderboardBar" id="search-results"
+                  style="
+                    display: none;
+                    background-color: #161c26;
+                    max-height: 178px;
+                    position: absolute;
+                    top: 45px;
+                    width: 100%;
+                    z-index: 1;
+                    border-radius: 5px;
+                    overflow-y: auto;">
+                  <div v-if="!loading.titles && !loading.quizzes">
+                    <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
+                      <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
+                        <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
+                          <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : require('../assets/images/content/' + filteredTitles[i - 1].poster_webp)) : filteredTitles[i - 1].poster">
+                        </div>
+                        <div class="d-flex flex-column">
+                          <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('imdb_id') ? (filteredTitles[i - 1].seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
+                          <p style="color: var(--laranja); font-size: 0.9rem;" class="m-0"><strong>{{ filteredTitles[i - 1].title }}</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-comment p-3 me-1" v-if="filteredTitles.length == 0">
+                      <p style="color: white; font-size: 0.9rem;" class="m-0"><strong>No results were found.</strong></p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="d-flex align-items-center">
+                <img :src="getLoggedUserData.data.avatar" style="border-radius: 50%; object-fit: cover; object-position: center top;" alt="Avatar" width="40px" height="40px" />
+                <div id="level">
+                  <span>{{ getLoggedUserData.data.stats.level }}</span>
+                </div>
               </div>
-              <div tabindex="0" class="leaderboardBar" id="search-results"
+              <div class="d-flex flex-column justify-content-center align-items-end">
+                <router-link :to="{ name: 'Profile', params: { id: getLoggedUserData.data.id } }" id="username">{{ getLoggedUserData.data.first_name }}</router-link>
+                <div id="badge-legend" class="d-flex" style="gap: 5px;">
+                  <img :src="require('../assets/images/badges/' + getLoggedUserData.data.badge_id.icon)" alt="Badge" width="15px" height="15px" />
+                  <span> {{ getLoggedUserData.data.badge_id.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div v-if="currentWidth < 992 && !getLoggedUserData.loading" id="mobile">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <a class="navbar-brand" :to="{ name: 'Authentication' }">
+            <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
+          </a>
+          <button class="nav-btn-toggler navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="user-card mt-3 d-flex m-0 align-items-center">
+              <img :src="getLoggedUserData.data.avatar" alt="Avatar" style="border-radius: 50%;" width="40px" height="40px" />
+              <div id="level">
+                <span>{{ getLoggedUserData.data.stats.level }}</span>
+              </div>
+              <div class="d-flex flex-column align-items-end">
+                <router-link :to="{ name: 'Profile', params: { id: getLoggedUserData.data.id } }" id="username">
+                  {{ getLoggedUserData.data.first_name }}
+                  <img :src="require('../assets/images/badges/' + getLoggedUserData.data.badge_id.icon)" alt="Badge" width="15px" height="15px" />
+                  <span> {{ getLoggedUserData.data.badge_id.name }}</span>
+                </router-link>
+              </div>
+            </div>
+            <form @submit.prevent="" class="position-relative">
+              <div class="input-group mb-3">
+                <input id="search-bar-mobile" type="search" class="form-control" placeholder="Find your favourite movie" aria-label="Search" v-model="search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+              </div>
+              <div tabindex="0" class="leaderboardBar" id="search-results-mobile"
                 style="
                   display: none;
                   background-color: #161c26;
@@ -46,7 +121,6 @@
                   z-index: 1;
                   border-radius: 5px;
                   overflow-y: auto;">
-
                 <div v-if="!loading.titles && !loading.quizzes">
                   <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
                     <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
@@ -66,101 +140,24 @@
 
               </div>
             </form>
-
-            <div class="d-flex align-items-center">
-              <img :src="loading.user ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' : data.user.avatar" style="border-radius: 50%; object-fit: cover; object-position: center top;" alt="Avatar" width="40px" height="40px" />
-              <div id="level">
-                <span>{{ loading.user ? 0 : data.user.stats.level }}</span>
-              </div>
-            </div>
-            <div class="d-flex flex-column justify-content-center align-items-end">
-              <router-link v-if="!loading.user" :to="{ name: 'Profile', params: { id: data.user.id } }" id="username">{{ data.user.first_name }}</router-link>
-              <div id="badge-legend" class="d-flex" style="gap: 5px;">
-                <img :src="loading.user ? '' : require('../assets/images/badges/' + data.user.badge_id.icon)" alt="Badge" width="15px" height="15px" />
-                <span> {{ loading.user ? "Loading" : data.user.badge_id.name }}</span>
-              </div>
-            </div>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <router-link class="nav-link active" :to="{ name: 'Home' }">Home</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Catalog' }">Catalog</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Quizzes' }">Quizzes</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-    </nav>
-  </div>
-
-  <div v-else id="mobile">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <a class="navbar-brand" :to="{ name: 'Authentication' }">
-          <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
-        </a>
-        <button class="nav-btn-toggler navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <div class="user-card mt-3 d-flex m-0 align-items-center">
-            <img :src="loading.user ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' : data.user.avatar" alt="Avatar" style="border-radius: 50%;" width="40px" height="40px" />
-            <div id="level">
-              <span>{{ loading.user ? 0 : data.user.stats.level }}</span>
-            </div>
-            <div class="d-flex flex-column align-items-end">
-              <router-link v-if="!loading.user" :to="{ name: 'Profile', params: { id: data.user.id } }" id="username">
-                {{ data.user.first_name }}
-                <img :src="loading.user ? '' : require('../assets/images/badges/' + data.user.badge_id.icon)" alt="Badge" width="15px" height="15px" />
-                <span> {{ loading.user ? "Loading" : data.user.badge_id.name }}</span>
-              </router-link>
-            </div>
-          </div>
-          <form @submit.prevent="" class="position-relative">
-            <div class="input-group mb-3">
-              <input id="search-bar-mobile" type="search" class="form-control" placeholder="Find your favourite movie" aria-label="Search" v-model="search">
-              <button type="submit"><i class="fas fa-search"></i></button>
-            </div>
-            <div tabindex="0" class="leaderboardBar" id="search-results-mobile"
-              style="
-                display: none;
-                background-color: #161c26;
-                max-height: 178px;
-                position: absolute;
-                top: 45px;
-                width: 100%;
-                z-index: 1;
-                border-radius: 5px;
-                overflow-y: auto;">
-              <div v-if="!loading.titles && !loading.quizzes">
-                <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
-                  <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
-                    <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
-                      <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : require('../assets/images/content/' + filteredTitles[i - 1].poster_webp)) : filteredTitles[i - 1].poster">
-                    </div>
-                    <div class="d-flex flex-column">
-                      <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('imdb_id') ? (filteredTitles[i - 1].seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
-                      <p style="color: var(--laranja); font-size: 0.9rem;" class="m-0"><strong>{{ filteredTitles[i - 1].title }}</strong></p>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-comment p-3 me-1" v-if="filteredTitles.length == 0">
-                  <p style="color: white; font-size: 0.9rem;" class="m-0"><strong>No results were found.</strong></p>
-                </div>
-              </div>
-
-            </div>
-          </form>
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link class="nav-link active" :to="{ name: 'Home' }">Home</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Catalog' }">Catalog</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Quizzes' }">Quizzes</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -189,7 +186,6 @@ export default {
   mounted() {
     this.webpSupported = this.isWebpSupported();
     window.addEventListener("resize", this.onResize);
-    this.getUserInfo();
     this.getSearchContent();
   },
   methods: {
@@ -218,13 +214,15 @@ export default {
       document.querySelector("#search-results").style.display = "none";
     },
     insertEventListeners() {
-      if (this.currentWidth >= 992) {
-        document.querySelector("#search-bar").addEventListener("focusout", (event) =>  document.querySelector("#search-results").style.display = event.relatedTarget != document.querySelector("#search-results") ?  "none" : "block");
-        document.querySelector("#search-bar").addEventListener("focusin", () => this.search.length >= 3 ? document.querySelector("#search-results").style.display = "block" : document.querySelector("#search-results").style.display = "none" );
-      } else { 
-        document.querySelector("#search-bar-mobile").addEventListener("focusout", (event) =>  document.querySelector("#search-results-mobile").style.display = event.relatedTarget != document.querySelector("#search-results-mobile") ?  "none" : "block");
-        document.querySelector("#search-bar-mobile").addEventListener("focusin", () => this.search.length >= 3 ? document.querySelector("#search-results-mobile").style.display = "block" : document.querySelector("#search-results-mobile").style.display = "none" );
-      };
+      try {
+        if (this.currentWidth >= 992) {
+          document.querySelector("#search-bar").addEventListener("focusout", (event) =>  document.querySelector("#search-results").style.display = event.relatedTarget != document.querySelector("#search-results") ?  "none" : "block");
+          document.querySelector("#search-bar").addEventListener("focusin", () => this.search.length >= 3 ? document.querySelector("#search-results").style.display = "block" : document.querySelector("#search-results").style.display = "none" );
+        } else { 
+          document.querySelector("#search-bar-mobile").addEventListener("focusout", (event) =>  document.querySelector("#search-results-mobile").style.display = event.relatedTarget != document.querySelector("#search-results-mobile") ?  "none" : "block");
+          document.querySelector("#search-bar-mobile").addEventListener("focusin", () => this.search.length >= 3 ? document.querySelector("#search-results-mobile").style.display = "block" : document.querySelector("#search-results-mobile").style.display = "none" );
+        };
+      } catch { };
     },
     isWebpSupported() {
       const elem = document.createElement('canvas');
@@ -250,20 +248,6 @@ export default {
         });
       });
     },
-    async getUserInfo() {
-      this.loading.user = true;
-      try {
-        this.data.user = await this.getUser({ id: this.getLoggedUserID });
-        if (this.data.user.success) {
-          this.data.user = this.data.user.msg[0];
-          this.loading.user = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-    },
     async getSearchContent() {
       this.loading.titles = true;
       try {
@@ -271,10 +255,10 @@ export default {
         if (this.data.titles.success) {
           this.loading.titles = false;
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
       } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
 
       this.loading.quizzes = true;
@@ -283,10 +267,10 @@ export default {
         if (this.data.quizzes.success) {
           this.loading.quizzes = false;
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
       } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
       
       if (!this.loading.titles && !this.loading.quizzes) {
@@ -297,7 +281,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUserID"]),
+    ...mapGetters(["getLoggedUserID", "getLoggedUserData"]),
     filteredTitles() {
       if (!this.loading.titles && !this.loading.quizzes) {
         let filterResult = [...this.data.titles_quizzes];

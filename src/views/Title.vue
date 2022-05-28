@@ -225,25 +225,22 @@
 
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   data() {
     return {
       loading: {
         title: true,
-        user:true
       },
       data: {
         title: [],
-        user:[]
       },
       webpSupported: true,
       showFullCast: false,
       selectedSeason: 1,
       showStars: false,
       savedStars: 0,
-      
       userLikes: [],
       userSeen: [],
       comments: [],
@@ -254,28 +251,13 @@ export default {
       relatedQuizzes: []
     };
   },
-  computed: {
-      
-  },
-  watch: {
-    
-    'loading.title'(){
-      this.waitForElm('.jumbotron').then((elm) => {
-            document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${ this.webpSupported ? require('../assets/images/content/' + this.data.title.banner_webp) : this.data.title.banner})`;
-          });
-    }
-  },
   mounted () {
-    this.getUserInfo();
-    this.getTitleId();
-    
+    this.getTitleInfo();
     // this.verifyLike();
     // this.verifySeen();
     // this.verifyRating();
   },
   created () {
-   
-    this.userLikes = this.getUserInfo;
     // this.userSeen = this.getTitlesSeenByUser(this.getLoggedUser.id);
     // this.comments = this.getTitleComments(this.$route.params.imdbid);
     // this.userRatings.pontuacao = this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid) ? this.getUserTitleRating(this.getLoggedUser.id, this.$route.params.imdbid).pontuacao : 0;
@@ -291,12 +273,9 @@ export default {
     // }
     // console.log("WebP supported: " + this.webpSupported);
   },
-  computed: {
-    ...mapGetters(["getLoggedUserID"])
-  },
   methods: {
-    ...mapActions(["getTitle","getUser"]),
-    async getTitleId() {
+    ...mapActions(["getTitle"]),
+    async getTitleInfo() {
       this.loading.title=true;
       try {
         this.data.title = await this.getTitle({id:this.$route.params.imdbid});
@@ -308,23 +287,6 @@ export default {
           this.$router.push({ name: 'Error', params: { '0': 'Error' } });
         }
       } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-      }
-    },
-    async getUserInfo() {
-      this.loading.user = true;
-      try {
-        this.data.user = await this.getUser({ id: this.getLoggedUserID });
-        if (this.data.user.success) {
-          this.data.user = this.data.user.msg[0];
-          this.loading.user = false;
-          console.log('====================================');
-          console.log(this.data.user);
-          console.log('====================================');
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
-        }
-      } catch(e) {
         this.$router.push({ name: 'Error', params: { '0': 'Error' } });
       }
     },
@@ -530,6 +492,18 @@ export default {
       const doc = document.querySelectorAll(".comment-message")[id];
       doc.innerHTML = comentario;
       doc.style.color = "#ffffff";
+    }
+  },
+  watch: {
+    'loading.title'() {
+      if (!this.loading.title) {
+        this.waitForElm('.jumbotron').then((elm) => {
+          document.querySelector(".jumbotron").style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${ this.webpSupported ? require('../assets/images/content/' + this.data.title.banner_webp) : this.data.title.banner})`;
+        });
+      }
+    },
+    '$route.params.imdbid'() {
+      this.getTitleInfo();
     }
   }
 };
