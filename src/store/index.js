@@ -61,6 +61,26 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async getTitle({context, state}, title) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/titles/"+title.id, {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          throw Error(response.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
     async getAllTitles({context, state}) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/titles", {
