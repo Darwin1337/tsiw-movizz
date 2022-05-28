@@ -282,12 +282,11 @@ export default {
         if (this.data.title.success) {
           this.data.title = this.data.title.msg;
           this.loading.title=false;
-          
         } else {
-          this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
-      } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'Error' } });
+      } catch(e) {
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
     },
     waitForElm(selector) {
