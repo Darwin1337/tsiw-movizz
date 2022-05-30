@@ -333,7 +333,146 @@ export default new Vuex.Store({
       } catch (e) {
         throw Error(e.message);
       }
-    }
+    },
+    async removeComment({context, state}, title, index) {
+      try {
+        console.log(title);
+        const response = await fetch("http://127.0.0.1:3000/api/title/" + title.imdb_id, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({
+            'index': index
+          })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addFavourite({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/favourites", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeFavourite({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/favourites", {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+
+    async addSeen({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/seen", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeSeen({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/seen", {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+
+   //Fiquei aqui
+    async addRating({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/seen", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+
   },
   modules: {
   }
