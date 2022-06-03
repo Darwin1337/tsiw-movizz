@@ -155,6 +155,28 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async getAllGenres({context, state}) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/genres", {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        let data = await response.json();
+        if (response.ok) {
+          data.msg = data.msg.sort((a,b) => a.badge_id - b.badge_id);
+          return data;
+        } else {
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
     async getUser({context, state}, user) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id, {
@@ -197,9 +219,9 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
-    async getBest10Movies({context, state}) {
+    async getBest10Titles({context, state}, isMovie) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles?top10=true&movie=true", {
+        const response = await fetch("http://127.0.0.1:3000/api/titles?top10=true&movie=" + isMovie, {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -208,27 +230,6 @@ export default new Vuex.Store({
           }
         });
 
-        if (response.ok) {
-          return await response.json();
-        } else {
-          const data = await response.json();
-          throw Error(data.msg);
-        }
-      } catch (e) {
-        throw Error(e.message);
-      }
-    },
-    async getBest10Series({context, state}) {
-      try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles?top10=true&movie=false", {
-          method: "GET",
-          headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + state.loggedUser.auth_key
-          }
-        });
-  
         if (response.ok) {
           return await response.json();
         } else {
@@ -260,6 +261,28 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async getTop5Users({context, state}) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users?top5=true", {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    // User related stuff
     async changeUserBadge({context, state}, user) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id + "/badges", {
@@ -322,6 +345,229 @@ export default new Vuex.Store({
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
           },
           body: JSON.stringify({ 'avatar': user.avatar })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addComment({context, state}, comment) {
+      try {
+        
+        const response = await fetch("http://127.0.0.1:3000/api/titles/"+comment.imdb_id+"/comments", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ user_id: comment.id_user, comment:comment.comment, spoiler:comment.spoiler, title_id: comment.id_title})
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeCommentById({context, state}, title) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/titles/" + title.imdb_id + "/comments", {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({
+            '_id_comment': title._id,
+            '_id_title': title.title_id
+          })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addFavourite({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/favourites", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeFavourite({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/favourites", {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addSeen({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id + "/seen", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeSeen({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/seen", {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title: user.imdb_id })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async getRating({context, state}, user) {
+    try {
+      const response = await fetch("http://127.0.0.1:3000/api/users/"+user.user_id+"/rating/"+user.imdb_id, {
+        method: "GET",
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.loggedUser.auth_key
+        }
+      });
+
+      if (response.ok) {
+        return await response.json();
+      } else {
+        const data = await response.json();
+        throw Error(data.msg);
+      }
+    } catch (e) {
+      throw Error(e.message);
+    }
+    },
+    async addRatings({context, state}, rating) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/rating/"+rating.imdb_id, {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title_id:rating.id_title, rating:rating.rating })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async changeRatings({context, state}, rating) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/rating/"+rating.imdb_id, {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title_id:rating.id_title, rating:rating.rating })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async deleteRatings({context, state}, rating) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/rating/"+rating.imdb_id, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title_id:rating.id_title, rating:rating.rating })
         });
   
         if (response.ok) {

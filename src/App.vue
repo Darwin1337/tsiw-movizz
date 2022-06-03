@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div :class="{ fullheight: $route.name == 'Error' }">
     <Navbar v-if="['Authentication', 'Error'].indexOf($route.name) == -1" />
-    <router-view class="view"/>
+    <router-view :class=" ['Authentication', 'Error'].indexOf($route.name) == -1 ? 'view' : 'fullheight'"/>
     <Footer v-if="$route.name != 'Error'" />
   </div>
 </template>
@@ -37,6 +37,10 @@ export default {
 
   .view {
     min-height: calc(100vh - 265px);
+  }
+
+  .fullheight {
+    min-height: 100vh;
   }
 
   @media (max-width: 991px) {

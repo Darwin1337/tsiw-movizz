@@ -6,15 +6,14 @@
         class="pe-2 d-flex align-items-center text-end">Movizz<br>Hall of Fame</span>
       <div class="top-3 d-flex align-items-end" style="gap: 15px;">
 
-        <div class="member d-flex flex-column align-items-center" style="cursor: pointer;" >
+        <div class="member d-flex flex-column align-items-center" style="cursor: pointer;" v-for="i in (data.users.length > 3) ? 3 : data.users.length" :key="i" @click="$router.push({ name: 'Profile', params: { id: data.users[i - 1].id }})">
           <div style="position: relative;">
-            <img  width="50px" height="50px" style="border-radius: 50%; object-fit: cover; object-position: center top;">
-            <img  width="35px"
-              style="position: absolute; top: -18px; left: 23px; transform: rotate(30deg);">
-            <p class="member-level big"></p>
+            <img :src="data.users[i - 1].avatar" width="50px" height="50px" style="border-radius: 50%; object-fit: cover; object-position: center top;">
+            <img :src="crowns[i - 1]" width="35px" style="position: absolute; top: -18px; left: 23px; transform: rotate(30deg);">
+            <p class="member-level big">{{ data.users[i - 1].stats.level }}</p>
           </div>
-          <p class="m-0 mt-2 text-center" style="color: white;"></p>
-          <p style="color: var(--cinza2);" class="m-0 text-center"></p>
+          <p class="m-0 mt-2 text-center" style="color: white;">{{ data.users[i - 1].first_name }}</p>
+          <p style="color: var(--cinza2);" class="m-0 text-center">{{ data.users[i - 1].badge_id.name }}</p>
         </div>
       </div>
     </div>
@@ -123,10 +122,12 @@ export default {
     return {
       webpSupported: true,
       data: {
-        titles:[],
-        quizzes:[],
-        series:[]
-      }
+        titles: [],
+        quizzes: [],
+        series: [],
+        users: []
+      },
+      crowns: [require("../assets/images/crown_gold_icon.svg"), require("../assets/images/crown_silver_icon.svg"), require("../assets/images/crown_bronze_icon.svg")]
     }
   },
   mounted () {
@@ -134,15 +135,16 @@ export default {
     this.get10Titles();
     this.get10Quizzes();
     this.get10Series();
+    this.get5Users();
   },
   methods: {
-    ...mapActions(["getUser", "getAllTitles", "getBest10Movies", "getBest10Quizzes","getBest10Series"]),
+    ...mapActions(["getBest10Titles", "getBest10Quizzes", "getTop5Users"]),
     isWebpSupported() {
       const elem = document.createElement('canvas');
       if (!!(elem.getContext && elem.getContext('2d'))) {
         return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
       }
-      this.webpSupported = false;
+      return false;
     },
     simulateScroll(dir, target) {
         if (dir == "right") {
@@ -165,7 +167,7 @@ export default {
     },
     async get10Titles() {
       try {
-        this.data.titles = await this.getBest10Movies();
+        this.data.titles = await this.getBest10Titles(true);
         if (this.data.titles.success) {
           this.data.titles = this.data.titles.msg;
         } else {
@@ -189,7 +191,7 @@ export default {
     },
     async get10Series() {
       try {
-        this.data.series = await this.getBest10Series();
+        this.data.series = await this.getBest10Titles(false);
         if (this.data.series.success) {
           this.data.series = this.data.series.msg;
         } else {
@@ -199,6 +201,18 @@ export default {
         this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
     },
+    async get5Users() {
+      try {
+        this.data.users = await this.getTop5Users();
+        if (this.data.users.success) {
+          this.data.users = this.data.users.msg;
+        } else {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        } 
+      } catch (e) {
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
+      }
+    }
   },
   computed: {
     ...mapGetters(["getLoggedUserID"])

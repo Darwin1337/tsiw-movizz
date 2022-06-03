@@ -229,7 +229,7 @@ export default {
       if (!!(elem.getContext && elem.getContext('2d'))) {
         return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
       }
-      this.webpSupported = false;
+      return false;
     },
     waitForElm(selector) {
       return new Promise(resolve => {

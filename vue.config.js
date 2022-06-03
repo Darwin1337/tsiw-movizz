@@ -6,5 +6,5 @@ module.exports = {
 			navigateFallback: 'index.html'
 		}
 	},
-	lintOnSave: true
+	lintOnSave: false
 }
