@@ -153,6 +153,9 @@
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'Prizes' }">Prizes</router-link>
               </li>
+              <li class="nav-item" v-if="getLoggedUserData.data.is_admin">
+                <router-link class="nav-link" :to="{ name: 'Admin' }">Admin</router-link>
+              </li>
             </ul>
           </div>
         </div>
@@ -251,7 +254,7 @@ export default {
     async getSearchContent() {
       this.loading.titles = true;
       try {
-        this.data.titles = await this.getAllTitles();
+        this.data.titles = await this.getAllTitles(true);
         if (this.data.titles.success) {
           this.loading.titles = false;
         } else {

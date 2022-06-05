@@ -91,9 +91,9 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
-    async getAllTitles({context, state}) {
+    async getAllTitles({context, state}, origin) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles", {
+        const response = await fetch(origin ? "http://127.0.0.1:3000/api/titles?navbar=true" : "http://127.0.0.1:3000/api/titles", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -177,6 +177,27 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async getAllPrizes({context, state}) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/prizes", {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
     async getUser({context, state}, user) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id, {
@@ -201,6 +222,27 @@ export default new Vuex.Store({
     async getTitle({context, state}, title) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/titles/"+title.id, {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async getQuiz({context, state}, quiz) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/quizzes/"+quiz.id, {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -580,15 +622,97 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
-    async getAllPrizes({context, state}) {
+    async addQuizAttempt({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/prizes", {
-          method: "GET",
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/played", {
+          method: "POST",
           headers: {
             'Accept': '*/*',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
-          }
+          },
+          body: JSON.stringify({
+            quiz_id: user.quiz_id,
+            questions_right: user.questions_right,
+            questions_wrong: user.questions_wrong,
+            allowed_points: user.allowed_points,
+            was_completed: user.was_completed
+          })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async updateQuizAttempt({context, state}, user) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/played/" + user.played_id, {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({
+            questions_right: user.questions_right,
+            questions_wrong: user.questions_wrong,
+            allowed_points: user.allowed_points,
+            was_completed: user.was_completed
+          })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addPoints({context, state}, points) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/points", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({
+            points: points,
+          })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addXP({context, state}, xp) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/xp", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({
+            xp: xp,
+          })
         });
 
         if (response.ok) {
@@ -603,14 +727,14 @@ export default new Vuex.Store({
     },
     async redeemPrize({context, state}, prize) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/prizes", {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/prizes_reedemed", {
           method: "POST",
           headers: {
             'Accept': '*/*',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
           },
-          body: JSON.stringify({ prize_id:prize.id, price: prize.price })
+          body: JSON.stringify({ prize_id: prize.id, price: prize.price })
         });
 
         if (response.ok) {
@@ -622,7 +746,7 @@ export default new Vuex.Store({
       } catch (e) {
         throw Error(e.message);
       }
-    },
+    }
   },
   modules: {
   }

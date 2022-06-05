@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="!loading.titles" class="container">
     <!-- Banner -->
     <div class="jumbo-wrapper mt-4" style="height: 425px;">
       <div :class="!webpSupported ? '' : 'webp'" class="jumbotron d-flex align-items-end p-5"
@@ -112,7 +112,7 @@
     <!-- mostrar todos -->
     <div v-if="!loading.titles">
       <div class="row g-3">
-        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="title in data.titles" :key="title.imdb_id">
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="title in filteredTitles" :key="title.imdb_id">
           <router-link :to="{ name: 'Title', params: { imdbid: title.imdb_id }} ">
             <div class="tile-custom">
               <div class="tile__media-custom">
@@ -127,7 +127,7 @@
             </div>
           </router-link>
         </div>
-        <div v-if="data.titles.length == 0">
+        <div v-if="filteredTitles.length == 0">
           <p>No results were found for the filters applied.</p>
         </div>
       </div>
@@ -142,6 +142,10 @@
       <p>Loading...</p>
     </div>
   </div>
+  <div v-else class="d-flex flex-column justify-content-center align-items-center text-center">
+    <img src="../assets/images/loading.gif" alt="">
+    <h3>We thought this would be faster as well, <span style="color: var(--laranja);">sorry</span>.</h3>
+  </div>
 </template>
 
 <script>
@@ -151,12 +155,17 @@
     data() {
       return {
         webpSupported: true,
+        selectedType: 1,
+        anos: [],
+        generos: [],
+        paises: [],
         data: {
           titles: [],
           movies: [],
           series: [],
           topMovies: [],
           topSeries: [],
+          filterHistory: [],
           totalPages: 1,
           currentPage: 1,
           bannerRating: 0.0,
@@ -164,12 +173,9 @@
         loading: {
           titles: true,
           topMovies: true,
-          topSeries: true
+          topSeries: true,
+          genres: true
         },
-        selectedType: 1,
-        anos: [],
-        generos: [],
-        paises: [],
         filters: {
           search: "",
           genre: "Genre",
@@ -183,22 +189,7 @@
       this.webpSupported = this.isWebpSupported();
       this.getTitles();
       this.getTopTitles();
-    },
-    created () {
-      // this.titles = this.selectedType == 1 ? this.getAllTitles.filter(title => title.total_temporadas == 0) : this.getAllTitles.filter(title => title.total_temporadas > 0);
-      // this.generos = this.getAllGenres.map(genre => genre.descricao);
-      // this.getAllTitles.map(title => {
-      //   // Pré carregar anos para o select
-      //   if (!this.anos.some(ano => ano == title.ano)) {
-      //     this.anos.push(title.ano);
-      //   }
-      //   // Pré carregar países para o select
-      //   if (!this.paises.some(pais => pais == title.pais)) {
-      //     this.paises.push(title.pais);
-      //   }
-      // });
-      // this.anos.sort();
-      // this.paises.sort();
+      this.getGenres();
     },
     methods: {
       ...mapActions(["getBest10Titles", "getAllTitles", "getAllGenres"]),
@@ -228,17 +219,28 @@
           }
         }
       },
-      async getTitles(page, isMovie) {
+      async getTitles() {
         try {
           this.loading.titles = true;
           this.data.movies = await this.getAllTitles();
           if (this.data.movies.success) {
             this.data.bannerRating = parseFloat(this.data.movies.msg.filter(tt => tt.imdb_id == 'tt6806448')[0].movizz_rating).toFixed(1);
+            this.data.movies.msg.map(title => {
+              // Pré carregar anos para o select
+              if (!this.anos.some(ano => ano == title.year)) {
+                this.anos.push(title.year);
+              }
+              // Pré carregar países para o select
+              if (!this.paises.some(pais => pais == title.country)) {
+                this.paises.push(title.country);
+              }
+            });
+            this.anos.sort();
+            this.paises.sort();
             this.data.series = this.data.movies.msg.filter(t => t.seasons > 0);
             this.data.movies = this.data.movies.msg.filter(t => t.seasons == 0);
+            this.filterHistory = this.selectedType == 1 ? [...this.data.movies] : [...this.data.series];
             this.loading.titles = false;
-            this.data.totalPages = Math.ceil(this.data.movies.length / 12);
-            this.data.titles = this.selectedType == 1 ? [...this.data.movies.slice(0, 12)] : [...this.data.series.slice(0, 12)];
           } else {
             this.$router.push({ name: 'Error', params: { '0': 'error' } });
           }
@@ -268,66 +270,86 @@
         }catch (e) {
           this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
-      }
+      },
+      async getGenres() {
+        try {
+          this.loading.genres = true;
+          this.generos = await this.getAllGenres();
+          if (this.generos.success) {
+            this.generos = this.generos.msg.map(genre => genre.description);
+            this.loading.genres = false;
+          } else {
+            this.$router.push({ name: 'Error', params: { '0': 'error' } });
+          }
+        }catch (e) {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      },
     },
     computed: {
       filteredTitles() {
-        // this.resetMostrar();
-        // let filterResult = [...this.titles];
+        if (!this.loading.titles && !this.loading.quizzes) {
+          let filterResult = this.selectedType == 1 ? [...this.data.movies] : [...this.data.series];
 
-        // // Barra de pesquisa
-        // if (this.filters.search != "") {
-        //   filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.filters.search.toLowerCase()));
-        // }
+          // Barra de pesquisa
+          if (this.filters.search != "") {
+            console.log("a1");
+            filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filters.search.toLowerCase()));
+          }
 
-        // // Géneros
-        // if (this.filters.genre != "All" && this.filters.genre != "Genre") {
-        //   filterResult = filterResult.filter(title => title.genero.some(genero => genero == this.filters.genre));
-        // }
+          // Géneros
+          if (this.filters.genre != "All" && this.filters.genre != "Genre") {
+            console.log("a2");
+            filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filters.genre));
+          }
 
-        // // Anos
-        // if (this.filters.year != "All" && this.filters.year != "Year") {
-        //   filterResult = filterResult.filter(title => title.ano == this.filters.year);
-        // }
-        
-        // // Países
-        // if (this.filters.country != "All" && this.filters.country != "Country") {
-        //   filterResult = filterResult.filter(title => this.filters.country == title.pais);
-        // }
+          // Anos
+          if (this.filters.year != "All" && this.filters.year != "Year") {
+            console.log("a3");
+            filterResult = filterResult.filter(title => title.year == this.filters.year);
+          }
+          
+          // Países
+          if (this.filters.country != "All" && this.filters.country != "Country") {
+            console.log("a4");
+            filterResult = filterResult.filter(title => this.filters.country == title.country);
+          }
 
-        // if (this.filters.orderby != "Recently added" && this.filters.orderby != "Order by") {
-        //   if (this.filters.orderby == "Alphabetic (A-Z)") {
-        //     filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Alphabetic (Z-A)") {
-        //     filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Most recent") {
-        //     filterResult = filterResult.sort((a, b) => (a.ano > b.ano) ? -1 : ((a.ano < b.ano) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Oldest") {
-        //     filterResult = filterResult.sort((a, b) => (a.ano < b.ano) ? -1 : ((a.ano > b.ano) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Best rated") {
-        //     filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb > b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb < b.pontuacao_imdb) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Worst rated") {
-        //     filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Most viewed") {
-        //     filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
-        //     filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
-        //   } else if (this.filters.orderby == "Least viewed") {
-        //     filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
-        //     filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
-        //   }    
-        // }
-        
-        // return filterResult;
+          if (this.filters.orderby != "Recently added" && this.filters.orderby != "Order by") {
+            console.log("a5");
+            if (this.filters.orderby == "Alphabetic (A-Z)") {
+              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
+            } else if (this.filters.orderby == "Alphabetic (Z-A)") {
+              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
+            } else if (this.filters.orderby == "Most recent") {
+              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
+            } else if (this.filters.orderby == "Oldest") {
+              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
+            } else if (this.filters.orderby == "Best rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Worst rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Most viewed") {
+              filterResult = filterResult.sort((a, b) => (a.times_seen > b.times_seen) ? -1 : ((a.times_seen < b.times_seen) ? 1 : 0));
+            } else if (this.filters.orderby == "Least viewed") {
+              filterResult = filterResult.sort((a, b) => (a.times_seen < b.times_seen) ? -1 : ((a.times_seen > b.times_seen) ? 1 : 0));
+            }    
+          }
+
+          this.data.totalPages = Math.ceil(filterResult.length / 12);
+          if (JSON.stringify(filterResult) != JSON.stringify(this.data.filterHistory)) {
+            // O utilizador mexeu nos filtros portanto forçar a página a ir para a 1
+            this.data.currentPage = 1;
+          }
+          this.data.filterHistory = structuredClone(filterResult);
+          return this.data.totalPages == 1 ? filterResult : filterResult.slice((this.data.currentPage - 1) * 12, ((this.data.currentPage - 1) * 12) + 12);
+        }
+        return null;
       }
     },
     watch: {
       selectedType() {
-        this.data.titles = this.selectedType == 1 ? [...this.data.movies.slice(0, 12)] : [...this.data.series.slice(0, 12)];
-        this.data.totalPages = this.selectedType == 1 ? Math.ceil(this.data.movies.length / 12) : Math.ceil(this.data.series.length / 12);
-        this.currentPage = 1;
-      },
-      'data.currentPage'() {
-        this.selectedType == 1 ? this.data.titles = [...this.data.movies.slice((this.data.currentPage - 1) * 12, ((this.data.currentPage - 1) * 12) + 12)] : this.data.titles = [...this.data.series.slice((this.data.currentPage - 1) * 12, ((this.data.currentPage - 1) * 12) + 12)];
+        this.data.currentPage = 1;
       }
     }
   }

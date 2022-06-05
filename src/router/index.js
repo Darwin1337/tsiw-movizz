@@ -113,7 +113,7 @@ router.beforeEach((to, from, next) => {
   } else if (!to.meta.requiresAuth && Store.getters.getLoggedUserID != null && !to.meta.error) {
     next({ name: "Home" });
   } else {
-    if (to.meta.onlyAdmin && !Store.getters.getLoggedUserData.is_admin) {
+    if (to.meta.onlyAdmin && !Store.getters.getLoggedUserData.data.is_admin) {
       next({ name: "Home" });
     } else {
       next();
