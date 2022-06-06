@@ -102,19 +102,7 @@
           </div>
         </div>
         <div class="help-section d-flex justify-content-around align-items-center quizHeader p-3" style="border-bottom-right-radius: 10px; border-bottom-left-radius: 10px">
-          <div class="position-relative" style="width: 100%; max-width: 150px">
-            <button disabled class="gray-btn" style="cursor: default">50/50</button>
-            <span class="position-absolute d-flex justify-content-center align-items-center" style="top: -10px; left: -10px; width: 25px; height: 25px; background-color: var(--azul-escuro2); border-radius: 50%; font-size: 0.85em; font-weight: bold">
-              <i class="fas fa-ban"></i>
-            </span>
-          </div>
-          <p class="m-0"><b>Need a hand? </b></p>
-          <div class="position-relative" style="width: 100%; max-width: 150px">
-            <button disabled class="gray-btn" style="cursor: default">New question</button>
-            <span class="position-absolute d-flex justify-content-center align-items-center" style="top: -10px; left: -10px; width: 25px; height: 25px; background-color: var(--azul-escuro2); border-radius: 50%; font-size: 0.85em; font-weight: bold">
-              <i class="fas fa-ban"></i>
-            </span>
-          </div>
+          <p class="m-0"><strong>Developed by Movizz</strong></p>
         </div>
       </div>
       <div class="col-lg-6 fix-margin">
@@ -136,19 +124,19 @@
               <button class="orange-btn" type="submit">Comment</button>
             </div>
           </form>
-          <!-- <div class="other-comments mt-5" id="comment">
-                  <div class="card-comment d-flex mb-3" style="gap: 15px;" v-for="(comment, i) in comments" :key="i" >
-                  <div  :style="'background-image: url(' + getAllUsers[comment.id_utilizador].avatar + ');'" style="min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
-                  <div class="details d-flex flex-column">
-                      <p id="comment-author">{{ getAllUsers[comment.id_utilizador].primeiro_nome + ' ' + getAllUsers[comment.id_utilizador].ultimo_nome }} <span>{{ new Date(comment.data).getDate() + "/" + (parseInt(new Date(comment.data).getMonth()) + 1) + "/" + new Date(comment.data).getFullYear() + " at " + new Date(comment.data).getHours() + ":" + String(new Date(comment.data).getMinutes()).padStart(2, '0') + "h" }}</span></p>
-                      <p class="comment-message">{{ comment.comentario }}</p>
-                  </div>
-                      <span v-if="comment.id_utilizador==getLoggedUser.id || getLoggedUser.is_admin" @click="removeComment(comment.id_comentario, comment.id_utilizador)" class="unblock-button"><i class="fas fa-trash"></i></span>
-                  </div>
-                  <div>
-                      <p v-if="comments.length==0">Be the first to comment on this quiz</p>
-                  </div>
-              </div> -->
+          <div class="other-comments mt-5" id="comment">
+            <div class="card-comment d-flex mb-3" style="gap: 15px;" v-for="(comment, i) in data.quiz.comments" :key="i" >
+              <div  :style="'background-image: url(' + comment.user_id.avatar + ');'" style="min-width: 50px;height: 50px;background-repeat: no-repeat;background-size: cover;background-position: center; border-radius: 50%;"></div>
+              <div class="details d-flex flex-column">
+                  <p id="comment-author">{{ comment.user_id.first_name + ' ' + comment.user_id.last_name }} <span>{{ new Date(comment.date).getDate() + "/" + (parseInt(new Date(comment.date).getMonth()) + 1) + "/" + new Date(comment.date).getFullYear() + " at " + new Date(comment.date).getHours() + ":" + String(new Date(comment.date).getMinutes()).padStart(2, '0') + "h" }}</span></p>
+                  <p class="comment-message">{{ comment.comment }}</p>
+              </div>
+              <span v-if="comment.user_id.id == getLoggedUserData.data.id || getLoggedUserData.data.is_admin" @click="removeComment(comment.id)" class="unblock-button"><i class="fas fa-trash"></i></span>
+            </div>
+            <div>
+                <p v-if="data.quiz.comments.length == 0">Be the first to comment on this quiz</p>
+            </div>
+          </div>
         </section>
       </div>
     </div>
@@ -192,15 +180,14 @@ export default {
         respostas_erradas: 0
       },
       savedStars: 0,
-      comentario: "",
-      comments: [],
+      comentario: ""
     };
   },
   mounted() {
     this.getQuizInfo();
   },
   methods: {
-    ...mapActions(["getQuiz", "addQuizAttempt", "updateQuizAttempt", "addPoints", "addXP"]),
+    ...mapActions(["getQuiz", "addQuizAttempt", "updateQuizAttempt", "addPoints", "addXP", "addQuizComment", "removeQuizComment", "addQuizRating", "changeQuizRating", "removeQuizRating"]),
     isWebpSupported() {
       const elem = document.createElement("canvas");
       if (!!(elem.getContext && elem.getContext("2d"))) {
@@ -210,24 +197,36 @@ export default {
     },
     fillStars(n, event_type) {
       if (event_type == "a") {
-        document.querySelectorAll(".stars .fas").forEach((a) => (a.style.color = "white"));
+        this.waitForElm(".stars .fas").then((elm) => {
+          document.querySelectorAll(".stars .fas").forEach((a) => (a.style.color = "white"));
+        });
         if (n > 0 && n != this.savedStars) {
           for (let i = 0; i < n; i++) {
-            document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
+            this.waitForElm(".stars .fas").then((elm) => {
+              document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
+            });
           }
         }
         this.savedStars = n != this.savedStars ? n : 0;
       } else if (event_type == "b") {
-        document.querySelectorAll(".stars .fas").forEach((a) => (a.style.color = "white"));
+        this.waitForElm(".stars .fas").then((elm) => {
+          document.querySelectorAll(".stars .fas").forEach((a) => (a.style.color = "white"));
+        });
         if (n > 0) {
           for (let i = 0; i < n; i++) {
-            document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
+            this.waitForElm(".stars .fas").then((elm) => {
+              document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
+            });
           }
         }
       } else {
-        document.querySelectorAll(".stars .fas").forEach((a) => (a.style.color = "white"));
+        this.waitForElm(".stars .fas").then((elm) => {
+          document.querySelectorAll(".stars .fas").forEach((a) => (a.style.color = "white"));
+        });
         for (let i = 0; i < this.savedStars; i++) {
-          document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
+          this.waitForElm(".stars .fas").then((elm) => {
+            document.querySelectorAll(".stars .fas")[i].style.color = "var(--laranja)";
+          });
         }
       }
     },
@@ -280,6 +279,84 @@ export default {
       this.quizData.opcao_4 = this.data.quiz.questions[this.quizData.num_pergunta].options[3].content;
       this.quizData.imagem = this.data.quiz.questions[this.quizData.num_pergunta].image;
     },
+    timeout(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    verifyRating() {
+      const ratIdx = this.getLoggedUserData.data.quiz_ratings.findIndex(rating => rating.quiz_id.toString() == this.data.quiz._id.toString());
+      const curRating = ratIdx != -1 ? this.getLoggedUserData.data.quiz_ratings[ratIdx].rating : 0.0;
+      for (let i = 0; i < curRating; i++) {
+        this.fillStars(i + 1, 'a');
+      }
+    },
+    waitForElm(selector) {
+      return new Promise((resolve) => {
+        if (document.querySelector(selector)) {
+          return resolve(document.querySelector(selector));
+        }
+        const observer = new MutationObserver((mutations) => {
+          if (document.querySelector(selector)) {
+            resolve(document.querySelector(selector));
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+      });
+    },
+    async changeRating(n, event_type){
+      // Deixar o utilizador classificar o quiz apenas se o mesmo já o tiver jogado
+      if (this.getLoggedUserData.data.played.some(attempt => (attempt.quiz_id.quiz_id.toString() == this.$route.params.id.toString()) && (attempt.was_completed))) {
+        this.fillStars(n, event_type);
+        if (this.savedStars > 0) {
+          const ratIdx = this.getLoggedUserData.data.quiz_ratings.findIndex(rating => rating.quiz_id.toString() == this.data.quiz._id.toString())
+          if (ratIdx != -1) {
+            try {
+              const updateRating = await this.changeQuizRating({ quiz_id: this.$route.params.id, rating: this.savedStars });
+              if (updateRating.success) {
+                this.$store.state.loggedUserData.data.quiz_ratings[ratIdx].rating = this.savedStars;
+                localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+                this.data.quiz.quizz_rating = updateRating.average;
+              } else {
+                throw new Error(updateRating.msg);
+              }
+            } catch (e) {
+              this.$swal('Error!', e.message, 'error');
+            }
+          } else {
+            try {
+              const newRating = await this.addQuizRating({ quiz_id: this.$route.params.id, rating: this.savedStars });
+              if (newRating.success) {
+                this.$store.state.loggedUserData.data.quiz_ratings.push(newRating.data);
+                localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+                this.data.quiz.quizz_rating = newRating.average;
+              } else {
+                throw new Error(updateRating.msg);
+              }
+            } catch (e) {
+              this.$swal('Error!', e.message, 'error');
+            }
+          }
+        } else {
+          try {
+            const removeRating = await this.removeQuizRating({ quiz_id: this.$route.params.id });
+            if (removeRating.success) {
+              this.$store.state.loggedUserData.data.quiz_ratings = this.$store.state.loggedUserData.data.quiz_ratings.filter(rating => rating.quiz_id.toString() != this.data.quiz._id.toString());
+              localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+              this.data.quiz.quizz_rating = removeRating.average;
+            } else {
+              throw new Error(updateRating.msg);
+            }
+          } catch (e) {
+            this.$swal('Error!', e.message, 'error');
+          }
+        }
+      } else {
+        this.$swal.fire('You have never completed this quiz, please play it at least once to have the ability to rate!');
+      }
+    },
     async answerQuestion(id_clicado) {
       if (!this.quizData.isLocked) {
         this.quizData.isLocked = true;
@@ -300,8 +377,6 @@ export default {
         if (this.quizData.num_pergunta == this.data.quiz.type.questions) {
           this.hasQuizFinished = true;
 
-          console.log("nice, you finished");
-
           // Atualizar a tentativa
           try {
             const updQuizAttempt = await this.updateQuizAttempt({
@@ -315,14 +390,13 @@ export default {
             if (!updQuizAttempt.success) {
               this.$router.push({ name: 'Error', params: { '0': 'error' } });
             } else {
-              const pldIdx = this.$store.state.loggedUserData.data.played.findIndex(jogo => jogo._id == this.quizData.pld_id);
-              this.$store.state.loggedUserData.data.played[pldIdx] = updQuizAttempt.data;
+              this.$store.state.loggedUserData.data.played[this.$store.state.loggedUserData.data.played.findIndex(jogo => jogo._id == this.quizData.pld_id)] = updQuizAttempt.data;
+              this.$store.state.loggedUserData.data.stats.quizzes_completed += 1;
+              this.$store.state.loggedUserData.data.stats.questions_right += this.quizData.respostas_certas;
+              this.$store.state.loggedUserData.data.stats.questions_wrong += this.quizData.respostas_erradas;
               localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
             }
           } catch (e) {
-            console.log("vv erro no answerQuestion() -> updQuizAttempt vv");
-            console.log(e);
-            console.log(e.message);
             this.$router.push({ name: 'Error', params: { '0': 'error' } });
           }
 
@@ -334,14 +408,10 @@ export default {
               if (!addPointsToUser.success) {
                 this.$router.push({ name: 'Error', params: { '0': 'error' } });
               } else {
-                console.log("added points");
                 this.$store.state.loggedUserData.data.points += this.quizData.pontos_ganhos;
                 localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
               }
             } catch (e) {
-              console.log("vv erro no answerQuestion() -> addPointsToUser vv");
-              console.log(e);
-              console.log(e.message);
               this.$router.push({ name: 'Error', params: { '0': 'error' } });
             }
           }
@@ -353,7 +423,6 @@ export default {
             if (!addXPToUser.success) {
               this.$router.push({ name: 'Error', params: { '0': 'error' } });
             } else {
-              console.log("added XP");
               this.$store.state.loggedUserData.data.xp += this.quizData.pontos_ganhos;
               // Verificar se o utilizador subiu de nível
               if (addXPToUser.passed_level.toString() == "true") {
@@ -363,9 +432,6 @@ export default {
               localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
             }
           } catch (e) {
-            console.log("vv erro no answerQuestion() -> addXPToUser vv");
-            console.log(e);
-            console.log(e.message);
             this.$router.push({ name: 'Error', params: { '0': 'error' } });
           }
         } else {
@@ -400,11 +466,10 @@ export default {
           } else {
             this.quizData.pld_id = quizAttempt.data._id;
             this.$store.state.loggedUserData.data.played.push(quizAttempt.data);
+            this.data.quiz.times_played += 1;
             localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
           }
         } catch (e) {
-          console.log("vv erro no showWarning() -> addQuizAttempt vv");
-          console.log(e);
           this.$router.push({ name: "Error", params: { 0: "error" } });
         }
         this.playQuiz()
@@ -418,17 +483,59 @@ export default {
           this.data.quiz = this.data.quiz.msg;
           this.loading.quiz = false;
           this.preGameVerification();
+          this.verifyRating();
         } else {
           this.$router.push({ name: "Error", params: { 0: "error" } });
         }
       } catch (e) {
-        console.log("vv erro no getQuizInfo() -> getQuiz vv");
-        console.log(e);
         this.$router.push({ name: "Error", params: { 0: "error" } });
       }
     },
-    timeout(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+    async addNewComment() {
+      if (this.getLoggedUserData.data.played.some(attempt => (attempt.quiz_id.quiz_id.toString() == this.$route.params.id.toString()) && (attempt.was_completed))) {
+        try {
+          const response = await this.addQuizComment({ quiz_id: this.$route.params.id, comment: this.comentario.trim() });
+
+          if (response.success) {
+            this.data.quiz.comments.push(response.data);
+            this.comentario = "";
+            this.$swal("Sucess!", "Comment added successfully!", "success");
+          } else {
+            throw new Error(response.msg);
+          }
+        } catch (e) {
+          this.$swal("Error!", e.message, "error");
+        }
+      } else {
+        this.$swal.fire('You have never completed this quiz, please play it at least once to have the ability to comment!');
+      }
+    },
+    async removeComment(id) {
+      const prompt = await this.$swal({
+        title: "Warning!",
+        text: "Are you sure you want to remove this comment?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!"
+      });
+
+      if (prompt.isConfirmed) {
+        try {
+          const response = await this.removeQuizComment({
+            quiz_id: this.$route.params.id,
+            comment_id: id
+          });
+
+          if (response.success) {
+            this.data.quiz.comments = this.data.quiz.comments.filter((comment) => comment.id.toString() != id.toString());
+          } else {
+            throw new Error(response.msg);
+          }
+        } catch (e) {
+          this.$swal("Error!", e.message, "error");
+        }
+      }
     }
   },
   computed: {

@@ -537,7 +537,7 @@ export default new Vuex.Store({
     },
     async getRating({context, state}, user) {
     try {
-      const response = await fetch("http://127.0.0.1:3000/api/users/"+user.user_id+"/rating/"+user.imdb_id, {
+      const response = await fetch("http://127.0.0.1:3000/api/users/"+user.user_id+"/title_ratings/"+user.imdb_id, {
         method: "GET",
         headers: {
           'Accept': '*/*',
@@ -558,7 +558,7 @@ export default new Vuex.Store({
     },
     async addRatings({context, state}, rating) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/rating/"+rating.imdb_id, {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -580,7 +580,7 @@ export default new Vuex.Store({
     },
     async changeRatings({context, state}, rating) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/rating/"+rating.imdb_id, {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -602,7 +602,7 @@ export default new Vuex.Store({
     },
     async deleteRatings({context, state}, rating) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/rating/"+rating.imdb_id, {
+        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -735,6 +735,118 @@ export default new Vuex.Store({
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
           },
           body: JSON.stringify({ prize_id: prize.id, price: prize.price })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addQuizComment({context, state}, data) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + data.quiz_id + "/comments", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ comment: data.comment })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeQuizComment({context, state}, data) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + data.quiz_id + "/comments/" + data.comment_id, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addQuizRating({context, state}, data) {
+      console.log(data);
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({
+            quiz_id: data.quiz_id,
+            rating: data.rating
+          })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async changeQuizRating({context, state}, data) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings/" + data.quiz_id, {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ rating: data.rating })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeQuizRating({context, state}, data) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings/" + data.quiz_id, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
         });
 
         if (response.ok) {

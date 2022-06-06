@@ -372,7 +372,7 @@ export default {
         });
 
         if (response.success) {
-          this.$swal("Sucesso!", "Comment added", "success");
+          this.$swal("Sucess!", "Comment added successfully!", "success");
           // Atualizar o array do titulo
           this.data.title.comments.push({
             date: new Date(),
@@ -413,8 +413,8 @@ export default {
     },
     async changeRating(n, event_type) {
       try {
-        //Caso já tenha um ratting e queira alterar
         if (this.savedStars > 0) {
+          // Caso já tenha um rating e queira alterar
           this.fillStars(n, event_type);
           if (this.savedStars == 0) {
             let response = await this.deleteRatings({
@@ -437,9 +437,8 @@ export default {
               throw new Error(response.msg);
             }
           }
-        }
-        //Caso queira adicionar um rating
-        else {
+        } else {
+          // Caso queira adicionar um rating
           this.fillStars(n, event_type);
           let response = await this.addRatings({
             id_user: this.getLoggedUserData.data._id,
