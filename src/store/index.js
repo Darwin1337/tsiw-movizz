@@ -522,7 +522,7 @@ export default new Vuex.Store({
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
           },
-          body: JSON.stringify({ title: user.imdb_id })
+          body: JSON.stringify({ title: user._id })
         });
   
         if (response.ok) {

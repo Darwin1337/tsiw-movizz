@@ -154,30 +154,28 @@
       </div>
     </div>
 
-      <!-- <div class="filtros row gy-5" v-if="selectedTab == 'favorites'">
-    </div>
-
+    <div class="filtros row gy-5" v-if="selectedTab == 'favorites'">
       <div>
         <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-2 mb-3">
           <div class="col-md-12 col-lg-3 col-sm-12">
             <form @submit.prevent="" class="d-flex">
               <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_liked.search">
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filtersFavourites.search">
                 <button type="button"><i class="fas fa-search"></i></button>
               </div>
             </form>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="genre" style="height: 40px;" v-model="filters_liked.genre">
+            <select id="genre" style="height: 40px;" v-model="filtersFavourites.genre">
               <option disabled value="Genre">Genre</option>
               <option value="All">All</option>
-              <option :value=genero v-for="(genero, index) in generos" :key="index">{{ genero }}</option>
+              <option :value=genero v-for="(genero, index) in data.genresFav" :key="index">{{ genero }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="year" style="height: 40px;" v-model="filters_liked.year">
+            <select id="year" style="height: 40px;" v-model="filtersFavourites.year">
               <option disabled value="Year">Year</option>
               <option value="All">All</option>
               <option :value=ano v-for="(ano, index) in anos" :key="index">{{ ano }}</option>
@@ -185,7 +183,7 @@
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="country" style="height: 40px;" v-model="filters_liked.country">
+            <select id="country" style="height: 40px;" v-model="filtersFavourites.country">
               <option disabled value="Country">Country</option>
               <option value="All">All</option>
               <option :value=pais v-for="(pais, index) in paises" :key="index">{{ pais }}</option>
@@ -193,18 +191,17 @@
           </div>
 
           <div class="col-md-3 col-lg-3 col-sm-6">
-            <select id="order" style="height: 40px;" v-model="filters_liked.orderby">
+             <select id="order" style="height: 40px;" v-model="filtersFavourites.orderby">
               <option disabled value="Order by">Order by</option>
               <option value="Recently added">Recently added</option>
               <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
               <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
               <option value="Most recent">Most recent</option>
               <option value="Oldest">Oldest</option>
-              <option value="Best rated">Best rated</option>
-              <option value="Worst rated">Worst rated</option>
-              <option value="Most viewed">Most viewed</option>
-              <option value="Least viewed">Least viewed</option>
+              <option value="Best IMDb rated">Best IMDb rated</option>
+              <option value="Worst IMDb rated">Worst IMDb rated</option>
             </select>
+            
           </div>
         </div>
       </div>
@@ -212,18 +209,18 @@
         <div class="row g-3">
           <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitles.length >= mostrar.liked ? mostrar.liked : filteredTitles.length)" :key="i">
             <div class="tile-custom" >
-              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitles[i - 1].id_imdb}})">
-                <img class="tile__img" :src="filteredTitles[i - 1].poster" alt="" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitles[i - 1].titulo}}</p>
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitles[i - 1].imdb_id}})">
+                <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : data.title.poster" alt="" />
+                
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitles[i - 1].title}}</p>
               </div>
-              <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
-                <button @click="removeLike(filteredTitles[i - 1].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
+              <div v-if="data.user.id == $store.state.loggedUserData.data.id " class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
+                <button @click="removeLike(filteredTitles[i - 1]._id)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
               </div>
             </div>
-            
           </div>
           <div v-if="filteredTitles.length==0">
-            <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
+            <p>{{ !parseInt(this.data.user.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
           </div>
         </div>
         <div v-if="mostrar.liked < filteredTitles.length" class="w-100 d-flex justify-content-center mt-4">
@@ -249,7 +246,7 @@
             <select id="genre" style="height: 40px;" v-model="filters_seen.genre">
               <option disabled value="Genre">Genre</option>
               <option value="All">All</option>
-              <option :value=genero v-for="(genero, index) in generos" :key="index">{{ genero }}</option>
+              <option :value=genero v-for="(genero, index) in data.genresSeen" :key="index">{{ genero }}</option>
             </select>
           </div>
 
@@ -257,7 +254,7 @@
             <select id="year" style="height: 40px;" v-model="filters_seen.year">
               <option disabled value="Year">Year</option>
               <option value="All">All</option>
-              <option :value=ano v-for="(ano, index) in anos" :key="index">{{ ano }}</option>
+              <option :value=ano v-for="(ano, index) in anosSeen" :key="index">{{ ano }}</option>
             </select>
           </div>
 
@@ -265,7 +262,7 @@
             <select id="country" style="height: 40px;" v-model="filters_seen.country">
               <option disabled value="Country">Country</option>
               <option value="All">All</option>
-              <option :value=pais v-for="(pais, index) in paises" :key="index">{{ pais }}</option>
+              <option :value=pais v-for="(pais, index) in paisesSeen" :key="index">{{ pais }}</option>
             </select>
           </div>
 
@@ -289,17 +286,17 @@
         <div class="row g-3">
           <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitlesSeen.length >= mostrar.seen ? mostrar.seen : filteredTitlesSeen.length)" :key="i" >
             <div class="tile-custom">
-              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitlesSeen[i - 1].id_imdb}})">
-                <img class="tile__img" :src="filteredTitlesSeen[i - 1].poster" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitlesSeen[i - 1].titulo}}</p>
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitlesSeen[i - 1].imdb_id}})">
+                <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + filteredTitlesSeen[i - 1].poster_webp) : filteredTitlesSeen[i - 1].poster" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitlesSeen[i - 1].title}}</p>
               </div>
-              <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
-                <button @click="removeSeen(filteredTitlesSeen[i - 1].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
+              <div v-if="data.user.id == $store.state.loggedUserData.data.id " class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
+                <button @click="removeSeen1(filteredTitlesSeen[i - 1]._id)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
               </div>
             </div>
           </div>
           <div v-if="filteredTitlesSeen.length==0">
-            <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't seen any movies nor series." : "This user hasn't seen any movies nor series." }}</p> 
+            <p>{{ !parseInt(this.data.user.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
           </div>
         </div>
         <div v-if="mostrar.seen < filteredTitlesSeen.length" class="w-100 d-flex justify-content-center mt-4">
@@ -333,7 +330,7 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
+            <!-- <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
               <div >
                 <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
                 <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
@@ -345,10 +342,10 @@
                 <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See comment</button>
                 <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeComment(title.id_comentario, false) : removeComment(title.id_comentario, true)">Delete</button>
               </div>
-            </div>
-            <div v-if="getAllUserComments($route.params.id).length == 0">
+            </div> -->
+            <!-- <div v-if="getAllUserComments($route.params.id).length == 0">
               <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't commented on any title nor quiz." : "This user hasn't commented on any title nor quiz." }}</p> 
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
@@ -374,28 +371,31 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredRatings" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in (filteredRatings.length >= mostrar.seen ? mostrar.seen : filteredRatings.length)" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div class="col-3">
                   <div style="width: 85px; height: 125px; min-width: 85px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).poster : getQuizByID(title.id_quiz).poster">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="filteredRatings[i].title_id?(webpSupported ? require('../assets/images/content/' + filteredRatings[i].title_id.poster_webp) : filteredRatings[i].title_id.poster):(webpSupported ? require('../assets/images/content/quiz/' + filteredRatings[i].quiz_id.poster_webp) : filteredRatings[i].quiz_id.poster)" />
                   </div>
                 </div>
                 <div class="d-flex flex-column col-8">
-                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
+
+                  <!--  -->
+                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">{{ filteredRatings[i].title_id ? (filteredRatings[i].title_id.seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ filteredRatings[i].title_id ? filteredRatings[i].title_id.title : filteredRatings[i].quiz_id.title }}</strong></p>
                   <div class="stars d-flex" style="gap: 5px; cursor: pointer; color: var(--laranja);">
-                    <i class="fas fa-star" v-for="i in title.pontuacao" :key="i"></i>
+                    <i class="fas fa-star" v-for="i in filteredRatings[i].rating" :key="i"></i>
                   </div>
-                  <div class="d-flex mt-auto" style="gap: 10px;">
+                  <!-- FIQUEI AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII -->
+                  <!-- <div class="d-flex mt-auto" style="gap: 10px;">
                     <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See Rating</button>
                     <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeRate(title.id_imdb, false) : removeRate(title.id_quiz, true)">Delete</button>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
-            <div v-if="getAllUserRatings($route.params.id).length == 0">
+            <!-- <div v-if="getAllUserRatings($route.params.id).length == 0">
               <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't rated any titles nor quizzes." : "This user hasn't rated any titles nor quizzes." }}</p> 
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
@@ -422,7 +422,7 @@
               </div>
             </div>
           </div>
-          <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
+          <!-- <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
             <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredPrizes" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div>
@@ -440,12 +440,12 @@
             <div v-if="getAllUserPrizes($route.params.id).length == 0">
               <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't claimed any prizes yet." : "This user hasn't claimed any prizes yet." }}</p> 
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
 
-    <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
+    <!-- <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
       <div class="card-profile p-3 w-100" style="max-width: 600px;">
         <div class="img-profile row g-3">
           <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
@@ -516,7 +516,7 @@
           <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.ajudas_utilizadas, 0) }}</p>
         </div>
       </div>
-    </div>-->
+    </div> -->
 
     <div class="modal fade backgroundBlur" id="modal-change-picture" ref="modal-change-picture" tabindex="-1"
       aria-hidden="true">
@@ -548,35 +548,108 @@ export default {
   name: "Profile",
   data() {
     return {
+      webpSupported: true,
+      anos: [],
+      paises:[],
+      anosSeen: [],
+      paisesSeen:[],
       selectedTab: "profile",
+      mostrar: {
+        liked: 12,
+        seen: 12
+      },
       loading: {
         user: true,
-        badges: true
+        badges: true,
+        genresFav:true,
+        genresSee:true
       },
       data: {
         user: {},
         badges: {},
+        genresFav:{},
+        genresSeen:{},
         randomPassword: ""
       },
       edit_user: {},
+      filtersFavourites: {
+          search: "",
+          genre: "Genre",
+          year: "Year",
+          country: "Country",
+          orderby: "Order by"
+      },
       filters_badge: {
         search: "",
         orderby: "Order by"
       },
+      filters_seen:{
+        search: "",
+        genre: "Genre",
+        year: "Year",
+        country: "Country",
+        orderby: "Order by"
+      },
+      filters_comments:{
+        search: "",
+        genre: "Genre",
+        year: "Year",
+        country: "Country",
+        orderby: "Order by"
+      },
+      filters_ratings:{
+        search: "",
+        genre: "Genre",
+        year: "Year",
+        country: "Country",
+        orderby: "Order by"
+      },
+      filters_prizes:{
+        search: "",
+        genre: "Genre",
+        year: "Year",
+        country: "Country",
+        orderby: "Order by"
+      }
     }
   },
   mounted () {
+    this.webpSupported = this.isWebpSupported();
     this.getUserInfo();
     this.getBadgesInfo();
+    this.getGenresFav();
+    this.getGenresSeen();
   },
   methods: {
-    ...mapActions(["getAllBadges", "getUser", "changeUserBadge", "editUser", "changeUserAvatar"]),
+    ...mapActions(["getAllBadges", "getUser", "changeUserBadge", "editUser", "changeUserAvatar","getAllGenres","removeFavourite","removeSeen"]),
     ...mapMutations(["LOGOUT_USER"]),
     async getUserInfo() {
       this.loading.user = true;
       try {
         this.data.user = await this.getUser({ id: this.$route.params.id });
         if (this.data.user.success) {
+          this.data.user.msg[0].favourites.map(user => {
+          //       // Pré carregar anos para o select
+          if (!this.anos.some(ano => ano == user.year)) {
+            this.anos.push(user.year);  
+          }
+          // Pré carregar países para o select
+          if (!this.paises.some(pais => pais == user.country)) {
+            this.paises.push(user.country);
+          }
+          });
+          this.anos.sort();
+          this.data.user.msg[0].seen.map(user => {
+           // Pré carregar anos para o select
+            if (!this.anosSeen.some(ano => ano == user.year)) {
+              this.anosSeen.push(user.year);  
+            }
+            // Pré carregar países para o select
+            if (!this.paisesSeen.some(pais => pais == user.country)) {
+              this.paisesSeen.push(user.country);
+            }
+          });
+          this.anosSeen.sort();
           this.data.user = this.data.user.msg[0];
           this.data.randomPassword = (Math.random() + 1).toString(36).substring(2);
           this.edit_user = {
@@ -589,6 +662,8 @@ export default {
             avatar: this.data.user.avatar,
             is_admin: this.data.user.is_admin
           };
+          
+          
           this.loading.user = false;
         } else {
           this.$router.push({ name: 'Error', params: { '0': 'error' } });
@@ -596,6 +671,13 @@ export default {
       } catch(e) {
         this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
+    },
+    isWebpSupported() {
+      const elem = document.createElement("canvas");
+      if (elem.getContext && elem.getContext("2d")) {
+        return elem.toDataURL("image/webp").indexOf("data:image/webp") == 0;
+      }
+      return false;
     },
     async getBadgesInfo() {
       this.loading.badges = true;
@@ -608,6 +690,34 @@ export default {
           this.$router.push({ name: 'Error', params: { '0': 'error' } });
         }
       } catch (e) {
+        this.$router.push({ name: 'Error', params: { '0': 'error' } });
+      }
+    },
+    async getGenresFav() {
+        try {
+          this.loading.genresFav = true;
+          this.data.genresFav = await this.getAllGenres();
+          if (this.data.genresFav.success) {
+            this.data.genresFav = this.data.genresFav.msg.map(genre => genre.description);
+            this.loading.genresFav = false;
+          } else {
+            this.$router.push({ name: 'Error', params: { '0': 'error' } });
+          }
+        }catch (e) {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      },
+    async getGenresSeen() {
+      try {
+        this.loading.genresSeen = true;
+        this.data.genresSeen = await this.getAllGenres();
+        if (this.data.genresSeen.success) {
+          this.data.genresSeen = this.data.genresSeen.msg.map(genre => genre.description);
+          this.loading.genresSeen = false;
+        } else {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      }catch (e) {
         this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
     },
@@ -627,6 +737,41 @@ export default {
       } catch (e) {
         this.$swal('Error!', e.message, 'error');
       }
+    },
+    async changeAvatar(ava) {
+      try {
+        let response = await this.changeUserAvatar({ id: this.$route.params.id, avatar: ava ? ava : this.edit_user.avatar });
+
+        if (response.success) {
+          this.data.user.avatar = ava ? ava : this.edit_user.avatar;
+          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
+          if (this.getLoggedUserData.data.id == this.$route.params.id) {
+            this.$store.state.loggedUserData.data.avatar = ava ? ava : this.edit_user.avatar;
+            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+          }
+          this.edit_user.avatar = this.data.user.avatar;
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
+    },
+    logoutUser() {
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to logout?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.LOGOUT_USER();
+          this.$router.push({ name: 'Authentication' });
+        }
+      });
     },
     async editUserInfo() {
       try {
@@ -670,40 +815,43 @@ export default {
         this.$swal('Error!', e.message, 'error');
       }
     },
-    async changeAvatar(ava) {
-      try {
-        let response = await this.changeUserAvatar({ id: this.$route.params.id, avatar: ava ? ava : this.edit_user.avatar });
-
+    async removeLike(id){
+      let response = await this.removeFavourite({
+            id: this.data.user.id,
+            imdb_id: id,
+        });
         if (response.success) {
-          this.data.user.avatar = ava ? ava : this.edit_user.avatar;
-          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
-          if (this.getLoggedUserData.data.id == this.$route.params.id) {
-            this.$store.state.loggedUserData.data.avatar = ava ? ava : this.edit_user.avatar;
-            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+          this.data.user.favourites.splice(this.data.user.favourites.findIndex(title => title._id.toString() == id.toString()), 1);
+          this.$store.state.loggedUserData.data.favourites = this.$store.state.loggedUserData.data.favourites.filter((title) => title._id != id);
+          localStorage.loggedUserData = JSON.stringify({
+            loading: false,
+            data: this.$store.state.loggedUserData.data,
+          });
+          
+
+          } else {
+            throw new Error(response.msg);
           }
-          this.edit_user.avatar = this.data.user.avatar;
-        } else {
-          throw new Error(response.msg);
-        }
-      } catch (e) {
-        this.$swal('Error!', e.message, 'error');
-      }
+
     },
-    logoutUser() {
-      this.$swal({
-        title: 'Warning!',
-        text: "Are you sure you want to logout?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.LOGOUT_USER();
-          this.$router.push({ name: 'Authentication' });
-        }
-      });
+    async removeSeen1(id){
+      let response = await this.removeSeen({
+            id: this.data.user.id,
+            _id: id,
+        });
+        if (response.success) {
+          this.data.user.seen.splice(this.data.user.seen.findIndex(title => title._id.toString() == id.toString()), 1);
+          this.$store.state.loggedUserData.data.seen = this.$store.state.loggedUserData.data.seen.filter((title) => title._id != id);
+          localStorage.loggedUserData = JSON.stringify({
+            loading: false,
+            data: this.$store.state.loggedUserData.data,
+          });
+          
+
+          } else {
+            throw new Error(response.msg);
+          }
+
     }
   },
   computed: {
@@ -727,6 +875,112 @@ export default {
         return filterResult;
       }
       return null;
+    },
+    filteredTitles() {
+      //this.resetMostrar('liked');
+      let filterResult = [...this.data.user.favourites];
+      // Barra de pesquisa
+      if (this.filtersFavourites.search != "") {
+        filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filtersFavourites.search.toLowerCase()));
+      }
+      // Géneros
+      if (this.filtersFavourites.genre != "All" && this.filtersFavourites.genre != "Genre") {
+        filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filtersFavourites.genre));
+      }
+      // Anos
+      if (this.filtersFavourites.year != "All" && this.filtersFavourites.year != "Year") {
+        filterResult = filterResult.filter(title => title.year == this.filtersFavourites.year);
+      }
+      
+      // Países
+      if (this.filtersFavourites.country != "All" && this.filtersFavourites.country != "Country") {
+        filterResult = filterResult.filter(title => this.filtersFavourites.country == title.country);
+      }
+      if (this.filtersFavourites.orderby != "Recently added" && this.filtersFavourites.orderby != "Order by") {
+            if (this.filtersFavourites.orderby == "Alphabetic (A-Z)") {
+              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
+            } else if (this.filtersFavourites.orderby == "Alphabetic (Z-A)") {
+              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
+            } else if (this.filtersFavourites.orderby == "Most recent") {
+              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
+            } else if (this.filtersFavourites.orderby == "Oldest") {
+              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
+            } else if (this.filtersFavourites.orderby == "Best IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
+            } else if (this.filtersFavourites.orderby == "Worst IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+            }    
+          }
+      
+      return filterResult;
+    },
+    filteredTitlesSeen() {
+      //this.resetMostrar('liked');
+      let filterResult = [...this.data.user.seen];
+      // Barra de pesquisa
+      if (this.filters_seen.search != "") {
+        filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filters_seen.search.toLowerCase()));
+      }
+      // Géneros
+      if (this.filters_seen.genre != "All" && this.filters_seen.genre != "Genre") {
+        filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filters_seen.genre));
+      }
+      // Anos
+      if (this.filters_seen.year != "All" && this.filters_seen.year != "Year") {
+        filterResult = filterResult.filter(title => title.year == this.filters_seen.year);
+      }
+      
+      // Países
+      if (this.filters_seen.country != "All" && this.filters_seen.country != "Country") {
+        filterResult = filterResult.filter(title => this.filters_seen.country == title.country);
+      }
+      if (this.filters_seen.orderby != "Recently added" && this.filters_seen.orderby != "Order by") {
+            if (this.filters_seen.orderby == "Alphabetic (A-Z)") {
+              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
+            } else if (this.filters_seen.orderby == "Alphabetic (Z-A)") {
+              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
+            } else if (this.filters_seen.orderby == "Most recent") {
+              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
+            } else if (this.filters_seen.orderby == "Oldest") {
+              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
+            } else if (this.filters_seen.orderby == "Best IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
+            } else if (this.filters_seen.orderby == "Worst IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+            }    
+          }
+      
+      return filterResult;
+    },
+    resetMostrar(which) {
+      if (which == "liked") this.mostrar.liked = 12;
+    },
+    filteredRatings(){
+      //this.resetMostrar('liked');
+      let filterResult = [...this.data.user.title_ratings].concat([...this.data.user.quiz_ratings]);
+
+    console.log(filterResult);
+      // Barra de pesquisa
+      if (this.filters_ratings.search != "") {
+        filterResult = filterResult.filter(rating => rating[rating.title_id ? 'title_id' : 'quiz_id'].title.toLowerCase().includes(this.filters_ratings.search.toLowerCase()));
+      }
+      if (this.filters_ratings.orderby != "Recently added" && this.filters_ratings.orderby != "Order by") {
+            if (this.filters_ratings.orderby == "Alphabetic (A-Z)") {
+              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
+            } else if (this.filters_ratings.orderby == "Alphabetic (Z-A)") {
+              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
+            } else if (this.filters_ratings.orderby == "Most recent") {
+              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
+            } else if (this.filters_ratings.orderby == "Oldest") {
+              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
+            } else if (this.filters_ratings.orderby == "Best IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
+            } else if (this.filters_ratings.orderby == "Worst IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+            }    
+          }
+      
+      return filterResult;
     }
   },
   watch: {

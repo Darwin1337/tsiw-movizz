@@ -3,9 +3,10 @@
     <div v-if="currentWidth >= 992 && !getLoggedUserData.loading" id="desktop">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <a class="navbar-brand" :to="{ name: 'Authentication' }">
+          <router-link class="navbar-brand" :to="{ name: 'Home' }">
             <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
-          </a>
+          </router-link>
+          
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -85,9 +86,9 @@
     <div v-if="currentWidth < 992 && !getLoggedUserData.loading" id="mobile">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-          <a class="navbar-brand" :to="{ name: 'Authentication' }">
-            <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
-          </a>
+          <router-link class="navbar-brand" :to="{ name: 'Home' }">
+            <img  src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
+          </router-link>
           <button class="nav-btn-toggler navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
           </button>
