@@ -1,17 +1,20 @@
 <template>
   <div class="container">
     <h3 class="mt-4">Rewards</h3>
-    <span class="p-2 mt-2 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px; display: inline-block">
-      <b>{{ getLoggedUserData.data.points }} points</b>
+    <span
+      class="p-2 mt-2 mb-2"
+      style="background-color: var(--azul-escuro); border-radius: 5px; display: inline-block;">
+      <b>{{getLoggedUser.pontos}}</b> points
     </span>
-
+     
     <div class="modal fade backgroundBlur" id="exampleModal" ref="exampleModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" style="max-width: 800px">
+      <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
         <div class="modal-content modalrewards">
-          <span id="idPremio" style="display: none"></span>
+          <span id="idPremio" style="display: none;"></span>
           <div class="modal-body row m-0 gy-3">
-            <div class="card-image-modal col-md-5">
-              <img class="w-100 h-100" id="premioImagem" />
+            <div
+              class="card-image-modal col-md-5">
+              <img class="w-100 h-100" id="premioImagem">
             </div>
             <div class="col-md-7">
               <div class="d-flex h-100 flex-column justify-content-between">
@@ -30,15 +33,16 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 p-2" v-for="(premio, index) in prizes" :key="index">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 p-2" v-for="(premio,index) in getAllPrizes" :key="index">
         <div class="card carddesign">
-          <div class="card-image">
-            <img class="w-100 h-100" :src="premio.image" alt="Card image cap" />
+          <div
+            class="card-image">
+            <img class="w-100 h-100" :src="getAllPrizes[index].img" alt="Card image cap">
           </div>
           <div class="card-body text-center">
-            <h5 class="card-title" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">{{ premio.name }}</h5>
-            <p class="card-text">{{ premio.price }} points</p>
-            <button :disabled="premio.price > getLoggedUserData.data.points" :class="{ noPoints: premio.price > getLoggedUserData.data.points }" class="orange-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openModal(index)" style="max-width: 150px; width: 100%">Buy</button>
+            <h5 class="card-title" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{getAllPrizes[index].nome}}</h5>
+            <p class="card-text">{{getAllPrizes[index].valor}} pontos</p>
+            <button :disabled="getAllPrizes[index].valor>getLoggedUser.pontos" :class="{noPoints:getAllPrizes[index].valor>getLoggedUser.pontos}" class="orange-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openModal(index)" style="max-width: 150px; width: 100%;">Buy</button>
           </div>
         </div>
       </div>
@@ -46,65 +50,42 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
-export default {
-  name: "Prizes",
+import { mapActions, mapGetters, mapMutations } from "vuex";
+export default ({
   data() {
     return {
-      prizes: [],
-    };
+      
+    }
   },
   computed: {
-    ...mapGetters(["getLoggedUserData"]),
-  },
-  mounted() {
-    this.getPizesInfo();
+    ...mapGetters(["getLoggedUser", "getAllPrizes"])
   },
   methods: {
-    ...mapActions(["getAllPrizes", "redeemPrize"]),
-    async getPizesInfo() {
-      try {
-        this.prizes = await this.getAllPrizes();
-        if (this.prizes.success) {
-          this.prizes = this.prizes.msg;
-        } else {
-          this.$router.push({ name: "Error", params: { 0: "error" } });
-        }
-      } catch (e) {
-        this.$router.push({ name: "Error", params: { 0: "error" } });
-      }
+    ...mapActions(["loadMovies"]),
+    ...mapMutations(["SET_NEW_BUY"]),
+    callAction() {
+      this.loadMovies();
     },
-    openModal(i) {
-      document.querySelector("#premioNome").innerHTML = `Are you sure you want to exchange your points for the <b>${this.prizes[i].name}</b>`;
-      document.querySelector("#premioPreco").innerHTML = `This reward costs ${this.prizes[i].price} points`;
-      document.querySelector("#premioImagem").src = this.prizes[i].image;
-      document.querySelector("#idPremio").innerHTML = this.prizes[i]._id;
+    openModal(i){
+      document.querySelector("#premioNome").innerHTML=`Are you sure you want to exchange your points for the <b>${this.getAllPrizes[i].nome}</b>`;
+      document.querySelector("#premioPreco").innerHTML=`This reward costs ${this.getAllPrizes[i].valor} points`;
+      document.querySelector("#premioImagem").src=this.getAllPrizes[i].img;
+      document.querySelector("#idPremio").innerHTML= i;
     },
-    async comprarPremio() {
-      try {
-        let response = await this.redeemPrize({ id: document.querySelector("#idPremio").innerHTML, price: document.querySelector("#premioPreco").innerHTML });
-        if (response.success) {
-          this.$store.state.loggedUserData.data.prizes_reedemed.push(response.data);
-          this.$store.state.loggedUserData.data.points -= response.data.prize_id.price;
-          localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
-          this.$swal("Success!", "Prize redeemed successfully!", "success");
-        } else {
-          throw new Error(response.msg);
-        }
-      } catch (e) {
-        this.$swal("Error!", e.message, "error");
-      }
-    },
-  },
-};
+    comprarPremio(){
+      const id=document.querySelector("#idPremio").innerHTML;
+      this.SET_NEW_BUY({id_utilizador:this.getLoggedUser.id, id_premio: id, data: new Date(), valor: this.getAllPrizes[id].valor})
+    }
+  }
+})
 </script>
 
 <style scoped>
-.noPoints {
-  background-color: var(--cinza3);
+.noPoints{
+  background-color:var(--cinza3);
 }
-.modalrewards {
-  background-color: #151e2e;
+.modalrewards{
+  background-color: #151E2E;
 }
 
 .carddesign {

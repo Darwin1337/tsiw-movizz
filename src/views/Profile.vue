@@ -1,151 +1,154 @@
 <template>
-   <div class="container">
-    <div v-if="!loading.users" class="pt-5 mb-5 navigation d-flex flex-wrap">
-      <p v-if="getLoggedUserData.data.id == $route.params.id || getLoggedUserData.data.is_admin" :class="{ active: selectedTab == 'profile'}" class="m-0" @click="selectedTab ='profile'">Profile</p>
+  <div class="container">
+    <div class="mt-5 mb-5 navigation d-flex flex-wrap">
+      <p v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" :class="{ active: selectedTab == 'profile'}" class="m-0" @click="selectedTab ='profile'">Profile</p>
       <p :class="{ active: selectedTab == 'favorites'}" class="m-0" @click="selectedTab ='favorites'">Favorites</p>
       <p :class="{ active: selectedTab == 'seen'}" class="m-0" @click="selectedTab ='seen'">Seen</p>
-      <p v-if="getLoggedUserData.data.id == $route.params.id || getLoggedUserData.data.is_admin" :class="{ active: selectedTab == 'history'}" class="m-0" @click="selectedTab ='history'">History</p>
+      <p v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" :class="{ active: selectedTab == 'history'}" class="m-0" @click="selectedTab ='history'">History</p>
       <p :class="{ active: selectedTab == 'statistics'}" class="m-0" @click="selectedTab ='statistics'">Statistics</p>
       <button class="ms-auto logout-btn" @click="logoutUser()">Logout</button>
     </div>
-    <div v-if="!loading.user">
-      <div class="row gy-5" v-if="selectedTab == 'profile'">
-        <div class="col-lg-6">
-          <div class="card-profile p-3">
-            <div class="img-profile row g-3">
-              <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
-                <div class="d-flex align-items-center position-relative">
-                  <img :src="data.user.avatar"
-                    style="border-radius: 50%; min-width: 50px; min-height: 50px; object-fit: cover; object-position: center top;" alt="Avatar" width="80px"
-                    height="80px" />
-                  <div
-                    v-if="data.user.avatar != 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"
-                    id="remove-picture" @click="changeAvatar('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')">
-                    <span style="cursor: pointer;"><i class="fas fa-trash"></i></span>
-                  </div>
-                </div>
-                <div class="mt-3">
-                  <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#modal-change-picture">Edit
-                    picture</button>
+
+    <div class="row gy-5" v-if="selectedTab == 'profile'">
+      <div class="col-lg-6">
+        <div class="card-profile p-3">
+          <div class="img-profile row g-3">
+            <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
+              <div class="d-flex align-items-center position-relative">
+                <img :src="getAllUsers.find(user => user.id == $route.params.id).avatar"
+                  style="border-radius: 50%; min-width: 50px; min-height: 50px; object-fit: cover; object-position: center top;" alt="Avatar" width="80px"
+                  height="80px" />
+                <div
+                  v-if="getAllUsers.find(user => user.id == $route.params.id).avatar != 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'"
+                  id="remove-picture" @click="editUser($event, true)">
+                  <span style="cursor: pointer;"><i class="fas fa-trash"></i></span>
                 </div>
               </div>
-              <div class="col-md-10 col-lg-9">
-                <div class="p-info d-flex align-items-center flex-wrap" style="gap: 5px;">
-                  <img :src="require('../assets/images/badges/' + data.user.badge_id.icon)" alt="Badge" width="15px"
-                    height="15px" />
-                  <p class="m-0">
-                    {{ data.user.first_name + ' ' + data.user.last_name }}
-                  </p>
-                  <p class="m-0" style="color: var(--cinza-claro); font-size: .85em;">
-                    {{ data.user.badge_id.name }}</p>
-                  <button class="edit-btn ms-auto"><strong>{{ data.user.points }}</strong>
-                    points</button>
-                </div>
-                <p style="color: var(--cinza-claro)" class="m-0"><strong>Member since:</strong>
-                  {{ new Date(data.user.register_date).getDate() + "/" + (parseInt(new Date(data.user.register_date).getMonth()) + 1) + "/" + new Date(data.user.register_date).getFullYear() }}
+              <div class="mt-3">
+                <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#modal-change-picture">Edit
+                  picture</button>
+              </div>
+            </div>
+            <div class="col-md-10 col-lg-9">
+              <div class="p-info d-flex align-items-center flex-wrap" style="gap: 5px;">
+                <img :src="this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].icon" alt="Badge" width="15px"
+                  height="15px" />
+                <p class="m-0">
+                  {{ getAllUsers.find(user => user.id == $route.params.id).primeiro_nome + ' ' + getAllUsers.find(user => user.id == $route.params.id).ultimo_nome }}
                 </p>
-                <div class="level-info d-flex align-items-center mt-4" style="gap: 15px;">
-                  <p class="m-0 d-flex justify-content-center align-items-center"
-                    style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                    {{ Math.floor(data.user.xp / 150) }}</p>
-                  <div class="d-flex flex-column w-100" style="gap: 10px;">
+                <p class="m-0" style="color: var(--cinza-claro); font-size: .85em;">
+                  {{ this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].name }}</p>
+                <button class="edit-btn ms-auto"><strong>{{ getAllUsers.find(user => user.id == $route.params.id).pontos }}</strong>
+                  points</button>
+              </div>
+              <p style="color: var(--cinza-claro)" class="m-0"><strong>Member since:</strong>
+                {{ new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getDate() + "/" + (parseInt(new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getMonth()) + 1) + "/" + new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getFullYear() }}
+              </p>
+              <div class="level-info d-flex align-items-center mt-4" style="gap: 15px;">
+                <p class="m-0 d-flex justify-content-center align-items-center"
+                  style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
+                  {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) }}</p>
+                <div class="d-flex flex-column w-100" style="gap: 10px;">
+                  <div
+                    style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
                     <div
-                      style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
-                      <div
-                        style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;"
-                        :style="{ width: parseFloat((data.user.xp - (data.user.stats.level * 150)) * 100) / (((Math.floor(data.user.xp / 150) + 1) * 150) - (data.user.stats.level * 150)).toFixed(2) + '%' }">
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <p class="m-0">Current XP <strong>{{ data.user.xp }}</strong></p>
-                      <p class="m-0">Next level
-                        <strong>{{ (Math.floor(data.user.xp / 150) + 1) * 150 }}</strong></p>
+                      style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;"
+                      :style="{ width: parseFloat((getAllUsers.find(user => user.id == $route.params.id).xp - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)) * 100) / (((Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150) - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)).toFixed(2) + '%' }">
                     </div>
                   </div>
-                  <p class="m-0 d-flex justify-content-center align-items-center"
-                    style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                    {{ Math.floor(data.user.xp / 150) + 1 }}</p>
+                  <div class="d-flex justify-content-between">
+                    <p class="m-0">Current XP <strong>{{ getAllUsers.find(user => user.id == $route.params.id).xp }}</strong></p>
+                    <p class="m-0">Next level
+                      <strong>{{ (Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150 }}</strong></p>
+                  </div>
                 </div>
+                <p class="m-0 d-flex justify-content-center align-items-center"
+                  style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
+                  {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1 }}</p>
               </div>
             </div>
           </div>
-          <p v-if="(getLoggedUserData.data.id != $route.params.id && getLoggedUserData.data.is_admin)" class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">You got special privileges.</span> Edit anything</p>
-          <p v-else class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">Misspelt something?</span> Edit your profile</p>
-          <form id="register" @submit.prevent="editUserInfo()">
-            <div class="row g-4">
-              <div class="col-sm-6">
-                <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name"
-                  required v-model="edit_user.primeiro_nome">
-              </div>
-              <div class="col-sm-6">
-                <input type="text" class="form-control bg-inputs" placeholder="Last name" aria-label="Last name" required
-                  v-model="edit_user.ultimo_nome">
-              </div>
-            </div>
-            <br>
-            <div class="input-group">
-              <input type="text" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required
-                v-model="edit_user.email">
-              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-            </div>
-            <br>
-            <div class="input-group">
-              <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password" required
-                v-model="edit_user.password">
-              <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            </div>
-            <br>
-            <div class="input-group">
-              <input type="date" class="form-control bg-inputs" placeholder="Date of birth" aria-label="Date of birth" required
-                v-model="edit_user.data_nascimento">
-              <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-            </div>
-            <div v-if="getLoggedUserData.data.is_admin && ($route.params.id != getLoggedUserData.data.id)">
-              <br>
-              <label class="cbox">Is an admin?
-                <input v-model="edit_user.is_admin" type="checkbox">
-                <span class="checkmark"></span>
-              </label>
-            </div>
-            <div>
-              <button type="submit" class="mt-4 orange-btn">Edit profile</button>
-            </div>
-          </form>
         </div>
-        <div class="col-lg-6 filtros">
-          <p class="m-0" style="color: var(--azul-claro); font-weight: bold; font-size: 1.25em;">Badges</p>
-          <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-3 mb-3">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-              <form class="d-flex" @submit.prevent="">
-                <div class="input-group">
-                  <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_badge.search">
-                  <button type="submit"><i class="fas fa-search"></i></button>
-                </div>
-              </form>
+        <p v-if="(getLoggedUser.id != $route.params.id && getLoggedUser.is_admin)" class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">You got special privileges.</span> Edit anything</p>
+        <p v-else class="title mt-4 mb-4"><span style="color: #BBE1FA; font-weight: bold;">Misspelt something?</span> Edit your profile</p>
+        <form id="register" @submit.prevent="editUser($event, false)">
+          <div class="row g-4">
+            <div class="col-sm-6">
+              <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name"
+                required v-model="edit_user.primeiro_nome">
             </div>
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-              <select id="order" style="height: 40px;" v-model="filters_badge.orderby">
-                <option disabled value="Order by">Order by</option>
-                <option value="All">All</option>
-                <option value="Unlocked">Unlocked</option>
-                <option value="Locked">Locked</option>
-              </select>
+            <div class="col-sm-6">
+              <input type="text" class="form-control bg-inputs" placeholder="Last name" aria-label="Last name" required
+                v-model="edit_user.ultimo_nome">
             </div>
           </div>
-          <div style="background-color: var(--azul-escuro2); border-radius: 10px;" class="p-3">
-            <div class="leaderboardBar" style="max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
-              <div class="row g-3 pe-2" v-if="!loading.badges">
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in filteredBadges" :key="index">
-                  <div class="badge-card d-flex flex-column align-items-center p-2">
-                    <p style="color: var(--cinza-claro)">Level {{ badge.level }}</p>
-                    <img :src="require('../assets/images/badges/' + badge.icon)" alt="Badge" width="50px" height="50px" />
-                  </div>
-                  <div style="background-color: var(--bg); border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" class="text-center p-2">
-                    <p class="m-0">{{ badge.name }}</p>
-                  </div>
-                  <div class="mt-2">
-                    <button @click="changeBadge(badge._id, badge)" :disabled="(data.user.xp < badge.xp_min)" class="logout-btn w-100" :style="{ backgroundColor: data.user.badge_id._id == badge._id ? 'var(--verde)' : (data.user.xp >= badge.xp_min ? 'var(--laranja)' : 'var(--cinza-claro)') }" style="font-size: 1rem; color: var(--bg); border-radius: 5px; font-weight: bold;">{{ (data.user.badge_id.badge_id == index) ? ('Selected') : ((data.user.xp >= badge.xp_min) ? ('Select') : ('Locked')) }}</button>
-                  </div>
+          <br>
+          <div class="input-group">
+            <input type="text" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required
+              v-model="edit_user.email">
+            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          </div>
+          <br>
+          <div class="input-group">
+            <input type="password" class="form-control bg-inputs" placeholder="Password" aria-label="Password" required
+              v-model="edit_user.password">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          </div>
+          <br>
+          <div class="input-group">
+            <input type="text" class="form-control bg-inputs" onmouseenter="(this.type='date')"
+              onfocus="(this.type='date')" placeholder="Date of birth" aria-label="Date of birth" required
+              v-model="edit_user.data_nascimento">
+            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+          </div>
+          <div v-if="getLoggedUser.is_admin && ($route.params.id != getLoggedUser.id)">
+            <br>
+            <label class="cbox">Is an admin?
+              <input v-model="edit_user.is_admin" type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+
+          <div>
+            <button type="submit" class="mt-4 orange-btn">Edit profile</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6 filtros">
+        <p class="m-0" style="color: var(--azul-claro); font-weight: bold; font-size: 1.25em;">Badges</p>
+        <div style="background-color: var(--azul-escuro); border-radius: 10px;" class="row g-3 m-0 pb-3 mt-3 mb-3">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <form class="d-flex" @submit.prevent="">
+              <div class="input-group">
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_badge.search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <select id="order" style="height: 40px;" v-model="filters_badge.orderby">
+              <option disabled value="Order by">Order by</option>
+              <option value="All">All</option>
+              <option value="Unlocked">Unlocked</option>
+              <option value="Locked">Locked</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background-color: var(--azul-escuro2); border-radius: 10px;" class="p-3">
+          <div class="leaderboardBar" style="max-height: 450px; overflow-y: scroll; overflow-x: hidden;">
+            <div class="row g-3 pe-2">
+              <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-6" v-for="(badge, index) in filteredBadges" :key="index">
+                <div class="badge-card d-flex flex-column align-items-center p-2">
+                  <p style="color: var(--cinza-claro)">Level {{ badge.level }}</p>
+                  <img :src="badge.icon" alt="Badge" width="50px" height="50px" />
+                </div>
+                <div style="background-color: var(--bg); border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" class="text-center p-2">
+                  <p class="m-0">{{ badge.name }}</p>
+                </div>
+                <div class="mt-2">
+                  <button @click="changeBadge(badge.id_badge)" :disabled="(getAllUsers[$route.params.id].xp < badge.xp_min)" class="logout-btn w-100" :style="{ backgroundColor: getAllUsers[$route.params.id].id_badge == badge.id_badge ? 'var(--verde)' : (getAllUsers[$route.params.id].xp >= badge.xp_min ? 'var(--laranja)' : 'var(--cinza-claro)') }" style="font-size: 1rem; color: var(--bg); border-radius: 5px; font-weight: bold;">{{ (getAllUsers[$route.params.id].id_badge == index) ? ('Selected') : ((getAllUsers[$route.params.id].xp >= badge.xp_min) ? ('Select') : ('Locked')) }}</button>
                 </div>
               </div>
             </div>
@@ -160,22 +163,22 @@
           <div class="col-md-12 col-lg-3 col-sm-12">
             <form @submit.prevent="" class="d-flex">
               <div class="input-group">
-                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filtersFavourites.search">
+                <input type="search" class="form-control" style="height: 40px;" placeholder="Search" aria-label="Search" v-model="filters_liked.search">
                 <button type="button"><i class="fas fa-search"></i></button>
               </div>
             </form>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="genre" style="height: 40px;" v-model="filtersFavourites.genre">
+            <select id="genre" style="height: 40px;" v-model="filters_liked.genre">
               <option disabled value="Genre">Genre</option>
               <option value="All">All</option>
-              <option :value=genero v-for="(genero, index) in data.genresFav" :key="index">{{ genero }}</option>
+              <option :value=genero v-for="(genero, index) in generos" :key="index">{{ genero }}</option>
             </select>
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="year" style="height: 40px;" v-model="filtersFavourites.year">
+            <select id="year" style="height: 40px;" v-model="filters_liked.year">
               <option disabled value="Year">Year</option>
               <option value="All">All</option>
               <option :value=ano v-for="(ano, index) in anos" :key="index">{{ ano }}</option>
@@ -183,7 +186,7 @@
           </div>
 
           <div class="col-md-3 col-lg-2 col-sm-6">
-            <select id="country" style="height: 40px;" v-model="filtersFavourites.country">
+            <select id="country" style="height: 40px;" v-model="filters_liked.country">
               <option disabled value="Country">Country</option>
               <option value="All">All</option>
               <option :value=pais v-for="(pais, index) in paises" :key="index">{{ pais }}</option>
@@ -191,17 +194,18 @@
           </div>
 
           <div class="col-md-3 col-lg-3 col-sm-6">
-             <select id="order" style="height: 40px;" v-model="filtersFavourites.orderby">
+            <select id="order" style="height: 40px;" v-model="filters_liked.orderby">
               <option disabled value="Order by">Order by</option>
               <option value="Recently added">Recently added</option>
               <option value="Alphabetic (A-Z)">Alphabetic (A-Z)</option>
               <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
               <option value="Most recent">Most recent</option>
               <option value="Oldest">Oldest</option>
-              <option value="Best IMDb rated">Best IMDb rated</option>
-              <option value="Worst IMDb rated">Worst IMDb rated</option>
+              <option value="Best rated">Best rated</option>
+              <option value="Worst rated">Worst rated</option>
+              <option value="Most viewed">Most viewed</option>
+              <option value="Least viewed">Least viewed</option>
             </select>
-            
           </div>
         </div>
       </div>
@@ -209,18 +213,18 @@
         <div class="row g-3">
           <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitles.length >= mostrar.liked ? mostrar.liked : filteredTitles.length)" :key="i">
             <div class="tile-custom" >
-              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitles[i - 1].imdb_id}})">
-                <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : data.title.poster" alt="" />
-                
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitles[i - 1].title}}</p>
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitles[i - 1].id_imdb}})">
+                <img class="tile__img" :src="filteredTitles[i - 1].poster" alt="" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitles[i - 1].titulo}}</p>
               </div>
-              <div v-if="data.user.id == $store.state.loggedUserData.data.id " class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
-                <button @click="removeLike(filteredTitles[i - 1]._id)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
+              <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end" >
+                <button @click="removeLike(filteredTitles[i - 1].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--vermelho);"><i class="fas fa-heart"></i></button>
               </div>
             </div>
+            
           </div>
           <div v-if="filteredTitles.length==0">
-            <p>{{ !parseInt(this.data.user.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
+            <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
           </div>
         </div>
         <div v-if="mostrar.liked < filteredTitles.length" class="w-100 d-flex justify-content-center mt-4">
@@ -246,7 +250,7 @@
             <select id="genre" style="height: 40px;" v-model="filters_seen.genre">
               <option disabled value="Genre">Genre</option>
               <option value="All">All</option>
-              <option :value=genero v-for="(genero, index) in data.genresSeen" :key="index">{{ genero }}</option>
+              <option :value=genero v-for="(genero, index) in generos" :key="index">{{ genero }}</option>
             </select>
           </div>
 
@@ -254,7 +258,7 @@
             <select id="year" style="height: 40px;" v-model="filters_seen.year">
               <option disabled value="Year">Year</option>
               <option value="All">All</option>
-              <option :value=ano v-for="(ano, index) in anosSeen" :key="index">{{ ano }}</option>
+              <option :value=ano v-for="(ano, index) in anos" :key="index">{{ ano }}</option>
             </select>
           </div>
 
@@ -262,7 +266,7 @@
             <select id="country" style="height: 40px;" v-model="filters_seen.country">
               <option disabled value="Country">Country</option>
               <option value="All">All</option>
-              <option :value=pais v-for="(pais, index) in paisesSeen" :key="index">{{ pais }}</option>
+              <option :value=pais v-for="(pais, index) in paises" :key="index">{{ pais }}</option>
             </select>
           </div>
 
@@ -286,17 +290,17 @@
         <div class="row g-3">
           <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitlesSeen.length >= mostrar.seen ? mostrar.seen : filteredTitlesSeen.length)" :key="i" >
             <div class="tile-custom">
-              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitlesSeen[i - 1].imdb_id}})">
-                <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + filteredTitlesSeen[i - 1].poster_webp) : filteredTitlesSeen[i - 1].poster" />
-                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitlesSeen[i - 1].title}}</p>
+              <div class="tile__media-custom" style="cursor: pointer;" @click="$router.push({ name: 'Title', params: { imdbid: filteredTitlesSeen[i - 1].id_imdb}})">
+                <img class="tile__img" :src="filteredTitlesSeen[i - 1].poster" />
+                <p style="cursor:pointer; padding-left:5px; padding-top:5px;">{{filteredTitlesSeen[i - 1].titulo}}</p>
               </div>
-              <div v-if="data.user.id == $store.state.loggedUserData.data.id " class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
-                <button @click="removeSeen1(filteredTitlesSeen[i - 1]._id)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
+              <div v-if="getLoggedUser.id == $route.params.id || getLoggedUser.is_admin" class="tile__details p-2 text-center d-flex justify-content-end align-items-end">
+                <button @click="removeSeen(filteredTitlesSeen[i - 1].id_imdb)" class="blur-btn d-flex justify-content-center align-items-center" style="font-size: .85em; width: 30px; min-width: 30px; height: 30px; min-height: 30px; background-color:var(--verde)"><i class="fas fa-eye"></i></button>
               </div>
             </div>
           </div>
           <div v-if="filteredTitlesSeen.length==0">
-            <p>{{ !parseInt(this.data.user.id) ? "You haven't added any movies nor series to your favorites." : "This user hasn't added any movies nor series to their favorites." }}</p> 
+            <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You haven't seen any movies nor series." : "This user hasn't seen any movies nor series." }}</p> 
           </div>
         </div>
         <div v-if="mostrar.seen < filteredTitlesSeen.length" class="w-100 d-flex justify-content-center mt-4">
@@ -330,7 +334,7 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <!-- <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
               <div >
                 <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
                 <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
@@ -342,10 +346,10 @@
                 <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See comment</button>
                 <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeComment(title.id_comentario, false) : removeComment(title.id_comentario, true)">Delete</button>
               </div>
-            </div> -->
-            <!-- <div v-if="getAllUserComments($route.params.id).length == 0">
+            </div>
+            <div v-if="getAllUserComments($route.params.id).length == 0">
               <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't commented on any title nor quiz." : "This user hasn't commented on any title nor quiz." }}</p> 
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
@@ -371,31 +375,28 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in (filteredRatings.length >= mostrar.seen ? mostrar.seen : filteredRatings.length)" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredRatings" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div class="col-3">
                   <div style="width: 85px; height: 125px; min-width: 85px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="filteredRatings[i].title_id?(webpSupported ? require('../assets/images/content/' + filteredRatings[i].title_id.poster_webp) : filteredRatings[i].title_id.poster):(webpSupported ? require('../assets/images/content/quiz/' + filteredRatings[i].quiz_id.poster_webp) : filteredRatings[i].quiz_id.poster)" />
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).poster : getQuizByID(title.id_quiz).poster">
                   </div>
                 </div>
                 <div class="d-flex flex-column col-8">
-
-                  <!--  -->
-                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">{{ filteredRatings[i].title_id ? (filteredRatings[i].title_id.seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ filteredRatings[i].title_id ? filteredRatings[i].title_id.title : filteredRatings[i].quiz_id.title }}</strong></p>
+                  <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
                   <div class="stars d-flex" style="gap: 5px; cursor: pointer; color: var(--laranja);">
-                    <i class="fas fa-star" v-for="i in filteredRatings[i].rating" :key="i"></i>
+                    <i class="fas fa-star" v-for="i in title.pontuacao" :key="i"></i>
                   </div>
-                  <!-- FIQUEI AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII -->
-                  <!-- <div class="d-flex mt-auto" style="gap: 10px;">
+                  <div class="d-flex mt-auto" style="gap: 10px;">
                     <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See Rating</button>
                     <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeRate(title.id_imdb, false) : removeRate(title.id_quiz, true)">Delete</button>
-                  </div> -->
+                  </div>
                 </div>
               </div>
             </div>
-            <!-- <div v-if="getAllUserRatings($route.params.id).length == 0">
+            <div v-if="getAllUserRatings($route.params.id).length == 0">
               <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't rated any titles nor quizzes." : "This user hasn't rated any titles nor quizzes." }}</p> 
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
@@ -422,7 +423,7 @@
               </div>
             </div>
           </div>
-          <!-- <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
+          <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
             <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredPrizes" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div>
@@ -440,12 +441,12 @@
             <div v-if="getAllUserPrizes($route.params.id).length == 0">
               <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't claimed any prizes yet." : "This user hasn't claimed any prizes yet." }}</p> 
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
+    <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
       <div class="card-profile p-3 w-100" style="max-width: 600px;">
         <div class="img-profile row g-3">
           <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
@@ -516,14 +517,14 @@
           <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.ajudas_utilizadas, 0) }}</p>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <div class="modal fade backgroundBlur" id="modal-change-picture" ref="modal-change-picture" tabindex="-1"
       aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
         <div class="modal-content" style="background-color: var(--bg);">
           <div>
-            <form @submit.prevent="changeAvatar()" class="modal-body d-flex flex-column" style="gap: 20px;">
+            <form @submit.prevent="editUser($event, true)" class="modal-body d-flex flex-column" style="gap: 20px;">
               <label for="url-pic">URL for your new avatar:</label>
               <div class="input-group">
                 <input type="text" class="form-control bg-inputs" aria-label="URL" required v-model="edit_user.avatar">
@@ -542,219 +543,157 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
-
+import { mapGetters, mapMutations } from "vuex";
 export default {
-  name: "Profile",
   data() {
     return {
-      webpSupported: true,
-      anos: [],
-      paises:[],
-      anosSeen: [],
-      paisesSeen:[],
-      selectedTab: "profile",
       mostrar: {
         liked: 12,
         seen: 12
       },
-      loading: {
-        user: true,
-        badges: true,
-        genresFav:true,
-        genresSee:true
-      },
-      data: {
-        user: {},
-        badges: {},
-        genresFav:{},
-        genresSeen:{},
-        randomPassword: ""
-      },
-      edit_user: {},
-      filtersFavourites: {
-          search: "",
-          genre: "Genre",
-          year: "Year",
-          country: "Country",
-          orderby: "Order by"
-      },
+      selectedTab: "statistics",
+      anos: [],
+      generos: [],
+      paises: [],
       filters_badge: {
         search: "",
         orderby: "Order by"
       },
-      filters_seen:{
+      filters_liked: {
         search: "",
         genre: "Genre",
         year: "Year",
         country: "Country",
         orderby: "Order by"
       },
-      filters_comments:{
+      filters_seen: {
         search: "",
         genre: "Genre",
         year: "Year",
         country: "Country",
         orderby: "Order by"
       },
-      filters_ratings:{
+      filters_comments: {
         search: "",
-        genre: "Genre",
-        year: "Year",
-        country: "Country",
         orderby: "Order by"
       },
-      filters_prizes:{
+      filters_ratings: {
         search: "",
-        genre: "Genre",
-        year: "Year",
-        country: "Country",
         orderby: "Order by"
-      }
+      },
+      filters_prizes: {
+        search: "",
+        orderby: "Order by"
+      },
+      edit_user: {
+        primeiro_nome: '',
+        ultimo_nome: '',
+        email: '',
+        password: '',
+        data_nascimento: '',
+        avatar: '',
+        is_admin: false
+      },
+      infoLikes:[],
+      infoViwed:[]
     }
   },
-  mounted () {
-    this.webpSupported = this.isWebpSupported();
-    this.getUserInfo();
-    this.getBadgesInfo();
-    this.getGenresFav();
-    this.getGenresSeen();
-  },
   methods: {
-    ...mapActions(["getAllBadges", "getUser", "changeUserBadge", "editUser", "changeUserAvatar","getAllGenres","removeFavourite","removeSeen"]),
-    ...mapMutations(["LOGOUT_USER"]),
-    async getUserInfo() {
-      this.loading.user = true;
-      try {
-        this.data.user = await this.getUser({ id: this.$route.params.id });
-        if (this.data.user.success) {
-          this.data.user.msg[0].favourites.map(user => {
-          //       // Pré carregar anos para o select
-          if (!this.anos.some(ano => ano == user.year)) {
-            this.anos.push(user.year);  
+    ...mapMutations(["SET_LOGOUT", "SET_LOGGED_USER", "SET_EDITED_USER", "SET_NEW_BADGE","REMOVE_LIKE","REMOVE_HAS_SEEN","REMOVE_TITLE_COMMENT","REMOVE_QUIZ_COMMENT", "REMOVE_TITLE_RATING", "REMOVE_QUIZ_RATING"]),
+    removeLike(id){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this movie from favorites?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_LIKE({ id_imdb: id, id_user: this.$route.params.id });
+          this.infoLikes=[];
+          for (let i = 0; i < this.getTitleLikes(this.$route.params.id).length; i++) {
+            this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.$route.params.id)[i]))
           }
-          // Pré carregar países para o select
-          if (!this.paises.some(pais => pais == user.country)) {
-            this.paises.push(user.country);
+        }
+      });
+    },
+    removeSeen(id){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this movie from viewed?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.REMOVE_HAS_SEEN({ id_imdb: id, id_user: this.$route.params.id });
+          this.infoViwed=[];
+          for (let i = 0; i < this.getTitlesSeenByUser(this.$route.params.id).length; i++) {
+            this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.$route.params.id)[i]))
           }
+        }
+      });
+    },
+    editUser(event, isAvatar) {
+      if (!isAvatar) {
+        // Se o email foi alterado, verificar se o mesmo é igual a algum já presente
+        const WAS_EMAIL_CHANGED = this.edit_user.email != this.getAllUsers[this.getAllUsers.findIndex(user => parseInt(user.id) == parseInt(this.$route.params.id))].email ? true : false;
+        const CAN_CONTINUE = WAS_EMAIL_CHANGED ? (this.isEmailAvailable(this.edit_user.email) ? true : false) : true;
+        if (CAN_CONTINUE) {
+          this.SET_EDITED_USER({
+            index: this.getAllUsers.findIndex(user => parseInt(user.id) == parseInt(this.$route.params.id)),
+            isAvatar: false,
+            primeiro_nome: this.edit_user.primeiro_nome,
+            ultimo_nome: this.edit_user.ultimo_nome,
+            email: this.edit_user.email,
+            password: this.edit_user.password,
+            data_nascimento: this.edit_user.data_nascimento,
+            is_admin: this.edit_user.is_admin
           });
-          this.anos.sort();
-          this.data.user.msg[0].seen.map(user => {
-           // Pré carregar anos para o select
-            if (!this.anosSeen.some(ano => ano == user.year)) {
-              this.anosSeen.push(user.year);  
-            }
-            // Pré carregar países para o select
-            if (!this.paisesSeen.some(pais => pais == user.country)) {
-              this.paisesSeen.push(user.country);
-            }
-          });
-          this.anosSeen.sort();
-          this.data.user = this.data.user.msg[0];
-          this.data.randomPassword = (Math.random() + 1).toString(36).substring(2);
-          this.edit_user = {
-            avatar: this.data.user.avatar,
-            primeiro_nome: this.data.user.first_name,
-            ultimo_nome: this.data.user.last_name,
-            email: this.data.user.email,
-            password: this.data.randomPassword,
-            data_nascimento: new Date(this.data.user.dob).toISOString().split('T')[0],
-            avatar: this.data.user.avatar,
-            is_admin: this.data.user.is_admin
-          };
-          
-          
-          this.loading.user = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'error' } });
-        }
-      } catch(e) {
-        this.$router.push({ name: 'Error', params: { '0': 'error' } });
-      }
-    },
-    isWebpSupported() {
-      const elem = document.createElement("canvas");
-      if (elem.getContext && elem.getContext("2d")) {
-        return elem.toDataURL("image/webp").indexOf("data:image/webp") == 0;
-      }
-      return false;
-    },
-    async getBadgesInfo() {
-      this.loading.badges = true;
-      try {
-        this.data.badges = await this.getAllBadges();
-        if (this.data.badges.success) {
-          this.data.badges = this.data.badges.msg;
-          this.loading.badges = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'error' } });
-        }
-      } catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'error' } });
-      }
-    },
-    async getGenresFav() {
-        try {
-          this.loading.genresFav = true;
-          this.data.genresFav = await this.getAllGenres();
-          if (this.data.genresFav.success) {
-            this.data.genresFav = this.data.genresFav.msg.map(genre => genre.description);
-            this.loading.genresFav = false;
-          } else {
-            this.$router.push({ name: 'Error', params: { '0': 'error' } });
-          }
-        }catch (e) {
-          this.$router.push({ name: 'Error', params: { '0': 'error' } });
-        }
-      },
-    async getGenresSeen() {
-      try {
-        this.loading.genresSeen = true;
-        this.data.genresSeen = await this.getAllGenres();
-        if (this.data.genresSeen.success) {
-          this.data.genresSeen = this.data.genresSeen.msg.map(genre => genre.description);
-          this.loading.genresSeen = false;
-        } else {
-          this.$router.push({ name: 'Error', params: { '0': 'error' } });
-        }
-      }catch (e) {
-        this.$router.push({ name: 'Error', params: { '0': 'error' } });
-      }
-    },
-    async changeBadge(badge_id, new_badge) {
-      try {
-        let response = await this.changeUserBadge({ id: this.$route.params.id, badge_id: badge_id});
-        if (response.success) {
-          this.data.user.badge_id = new_badge;
-          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
-          if (this.getLoggedUserData.data.id == this.$route.params.id) {
-            this.$store.state.loggedUserData.data.badge_id = new_badge;
-            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
-          }
-        } else {
-          throw new Error(response.msg);
-        }
-      } catch (e) {
-        this.$swal('Error!', e.message, 'error');
-      }
-    },
-    async changeAvatar(ava) {
-      try {
-        let response = await this.changeUserAvatar({ id: this.$route.params.id, avatar: ava ? ava : this.edit_user.avatar });
 
-        if (response.success) {
-          this.data.user.avatar = ava ? ava : this.edit_user.avatar;
-          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
-          if (this.getLoggedUserData.data.id == this.$route.params.id) {
-            this.$store.state.loggedUserData.data.avatar = ava ? ava : this.edit_user.avatar;
-            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+          // Se a edição do perfil é feita pelo próprio utilizador e não por um administrador, atualizar o loggedUser para mostrar informação atualizada
+          if (parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id)) {
+            this.SET_LOGGED_USER(this.edit_user.email);
           }
-          this.edit_user.avatar = this.data.user.avatar;
+          this.$swal('Success!', 'The data has been successfully updated.', 'success');
         } else {
-          throw new Error(response.msg);
+          this.$swal('Error!', 'The e-mail entered is already being used.', 'error');
         }
-      } catch (e) {
-        this.$swal('Error!', e.message, 'error');
+      } else {
+        if (event.currentTarget.id == "remove-picture") {
+          this.$swal({
+            title: 'Warning!',
+            text: "Are you sure you want to remove your avatar?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.SET_EDITED_USER({
+                index: this.getAllUsers.findIndex(user => parseInt(user.id) == parseInt(this.$route.params.id)),
+                isAvatar: true,
+                avatar: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+              });
+              this.edit_user.avatar = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            }
+          });
+        } else {
+          this.SET_EDITED_USER({
+            index: this.getAllUsers.findIndex(user => parseInt(user.id) == parseInt(this.$route.params.id)),
+            isAvatar: true,
+            avatar: this.edit_user.avatar
+          });
+        }
+
+        // Se a edição do perfil é feita pelo próprio utilizador e não por um administrador, atualizar o loggedUser para mostrar informação atualizada
+        if (parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id)) {
+          this.SET_LOGGED_USER(this.edit_user.email);
+        }
       }
     },
     logoutUser() {
@@ -768,227 +707,257 @@ export default {
         confirmButtonText: 'Yes'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.LOGOUT_USER();
+          this.SET_LOGOUT();
           this.$router.push({ name: 'Authentication' });
         }
       });
     },
-    async editUserInfo() {
-      try {
-        let response = await this.editUser({
-          id: this.$route.params.id,
-          first_name: this.edit_user.primeiro_nome,
-          last_name: this.edit_user.ultimo_nome,
-          email: this.edit_user.email,
-          password: (this.edit_user.password == this.data.randomPassword) ? "" : this.edit_user.password,
-          dob: String(this.edit_user.data_nascimento),
-          is_admin: this.edit_user.is_admin,
-          is_locked: this.data.user.is_locked
-        });
-
-        if (response.success) {
-          // Atualizar o array local
-          this.data.user.first_name = this.edit_user.primeiro_nome;
-          this.data.user.last_name = this.edit_user.ultimo_nome;
-          this.data.user.email = this.edit_user.email;
-          this.data.user.password = this.edit_user.password;
-          this.data.user.dob = this.edit_user.data_nascimento;
-          this.data.user.is_admin = this.edit_user.is_admin;
-
-          // Atualizar o state e a localStorage caso o utilizador alterado seja igual ao logado
-          if (this.getLoggedUserData.data.id == this.$route.params.id) {
-            this.$store.state.loggedUserData.data.first_name = this.data.user.first_name;
-            this.$store.state.loggedUserData.data.last_name = this.data.user.last_name;
-            this.$store.state.loggedUserData.data.email = this.data.user.email;
-            this.$store.state.loggedUserData.data.password = this.data.user.password;
-            this.$store.state.loggedUserData.data.dob = this.data.user.dob;
-            this.$store.state.loggedUserData.data.is_admin = this.data.user.is_admin;
-            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
-          }
-          
-          this.$swal('Success!', 'The data has been successfully updated.', 'success');
-          this.edit_user.password = this.data.randomPassword;
-        } else {
-          throw new Error(response.msg);
-        }
-      } catch (e) {
-        this.$swal('Error!', e.message, 'error');
+    changeBadge(idxBadge) {
+      this.SET_NEW_BADGE({ index: this.getAllUsers.findIndex(user => parseInt(user.id) == parseInt(this.$route.params.id)), id_badge: idxBadge });
+      // Se a edição do perfil é feita pelo próprio utilizador e não por um administrador, atualizar o loggedUser para mostrar informação atualizada
+      if (parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id)) {
+        this.SET_LOGGED_USER(this.edit_user.email);
       }
     },
-    async removeLike(id){
-      let response = await this.removeFavourite({
-            id: this.data.user.id,
-            imdb_id: id,
-        });
-        if (response.success) {
-          this.data.user.favourites.splice(this.data.user.favourites.findIndex(title => title._id.toString() == id.toString()), 1);
-          this.$store.state.loggedUserData.data.favourites = this.$store.state.loggedUserData.data.favourites.filter((title) => title._id != id);
-          localStorage.loggedUserData = JSON.stringify({
-            loading: false,
-            data: this.$store.state.loggedUserData.data,
-          });
-          
-
-          } else {
-            throw new Error(response.msg);
-          }
-
+    removeComment(id_comentario, tipo){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this comment?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          !tipo ? this.REMOVE_TITLE_COMMENT({ id_comment: id_comentario, id_user: this.$route.params.id }) : this.REMOVE_QUIZ_COMMENT({ id_comment: id_comentario, id_user: this.$route.params.id });
+        }
+      });
     },
-    async removeSeen1(id){
-      let response = await this.removeSeen({
-            id: this.data.user.id,
-            _id: id,
-        });
-        if (response.success) {
-          this.data.user.seen.splice(this.data.user.seen.findIndex(title => title._id.toString() == id.toString()), 1);
-          this.$store.state.loggedUserData.data.seen = this.$store.state.loggedUserData.data.seen.filter((title) => title._id != id);
-          localStorage.loggedUserData = JSON.stringify({
-            loading: false,
-            data: this.$store.state.loggedUserData.data,
-          });
-          
-
-          } else {
-            throw new Error(response.msg);
-          }
-
+    removeRate(id, tipo){
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this rating?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          !tipo ? this.REMOVE_TITLE_RATING({ id_imdb: id, id_user: this.$route.params.id}) : this.REMOVE_QUIZ_RATING({ id_quiz: id, id_user: this.$route.params.id});
+        }
+      });
+    },
+    resetMostrar(which) {
+      if (which == "liked") this.mostrar.liked = 12;
     }
   },
   computed: {
-    ...mapGetters(["getLoggedUserID", "getLoggedUserData"]),
+    ...mapGetters(["getLoggedUser", "getAllGenres", "getAllViewsByTitle", "getAllTitles", "getBadges", "getQuizByID", "getAllUsers", "isEmailAvailable","getTitleLikes","getTitleInfo","getTitlesSeenByUser","getAllUserPrizes","getAllUserComments","getAllUserRatings", "getPrizeInfo"]),
     filteredBadges() {
-      if (!this.loading.badges) {
-        let filterResult = [...this.data.badges];
-        // Barra de pesquisa
-        if (this.filters_badge.search != "") {
-          filterResult = filterResult.filter(badge => badge.name.toLowerCase().includes(this.filters_badge.search.toLowerCase()));
-        }
-        if (this.filters_badge.orderby != "All" && this.filters_badge.orderby != "Order by") {
-          if (this.filters_badge.orderby == "Unlocked") {
-            filterResult.map(badge => badge.locked = this.data.user.xp < badge.xp_min)
-            filterResult = filterResult.sort((a, b) => (a.locked < b.locked) ? -1 : ((a.locked > b.locked) ? 1 : 0));
-          } else if (this.filters_badge.orderby == "Locked") {
-            filterResult.map(badge => badge.locked = this.data.user.xp < badge.xp_min)
-            filterResult = filterResult.sort((a, b) => (a.locked > b.locked) ? -1 : ((a.locked < b.locked) ? 1 : 0));
-          }
-        }
-        return filterResult;
+      let filterResult = [...this.getBadges];
+
+      // Barra de pesquisa
+      if (this.filters_badge.search != "") {
+        filterResult = filterResult.filter(badge => badge.name.toLowerCase().includes(this.filters_badge.search.toLowerCase()));
       }
-      return null;
+
+      if (this.filters_badge.orderby != "All" && this.filters_badge.orderby != "Order by") {
+        if (this.filters_badge.orderby == "Unlocked") {
+          filterResult.map(badge => badge.locked = JSON.parse(JSON.stringify(this.getAllUsers[this.$route.params.id])).xp < badge.xp_min)
+          filterResult = filterResult.sort((a, b) => (a.locked < b.locked) ? -1 : ((a.locked > b.locked) ? 1 : 0));
+        } else if (this.filters_badge.orderby == "Locked") {
+          filterResult.map(badge => badge.locked = JSON.parse(JSON.stringify(this.getAllUsers[this.$route.params.id])).xp < badge.xp_min)
+          filterResult = filterResult.sort((a, b) => (a.locked > b.locked) ? -1 : ((a.locked < b.locked) ? 1 : 0));
+        }
+      }
+
+      return filterResult;
     },
     filteredTitles() {
-      //this.resetMostrar('liked');
-      let filterResult = [...this.data.user.favourites];
+      this.resetMostrar('liked');
+      let filterResult = [...this.infoLikes];
+
       // Barra de pesquisa
-      if (this.filtersFavourites.search != "") {
-        filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filtersFavourites.search.toLowerCase()));
+      if (this.filters_liked.search != "") {
+        filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.filters_liked.search.toLowerCase()));
       }
+
       // Géneros
-      if (this.filtersFavourites.genre != "All" && this.filtersFavourites.genre != "Genre") {
-        filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filtersFavourites.genre));
+      if (this.filters_liked.genre != "All" && this.filters_liked.genre != "Genre") {
+        filterResult = filterResult.filter(title => title.genero.some(genero => genero == this.filters_liked.genre));
       }
+
       // Anos
-      if (this.filtersFavourites.year != "All" && this.filtersFavourites.year != "Year") {
-        filterResult = filterResult.filter(title => title.year == this.filtersFavourites.year);
+      if (this.filters_liked.year != "All" && this.filters_liked.year != "Year") {
+        filterResult = filterResult.filter(title => title.ano == this.filters_liked.year);
       }
       
       // Países
-      if (this.filtersFavourites.country != "All" && this.filtersFavourites.country != "Country") {
-        filterResult = filterResult.filter(title => this.filtersFavourites.country == title.country);
+      if (this.filters_liked.country != "All" && this.filters_liked.country != "Country") {
+        filterResult = filterResult.filter(title => this.filters_liked.country == title.pais);
       }
-      if (this.filtersFavourites.orderby != "Recently added" && this.filtersFavourites.orderby != "Order by") {
-            if (this.filtersFavourites.orderby == "Alphabetic (A-Z)") {
-              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
-            } else if (this.filtersFavourites.orderby == "Alphabetic (Z-A)") {
-              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
-            } else if (this.filtersFavourites.orderby == "Most recent") {
-              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
-            } else if (this.filtersFavourites.orderby == "Oldest") {
-              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
-            } else if (this.filtersFavourites.orderby == "Best IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
-            } else if (this.filtersFavourites.orderby == "Worst IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
-            }    
-          }
+
+      if (this.filters_liked.orderby != "Recently added" && this.filters_liked.orderby != "Order by") {
+        if (this.filters_liked.orderby == "Alphabetic (A-Z)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Alphabetic (Z-A)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.ano > b.ano) ? -1 : ((a.ano < b.ano) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Oldest") {
+          filterResult = filterResult.sort((a, b) => (a.ano < b.ano) ? -1 : ((a.ano > b.ano) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Best rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb > b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb < b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Worst rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Most viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
+        } else if (this.filters_liked.orderby == "Least viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
+        }    
+      }
       
       return filterResult;
     },
     filteredTitlesSeen() {
-      //this.resetMostrar('liked');
-      let filterResult = [...this.data.user.seen];
+      this.resetMostrar('seen');
+      let filterResult = [...this.infoViwed];
+
       // Barra de pesquisa
       if (this.filters_seen.search != "") {
-        filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filters_seen.search.toLowerCase()));
+        filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.filters_seen.search.toLowerCase()));
       }
+
       // Géneros
       if (this.filters_seen.genre != "All" && this.filters_seen.genre != "Genre") {
-        filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filters_seen.genre));
+        filterResult = filterResult.filter(title => title.genero.some(genero => genero == this.filters_seen.genre));
       }
+
       // Anos
       if (this.filters_seen.year != "All" && this.filters_seen.year != "Year") {
-        filterResult = filterResult.filter(title => title.year == this.filters_seen.year);
+        filterResult = filterResult.filter(title => title.ano == this.filters_seen.year);
       }
       
       // Países
       if (this.filters_seen.country != "All" && this.filters_seen.country != "Country") {
-        filterResult = filterResult.filter(title => this.filters_seen.country == title.country);
+        filterResult = filterResult.filter(title => this.filters_seen.country == title.pais);
       }
+
       if (this.filters_seen.orderby != "Recently added" && this.filters_seen.orderby != "Order by") {
-            if (this.filters_seen.orderby == "Alphabetic (A-Z)") {
-              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
-            } else if (this.filters_seen.orderby == "Alphabetic (Z-A)") {
-              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
-            } else if (this.filters_seen.orderby == "Most recent") {
-              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
-            } else if (this.filters_seen.orderby == "Oldest") {
-              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
-            } else if (this.filters_seen.orderby == "Best IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
-            } else if (this.filters_seen.orderby == "Worst IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
-            }    
-          }
+        if (this.filters_seen.orderby == "Alphabetic (A-Z)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Alphabetic (Z-A)") {
+          filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.ano > b.ano) ? -1 : ((a.ano < b.ano) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Oldest") {
+          filterResult = filterResult.sort((a, b) => (a.ano < b.ano) ? -1 : ((a.ano > b.ano) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Best rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb > b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb < b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Worst rated") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Most viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
+        } else if (this.filters_seen.orderby == "Least viewed") {
+          filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
+          filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
+        }    
+      }
       
       return filterResult;
     },
-    resetMostrar(which) {
-      if (which == "liked") this.mostrar.liked = 12;
-    },
-    filteredRatings(){
-      //this.resetMostrar('liked');
-      let filterResult = [...this.data.user.title_ratings].concat([...this.data.user.quiz_ratings]);
+    filteredComments() {
+      let filterResult = [...this.getAllUserComments(this.$route.params.id)];
 
-    console.log(filterResult);
+      // Barra de pesquisa
+      if (this.filters_comments.search != "") {
+        filterResult = filterResult.filter(comentario => comentario.comentario.toLowerCase().includes(this.filters_comments.search.toLowerCase()));
+      }
+
+      // Ordenação
+      if (this.filters_comments.orderby != "Oldest" && this.filters_comments.orderby != "Order by") {
+        filterResult = filterResult.sort((a, b) => (a.data > b.data) ? -1 : ((a.data < b.data) ? 1 : 0));
+      }
+
+      return filterResult;
+    },
+    filteredRatings() {
+      let filterResult = [...this.getAllUserRatings(this.$route.params.id)];
+
       // Barra de pesquisa
       if (this.filters_ratings.search != "") {
-        filterResult = filterResult.filter(rating => rating[rating.title_id ? 'title_id' : 'quiz_id'].title.toLowerCase().includes(this.filters_ratings.search.toLowerCase()));
+        filterResult = filterResult.filter(rating => rating.hasOwnProperty('id_imdb') ? this.getTitleInfo(rating.id_imdb).titulo.toLowerCase().includes(this.filters_ratings.search.toLowerCase()) : this.getQuizByID(rating.id_quiz).titulo.toLowerCase().includes(this.filters_ratings.search.toLowerCase()));
       }
-      if (this.filters_ratings.orderby != "Recently added" && this.filters_ratings.orderby != "Order by") {
-            if (this.filters_ratings.orderby == "Alphabetic (A-Z)") {
-              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Alphabetic (Z-A)") {
-              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Most recent") {
-              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Oldest") {
-              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Best IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Worst IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
-            }    
-          }
-      
+
+      // Ordenação
+      if (this.filters_ratings.orderby != "Order by") {
+        if (this.filters_ratings.orderby == "Best") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao > b.pontuacao) ? -1 : ((a.pontuacao < b.pontuacao) ? 1 : 0));
+        } else if (this.filters_ratings.orderby == "Worst") {
+          filterResult = filterResult.sort((a, b) => (a.pontuacao < b.pontuacao) ? -1 : ((a.pontuacao > b.pontuacao) ? 1 : 0));
+        }
+      }
+
+      return filterResult;
+    },
+    filteredPrizes() {
+      let filterResult = [...this.getAllUserPrizes(this.$route.params.id)];
+
+      // Barra de pesquisa
+      if (this.filters_prizes.search != "") {
+        filterResult = filterResult.filter(prize => this.getPrizeInfo(prize.id_premio).nome.toLowerCase().includes(this.filters_prizes.search.toLowerCase()));
+      }
+
+      // Ordenação
+      if (this.filters_prizes.orderby != "Oldest" && this.filters_prizes.orderby != "Order by") {
+        if (this.filters_prizes.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.data > b.data) ? -1 : ((a.data < b.data) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Most expensive") {
+          filterResult = filterResult.sort((a, b) => (this.getPrizeInfo(a.id_premio).valor > this.getPrizeInfo(b.id_premio).valor) ? -1 : ((this.getPrizeInfo(a.id_premio).valor < this.getPrizeInfo(b.id_premio).valor) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Cheapest") {
+          filterResult = filterResult.sort((a, b) => (this.getPrizeInfo(a.id_premio).valor < this.getPrizeInfo(b.id_premio).valor) ? -1 : ((this.getPrizeInfo(a.id_premio).valor > this.getPrizeInfo(b.id_premio).valor) ? 1 : 0));
+        }
+      }
+
       return filterResult;
     }
   },
-  watch: {
-    '$route.params.id'() {
-      this.getUserInfo();
+  mounted () {
+    this.edit_user.primeiro_nome = this.getAllUsers.find(user => user.id == this.$route.params.id).primeiro_nome;
+    this.edit_user.ultimo_nome = this.getAllUsers.find(user => user.id == this.$route.params.id).ultimo_nome;
+    this.edit_user.email = this.getAllUsers.find(user => user.id == this.$route.params.id).email;
+    this.edit_user.password = this.getAllUsers.find(user => user.id == this.$route.params.id).password;
+    this.edit_user.data_nascimento = this.getAllUsers.find(user => user.id == this.$route.params.id).data_nascimento;
+    this.edit_user.avatar = this.getAllUsers.find(user => user.id == this.$route.params.id).avatar;
+    this.edit_user.is_admin = this.getAllUsers.find(user => user.id == this.$route.params.id).is_admin;
+    this.selectedTab = this.getLoggedUser.id == this.$route.params.id || this.getLoggedUser.is_admin ? "profile" : "statistics";
+
+    for (let i = 0; i < this.getTitleLikes(this.$route.params.id).length; i++) {
+      this.infoLikes.push(this.getTitleInfo(this.getTitleLikes(this.$route.params.id)[i]))
+    }
+    for (let i = 0; i < this.getTitlesSeenByUser(this.$route.params.id).length; i++) {
+      this.infoViwed.push(this.getTitleInfo(this.getTitlesSeenByUser(this.$route.params.id)[i]))
     }
   },
-};
+  created () {
+    this.generos = this.getAllGenres.map(genre => genre.descricao);
+    this.getAllTitles.map(title => {
+      // Pré carregar anos para o select
+      if (!this.anos.some(ano => ano == title.ano)) {
+        this.anos.push(title.ano);
+      }
+      // Pré carregar países para o select
+      if (!this.paises.some(pais => pais == title.pais)) {
+        this.paises.push(title.pais);
+      }
+    });
+    this.anos.sort();
+    this.paises.sort();
+  },
+}
 </script>
 
 <style scoped>

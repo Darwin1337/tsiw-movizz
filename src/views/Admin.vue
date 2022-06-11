@@ -24,25 +24,24 @@
 </template>
 
 <script>
-import AdminPrizes from "@/components/AdminPrizes.vue";
-import AdminQuizzes from "@/components/AdminQuizzes.vue";
-import AdminTitles from "@/components/AdminTitles.vue";
-import AdminUsers from "@/components/AdminUsers.vue";
+import AdminPrizes from '../components/AdminPrizes.vue'
+import AdminTitles from '../components/AdminTitles.vue'
+import AdminUsers from '../components/AdminUsers.vue'
+import AdminQuizzes from '../components/AdminQuizzes.vue'
 
-export default {
-  name: "Admin",
-  components: {
-    AdminPrizes,
-    AdminQuizzes,
-    AdminTitles,
-    AdminUsers,
-  },
-  data() {
-    return {
-      tab: "users"
+  export default {
+    components: {
+      AdminPrizes,
+      AdminTitles,
+      AdminUsers,
+      AdminQuizzes
+    },
+    data() {
+      return {
+        tab: "users"
+      }
     }
   }
-};
 </script>
 
 <style scoped>
@@ -51,40 +50,51 @@ export default {
     color: white;
     cursor: pointer;
   }
+
   .active {
     color: var(--laranja);
     border-bottom: 1px solid var(--laranja);
   }
+
   .filters select {
     border-radius: 35px !important;
   }
+
   .filters button {
     border-top-right-radius: 35px;
     border-bottom-right-radius: 35px;
   }
+
   .filters input {
     border-radius: 35px !important;
     border-top-right-radius: 0px !important;
     border-bottom-right-radius: 0px !important;
   }
+
+
   #section2 input {
     border-radius: 5px;
   }
+
   #section2 input.bg-inputs {
     border-radius: 0;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
   }
+
   #section2 textarea {
     border-radius: 5px;
   }
+
   #section2 select {
     border-radius: 5px;
   }
+
   .backgroundQuestions {
     background-color: var(--cinza3);
     border-radius: 5px;
   }
+
   .removeQuestion {
     color: white;
     background: var(--vermelho);
@@ -92,6 +102,7 @@ export default {
     border-radius: 30px;
     cursor: pointer;
   }
+
   .editQuestion {
     color: black;
     background: var(--verde);
@@ -99,6 +110,7 @@ export default {
     border-radius: 30px;
     cursor: pointer;
   }
+
   .removeIcon {
     position: absolute;
     bottom: 6px;
@@ -108,6 +120,7 @@ export default {
     border-radius: 30px;
     cursor: pointer;
   }
+
   .uploadButton {
     width: 100%;
     padding: 5px 15px;
@@ -115,6 +128,7 @@ export default {
     background: var(--cinza-claro);
     border-radius: 5px;
   }
+
   .quizImg img {
     border-radius: 5px;
     object-position: top center;
@@ -122,15 +136,18 @@ export default {
     width: 100%;
     object-fit: cover;
   }
+
   .colorOrange {
     color: var(--laranja);
   }
+
   .addQuestionButton {
     background-color: var(--laranja);
     border-radius: 5px;
     color: black;
     padding: 10px 25px;
   }
+
   .addNewQuizButton {
     background-color: var(--laranja);
     color: black;
@@ -138,6 +155,7 @@ export default {
     border: none;
     border-radius: 5px;
   }
+
   .editQuizButton {
     padding: 10px;
     margin: 10px 0px;
@@ -146,6 +164,7 @@ export default {
     border: none;
     border-radius: 5px;
   }
+
   .editQuizButtonPrizes {
     padding: 10px;
     margin: 10px 0px;
@@ -154,6 +173,7 @@ export default {
     border: none;
     border-radius: 5px;
   }
+
   .removeQuizButton {
     padding: 10px;
     margin: 0px 0px;
@@ -162,11 +182,13 @@ export default {
     border: none;
     border-radius: 5px;
   }
+
   .bg {
     position: relative;
     display: block;
     z-index: 0;
   }
+
   .bg::after {
     content: "";
     background: url("../assets/images/twd_bg.png");
@@ -182,12 +204,15 @@ export default {
     z-index: -1;
     height: 100%;
   }
+
   .modalrewards {
     background-color: #151E2E;
   }
+
   .padding-10 {
     padding: 10px;
   }
+
   .detailsButton {
     background-color: var(--cinza3);
     border: none;
@@ -195,15 +220,18 @@ export default {
     border-radius: 5px;
     padding: 10px 23px;
   }
+
   .cardUser {
     border-radius: 5px;
     background-color: var(--azul-escuro2)
   }
+
   .block-button {
     background: var(--vermelho);
     border-radius: 5px;
     padding: 10px;
   }
+
   .unblock-button {
     background: #ffffff;
     border-radius: 5px;
@@ -217,6 +245,7 @@ export default {
     justify-content: center;
     cursor: pointer;
   }
+
   .member-level {
     position: absolute;
     background-color: var(--azul-claro);
@@ -227,6 +256,7 @@ export default {
     color: var(--bg);
     font-weight: bold;
   }
+
   .member-level.big {
     width: 25px;
     height: 25px;
@@ -234,6 +264,7 @@ export default {
     top: 41px;
     left: 41px;
   }
+
   .member-level.small {
     width: 20px;
     height: 20px;
@@ -241,16 +272,20 @@ export default {
     top: 25px;
     left: 25px;
   }
+
   form ::placeholder {
     color: var(--cinza2);
     opacity: 1;
   }
+
   form :-ms-input-placeholder {
     color: var(--cinza2);
   }
+
   form ::-ms-input-placeholder {
     color: var(--cinza2);
   }
+
   form input {
     border: none;
     outline: none;
@@ -259,6 +294,7 @@ export default {
     color: white;
     padding: 10px 15px 10px 15px;
   }
+
   form textarea {
     border: none;
     outline: none;
@@ -267,6 +303,7 @@ export default {
     color: white;
     padding: 10px 15px 10px 15px;
   }
+
   form button {
     border: none !important;
     background: var(--cinza3);
@@ -274,9 +311,11 @@ export default {
     border-bottom-right-radius: 35px;
     padding: 0 15px 0 15px;
   }
+
   form i {
     color: var(--cinza-claro);
   }
+
   form input,
   form input:focus {
     color: white;
@@ -284,6 +323,7 @@ export default {
     box-shadow: none;
     background-color: var(--cinza3);
   }
+
   form input.bg-inputs,
   form input.bg-inputs:focus {
     outline: none;
@@ -292,6 +332,7 @@ export default {
     background-color: #1D232E;
     color: white;
   }
+
   select {
     /* Reset */
     -webkit-appearance: none;
@@ -310,6 +351,7 @@ export default {
     box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
     cursor: pointer;
   }
+
   select option {
     background-color: white !important;
     color: black !important;
@@ -318,26 +360,32 @@ export default {
   .leaderboardBar::-webkit-scrollbar {
     width: 5px;
   }
+
   .leaderboardBar::-webkit-scrollbar-thumb {
     background: #464646;
     -webkit-border-radius: 10px;
     border-radius: 10px;
   }
+
   .leaderboardBar::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
   select:focus {
     outline: none;
   }
+
   select::-ms-expand {
     display: none;
   }
+
   input[type="search"]::-webkit-search-decoration,
   input[type="search"]::-webkit-search-cancel-button,
   input[type="search"]::-webkit-search-results-button,
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
+
   .tile {
     position: relative;
     display: inline-block;
@@ -346,28 +394,34 @@ export default {
     margin-right: 10px;
     font-size: 20px;
   }
+
   .tile-custom {
     position: relative;
     display: inline-block;
     font-size: 20px;
   }
+
   .tile__media img {
     max-width: 200px;
     width: 100%;
     height: 296.28px;
   }
+
   .tile__img {
     width: 100%;
     -o-object-fit: cover;
     object-fit: cover;
     border-radius: 5px;
   }
+
   .tile:hover .tile__details {
     opacity: 1;
   }
+
   .tile-custom:hover .tile__details {
     opacity: 1;
   }
+
   .tile__details {
     position: absolute;
     bottom: 0;
@@ -378,13 +432,16 @@ export default {
     transition: 450ms opacity;
     border-radius: 5px;
   }
+
   .input-group-text .fas {
       color: #AFB3B7;
   }
+
   .input-group-text {
       border: none !important;
       background: #1D232E;
   }
+
   .tile__details .quiz-card-rating {
     position: absolute;
     bottom: 0;
@@ -399,9 +456,11 @@ export default {
     font-size: .85em;
     color: var(--verde);
   }
+
   .tile__details .quiz-card-title {
     white-space: normal;
   }
+
   .tile__details .quiz-card-play {
     position: absolute;
     top: 130px;
@@ -414,35 +473,43 @@ export default {
     border: 1px solid white;
     border-radius: 50%;
   }
+
   .tile__details .quiz-card-play:hover {
     cursor: pointer;
   }
+
   .navigation {
     font-size: 1.25em;
     gap: 0 5em;
   }
+
   @media (max-width: 419px) {
     .tile {
       max-width: 150px;
     }
+
     .tile__media img {
       height: 222.22px;
     }
+
     .tile__details .quiz-card-play {
       top: 96px;
       left: 58px;
     }
   }
+
   @media (max-width: 575px) {
     .cardUser {
       flex-direction: column;
       text-align: center;
     }
   }
+
   @media (max-width: 991px) {
     .cardUser {
       margin-bottom: 20px;
     }
+
     .navigation {
       gap: 0 2em;
     }

@@ -5,6 +5,5 @@ module.exports = {
 			clientsClaim: true,
 			navigateFallback: 'index.html'
 		}
-	},
-	lintOnSave: false
+	}
 }
