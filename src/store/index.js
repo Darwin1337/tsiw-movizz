@@ -6,7 +6,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     loggedUser: localStorage.loggedUser ? JSON.parse(localStorage.loggedUser) : null,
-    loggedUserData: localStorage.loggedUserData ? JSON.parse(localStorage.loggedUserData) : null
+    loggedUserData: localStorage.loggedUserData ? JSON.parse(localStorage.loggedUserData) : null,
+    api_keys: ["k_bxe02t9j", "k_82n08589", "k_z0rw7im2", "k_ysbktlgy", "k_z0rw7im2", "k_n116qcbn", "k_h21sbegj", "k_utdlvs0n", "k_14iolt3q", "k_p9fk9brd", "k_3gpl3mmq", "k_23fa7215", "k_08fh2pq9", "k_8luslxgk", "k_zhzvooqo", "k_o6h8ohp8"],
+    cur_api: 0,
+    tries_main: 0,
+    tries_eps: 0
   },
   getters: {
     getLoggedUserID: (state) => (state.loggedUser) ? JSON.parse(atob(state.loggedUser.auth_key.split('.')[1])).id : null,
@@ -177,9 +181,51 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async getAllThemes({context, state}) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/themes", {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
     async getAllPrizes({context, state}) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/prizes", {
+          method: "GET",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async getAllPlatforms({context, state}) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/platforms", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -312,6 +358,184 @@ export default new Vuex.Store({
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
           }
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async extAPIgetTitle({context, state}, title) {
+      try {
+        const response = await fetch(`https://imdb-api.com/en/API/Title/${ state.api_keys[state.cur_api] }/${ title }/FullCast,Posters,Trailer`);
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          throw new Error;
+        }
+      } catch (e) {
+        throw new Error;
+      }
+    },
+    async extAPIgetSeason({context, state}, title) {
+      try {
+        const response = await fetch(`https://imdb-api.com/en/API/SeasonEpisodes/${ this.state.api_keys[this.state.cur_api] }/${ title.id }/${ title.season }`);
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          throw new Error;
+        }
+      } catch (e) {
+        throw new Error;
+      }
+    },
+    async registerTitle({context, state}, title) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/titles", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ title })
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async removeTitle({context, state}, data) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/titles/" + data, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async changePlatforms({context, state}, data) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/titles/" + data.imdb_id + "/platforms", {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify({ platforms: data.platforms })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async addPrize({context, state}, prize) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/prizes", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify(prize)
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async editPrize({context, state}, prize) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/prizes/" + prize.prize_id, {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify(prize.data)
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async deletePrize({context, state}, prize) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/prizes/" + prize, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async editQuiz({context, state}, quiz) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + quiz.quiz_id, {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify(quiz.data)
         });
   
         if (response.ok) {
@@ -622,6 +846,27 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async changeLockedStatus({context, state}, id) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/users/" + id + "/is_locked", {
+          method: "PATCH",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
     async addQuizAttempt({context, state}, user) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/played", {
@@ -791,7 +1036,6 @@ export default new Vuex.Store({
       }
     },
     async addQuizRating({context, state}, data) {
-      console.log(data);
       try {
         const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings", {
           method: "POST",

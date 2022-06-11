@@ -11,8 +11,9 @@
             <p style="color: var(--cinza2); font-weight: bold;">5 questions • Normal difficulty</p>
             <br>
             <div>
-              <router-link :to="{name:''}"><img src="../assets/images/play_icon.png" width="25px"
-                  height="25px">&nbsp;&nbsp;&nbsp;Play</router-link>
+              <router-link :to="{name:''}">
+                <img src="../assets/images/play_icon.png" width="25px" height="25px">&nbsp;&nbsp;&nbsp;Play
+              </router-link>
             </div>
           </div>
         </div>
@@ -52,7 +53,7 @@
             <div class="row__inner p-0">
               <div class="tile" v-for="i in data.topQuizzes.length" :key="i">
                 <div class="tile__media">
-                  <img class="tile__img" :src="webpSupported ? require('../assets/images/content/quiz/' + data.topQuizzes[i - 1].poster_webp) : data.topQuizzes[i - 1].poster" />
+                  <img class="tile__img" :src="webpSupported ? (data.topQuizzes[i - 1].poster_webp ? require('../assets/images/content/quiz/' + data.topQuizzes[i - 1].poster_webp) : data.topQuizzes[i - 1].poster) : data.topQuizzes[i - 1].poster" />
                 </div>
                 <div class="tile__details p-2">
                   <p class="quiz-card-title">{{ data.topQuizzes[i - 1].title }}</p>
@@ -120,7 +121,7 @@
           <div class="tile-custom">
             <div class="tile__media-custom">
               <img class="tile__img"
-                :src="webpSupported ? require('../assets/images/content/quiz/' + filteredQuizzes[i - 1].poster_webp) : filteredQuizzes[i - 1].poster" />
+                :src="webpSupported ? (filteredQuizzes[i - 1].poster_webp ? require('../assets/images/content/quiz/' + filteredQuizzes[i - 1].poster_webp) : filteredQuizzes[i - 1].poster) : filteredQuizzes[i - 1].poster" />
             </div>
             <div class="tile__details-custom p-2 text-center">
               <p class="quiz-card-title">{{ filteredQuizzes[i - 1].title }}</p>

@@ -44,7 +44,7 @@
             <div class="row__inner p-0">
               <div class="tile" v-for="i in 10" :key="i" :set="topTitles = (selectedType == 1 ? data.topMovies : data.topSeries)" @click="$router.push({ name: 'Title', params: { imdbid: topTitles[i - 1].imdb_id} })">
                 <div class="tile__media">
-                  <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + topTitles[i - 1].poster_webp) : topTitles[i - 1].poster"
+                  <img class="tile__img" :src="webpSupported ? (topTitles[i - 1].poster_webp ? require('../assets/images/content/' + topTitles[i - 1].poster_webp) : topTitles[i - 1].poster) : topTitles[i - 1].poster"
                     rel="preload" />
                 </div>
                 <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
@@ -101,8 +101,10 @@
           <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
           <option value="Most recent">Most recent</option>
           <option value="Oldest">Oldest</option>
-          <option value="Best rated">Best rated</option>
-          <option value="Worst rated">Worst rated</option>
+          <option value="Best IMDb rated">Best IMDb rated</option>
+          <option value="Worst IMDb rated">Worst IMDb rated</option>
+          <option value="Best Movizz rated">Best Movizz rated</option>
+          <option value="Worst Movizz rated">Worst Movizz rated</option>
           <option value="Most viewed">Most viewed</option>
           <option value="Least viewed">Least viewed</option>
         </select>
@@ -117,12 +119,13 @@
             <div class="tile-custom">
               <div class="tile__media-custom">
                 <img class="tile__img"
-                  :src="webpSupported ? require('../assets/images/content/' + title.poster_webp) : title.poster"
+                  :src="webpSupported ? (title.poster_webp ? require('../assets/images/content/' + title.poster_webp) : title.poster) : title.poster"
                   rel="preload" />
               </div>
               <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
                 <p class="quiz-card-title">{{ title.title }}</p>
-                <button class="orange-btn w-100" style="font-size: .85em; max-width: 150px;">IMDb {{ parseFloat(title.imdb_rating).toFixed(1) }}</button>
+                <button class="orange-btn w-100 mb-2" style="font-size: .85em; max-width: 150px;">IMDb {{ parseFloat(title.imdb_rating).toFixed(1) }}</button>
+                <button class="blur-btn" style="font-size: .85em; max-width: 150px;">Movizz {{ parseFloat(title.movizz_rating).toFixed(1) }}</button>
               </div>
             </div>
           </router-link>
@@ -150,6 +153,7 @@
 
 <script>
  import { mapActions } from "vuex";
+ 
   export default {
     name: "Catalog",
     data() {
@@ -225,6 +229,7 @@
           this.data.movies = await this.getAllTitles();
           if (this.data.movies.success) {
             this.data.bannerRating = parseFloat(this.data.movies.msg.filter(tt => tt.imdb_id == 'tt6806448')[0].movizz_rating).toFixed(1);
+
             this.data.movies.msg.map(title => {
               // Pré carregar anos para o select
               if (!this.anos.some(ano => ano == title.year)) {
@@ -235,6 +240,7 @@
                 this.paises.push(title.country);
               }
             });
+            
             this.anos.sort();
             this.paises.sort();
             this.data.series = this.data.movies.msg.filter(t => t.seasons > 0);
@@ -325,10 +331,14 @@
               filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
             } else if (this.filters.orderby == "Oldest") {
               filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
-            } else if (this.filters.orderby == "Best rated") {
+            } else if (this.filters.orderby == "Best IMDb rated") {
               filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
-            } else if (this.filters.orderby == "Worst rated") {
+            } else if (this.filters.orderby == "Worst IMDb rated") {
               filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Best Movizz rated") {
+              filterResult = filterResult.sort((a, b) => (a.movizz_rating > b.movizz_rating) ? -1 : ((a.movizz_rating < b.movizz_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Worst Movizz rated") {
+              filterResult = filterResult.sort((a, b) => (a.movizz_rating < b.movizz_rating) ? -1 : ((a.movizz_rating > b.movizz_rating) ? 1 : 0));
             } else if (this.filters.orderby == "Most viewed") {
               filterResult = filterResult.sort((a, b) => (a.times_seen > b.times_seen) ? -1 : ((a.times_seen < b.times_seen) ? 1 : 0));
             } else if (this.filters.orderby == "Least viewed") {

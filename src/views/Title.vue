@@ -5,7 +5,7 @@
         <div class="row h-100 w-100 pt-5 pb-5 m-0">
           <div class="poster col-lg-4 m-auto">
             <div class="w-100 poster-wrapper">
-              <img id="title-poster" :src="webpSupported ? require('../assets/images/content/' + data.title.poster_webp) : data.title.poster" alt="Title cover" />
+              <img id="title-poster" :src="webpSupported ? (data.title.poster_webp ? require('../assets/images/content/' + data.title.poster_webp) : data.title.poster) : data.title.poster" alt="Title cover" />
             </div>
           </div>
           <div class="main-info col-lg-8">
@@ -90,7 +90,7 @@
                 <div
                   class="cast-photo"
                   :style="{
-                    backgroundImage: 'url(' + (webpSupported ? require('../assets/images/content/' + data.title.cast[i - 1].image_webp) : data.title.cast[i - 1].image) + ')',
+                    backgroundImage: 'url(' + (webpSupported ? (data.title.cast[i - 1].image_webp ? require('../assets/images/content/' + data.title.cast[i - 1].image_webp) : data.title.cast[i - 1].image) : data.title.cast[i - 1].image) + ')',
                   }"
                   style="background-repeat: no-repeat; background-size: cover; background-position: center center; width: 100%; height: 150px; border-top-right-radius: 10px; border-top-left-radius: 10px"
                 ></div>
@@ -151,7 +151,7 @@
               <div class="row__inner p-0">
                 <div class="tile" v-for="(episodio, i) in data.title.episodes.filter((ep) => ep.season == selectedSeason)" :key="i">
                   <div class="tile__media">
-                    <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + episodio.banner_webp) : episodio.banner" />
+                    <img class="tile__img" :src="webpSupported ? (episodio.banner_webp ? require('../assets/images/content/' + episodio.banner_webp) : episodio.banner) : episodio.banner" />
                   </div>
                   <div class="tile__details">
                     <div class="tile__title">
@@ -215,30 +215,28 @@
         <div class="col-md-4">
           <section id="quizzes">
             <p class="subtitle">Find this show in these quizzes</p>
-            <div class="related-card d-flex mb-3" v-for="i in relatedQuizzes.length" :key="i">
+            <div class="related-card d-flex mb-3" v-for="i in data.title.relatedQuizzes.length" :key="i">
               <div
                 class="related-image"
-                :style="{
-                  backgroundImage: 'url(' + (webpSupported ? require('../assets/images/content/quiz/' + relatedQuizzes[i - 1].banner_webp) : relatedQuizzes[i - 1].banner) + ')',
-                }"
+                :style="{ backgroundImage: 'url(' + (webpSupported ? (data.title.relatedQuizzes[i - 1].banner_webp ? require('../assets/images/content/quiz/' + data.title.relatedQuizzes[i - 1].banner_webp) : data.title.relatedQuizzes[i - 1].banner) : data.title.relatedQuizzes[i - 1].banner) + ')' }"
               ></div>
               <div class="related-info d-flex flex-column p-2">
                 <p id="related-quiz-title">
-                  {{ relatedQuizzes[i - 1].titulo }}
+                  {{ data.title.relatedQuizzes[i - 1].title }}
                 </p>
                 <p id="related-quiz-description">
-                  {{ relatedQuizzes[i - 1].descricao }}
+                  {{ data.title.relatedQuizzes[i - 1].description }}
                 </p>
                 <a
                   class="d-flex"
                   style="gap: 10px; cursor: pointer"
-                  @click="$router.push({name: 'Quiz', params: { id: relatedQuizzes[i - 1].id_quiz } })">
+                  @click="$router.push({name: 'Quiz', params: { id: data.title.relatedQuizzes[i - 1].quiz_id } })">
                   <img src="../assets/images/play_icon.png" alt="Play icon" width="25px" height="25px" />
                   <p>Play</p>
                 </a>
               </div>
             </div>
-            <div v-if="relatedQuizzes.length == 0">
+            <div v-if="data.title.relatedQuizzes.length == 0">
               <p>This title is not in any of our quizzes, sorry.</p>
             </div>
           </section>
@@ -515,7 +513,7 @@ export default {
         } else {
           let response = await this.removeSeen({
             id: this.getLoggedUserData.data.id,
-            imdb_id: this.data.title._id,
+            _id: this.data.title._id,
           });
           if (response.success) {
             this.userSeen = this.userSeen.filter((title) => title != this.$route.params.imdbid);
@@ -662,7 +660,7 @@ export default {
     "loading.title"() {
       if (!this.loading.title) {
         this.waitForElm(".jumbotron").then((elm) => {
-          elm.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.webpSupported ? require("../assets/images/content/" + this.data.title.banner_webp) : this.data.title.banner})`;
+          elm.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${this.webpSupported ? (this.data.title.banner_webp ? require("../assets/images/content/" + this.data.title.banner_webp) : this.data.title.banner) : this.data.title.banner})`;
         });
         this.verifyLike();
         this.verifySeen();

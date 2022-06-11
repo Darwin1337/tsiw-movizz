@@ -6,7 +6,6 @@
           <router-link class="navbar-brand" :to="{ name: 'Home' }">
             <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
           </router-link>
-          
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -50,7 +49,7 @@
                     <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
                       <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
                         <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
-                          <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : require('../assets/images/content/' + filteredTitles[i - 1].poster_webp)) : filteredTitles[i - 1].poster">
+                          <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? (filteredTitles[i - 1].poster_webp ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster) : (filteredTitles[i - 1].poster_webp ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster)) : filteredTitles[i - 1].poster">
                         </div>
                         <div class="d-flex flex-column">
                           <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('imdb_id') ? (filteredTitles[i - 1].seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>
@@ -87,7 +86,7 @@
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
           <router-link class="navbar-brand" :to="{ name: 'Home' }">
-            <img  src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
+            <img src="../assets/images/logo.svg" alt="Logo" width="166" height="26" />
           </router-link>
           <button class="nav-btn-toggler navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -126,7 +125,7 @@
                   <div class="card-comment p-3 me-1" v-for="i in filteredTitles.length" :key="i">
                     <div class="d-flex w-100 align-items-center" style="gap: 15px; cursor: pointer;" @click="redirect(filteredTitles[i - 1])">
                       <div style="width: 50px; height: 73px; min-width: 50px; min-height: 73px;">
-                        <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : require('../assets/images/content/' + filteredTitles[i - 1].poster_webp)) : filteredTitles[i - 1].poster">
+                        <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="webpSupported ? (filteredTitles[i - 1].quiz_id ? (filteredTitles[i - 1].poster_webp ? require('../assets/images/content/quiz/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster) : (filteredTitles[i - 1].poster_webp ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster)) : filteredTitles[i - 1].poster">
                       </div>
                       <div class="d-flex flex-column">
                         <p class="m-0" style="color: var(--cinza-claro);">{{ filteredTitles[i - 1].hasOwnProperty('imdb_id') ? (filteredTitles[i - 1].seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</p>

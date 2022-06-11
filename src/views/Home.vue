@@ -48,12 +48,12 @@
         <div class="row__inner p-0">
           <div class="tile" v-for="(quiz,i) in data.quizzes" :key="i" @click="$router.push({ name: 'Quiz', params: { id: quiz.quiz_id } })">
             <div class="tile__media">
-              <img class="tile__img" :src="require('../assets/images/content/quiz/' + quiz.poster_webp)" />
+              <img class="tile__img" :src="webpSupported ? (quiz.poster_webp ? require('../assets/images/content/quiz/' + quiz.poster_webp) : quiz.poster) : quiz.poster" alt="Quiz poster" />
             </div>
             <div class="tile__details p-2">
               <p class="quiz-card-title">{{ quiz.title }}</p>
               <p class="quiz-card-play">▶</p>
-              <!-- <p class="quiz-card-rating">{{ getQuizRating(i.id_quiz) }}</p> -->
+              <p class="quiz-card-rating">{{ parseFloat(quiz.quizz_rating).toFixed(1) }}</p>
             </div>
           </div>
         </div>
@@ -74,8 +74,7 @@
           <div class="row__inner p-0">
             <div class="tile" v-for="(title, i) in data.titles" :key="i" @click="$router.push({ name: 'Title', params: { imdbid: title.imdb_id} })">
               <div class="tile__media">
-                <img class="tile__img" :src="require('../assets/images/content/' + title.poster_webp)"
-                  alt="Movie Cover" />
+                <img class="tile__img" :src="webpSupported ? (title.poster_webp ? require('../assets/images/content/' + title.poster_webp) : title.poster) : title.poster" alt="Movie Cover" />
               </div>
               <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
                 <p class="quiz-card-title">{{title.title}}</p>
@@ -98,8 +97,7 @@
         <div class="row__inner p-0">
           <div class="tile" v-for=" (serie,i) in data.series" :key="i" @click="$router.push({ name: 'Title', params: { imdbid: serie.imdb_id} })">
             <div class="tile__media">
-              <img class="tile__img" :src="require('../assets/images/content/' + serie.poster_webp)"
-                alt="Series Cover" />
+              <img class="tile__img" :src="webpSupported ? (serie.poster_webp ? require('../assets/images/content/' + serie.poster_webp) : serie.poster) : serie.poster" alt="Series Cover" />
             </div>
             <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
               <p class="quiz-card-title">{{serie.title}}</p>

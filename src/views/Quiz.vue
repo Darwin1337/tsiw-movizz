@@ -5,7 +5,7 @@
         <div
           class="jumbotron d-flex align-items-center p-5"
           style="max-height: 386px; height: 100%; background-position: center"
-          :style="'background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.65)), url(' + (webpSupported ? require('../assets/images/content/quiz/' + data.quiz.banner_webp) : data.quiz.banner) + ');'"
+          :style="'background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.65)), url(' + (webpSupported ? (data.quiz.banner_webp ? require('../assets/images/content/quiz/' + data.quiz.banner_webp) : data.quiz.banner) : data.quiz.banner) + ');'"
         >
           <div id="banner" class="w-100 h-100">
             <h3 class="quiz-title">{{ data.quiz.title }}</h3>
