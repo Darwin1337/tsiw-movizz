@@ -39,7 +39,7 @@
           <p class="seccion-title">No time to waste?</p>
           <p class="login-title">Prove it's really you, <span style="color: #BBE1FA; font-weight: bold;">sign in</span>
           </p>
-          <form id="login" class="mb-5" @submit.prevent="loginUser()">
+          <form id="login" class="mb-5" @submit.prevent="login()">
             <div class="input-group">
               <input type="text" class="form-control bg-inputs" placeholder="E-mail" aria-label="E-mail" required v-model="old_user.email">
               <span class="input-group-text"><i class="fas fa-envelope"></i></span>
@@ -55,7 +55,7 @@
           </form>
           <p class="login-title"><span style="color: #BBE1FA; font-weight: bold;">Sign up</span>, we promise we won't
             sell your data</p>
-          <form id="register" @submit.prevent="registerUser()">
+          <form id="register" @submit.prevent="register()">
             <div class="row g-4">
               <div class="col-sm-6">
                 <input type="text" class="form-control bg-inputs" placeholder="First name" aria-label="First name" required v-model="new_user.primeiro_nome">
@@ -80,7 +80,7 @@
               <span class="input-group-text"><i class="fas fa-calendar"></i></span>
             </div>
             <div class="text-center">
-              <button type="submit" class="mt-4 orange-btn">Sign up</button>
+              <button type="button" @click="register()" class="mt-4 orange-btn">Sign up</button>
             </div> 
           </form>
         </div>
@@ -91,9 +91,10 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
+  name: "Authentication",
   data() {
     return {
       old_user: {
@@ -105,52 +106,55 @@ export default {
         ultimo_nome: '',
         email: '',
         password: '',
-        data_nascimento: '',
-        avatar: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-        id_badge: 0,
-        pontos: 0,
-        xp: 0,
-        nivel: 0,
-        num_quizzes: 0,
-        num_certas: 0,
-        num_erradas: 0,
-        num_ajudas: 0,
-		    is_admin: true, 
-        data_registo: new Date(),
-        played: [],
-        is_locked: false
+        data_nascimento: ''
       }
     }
   },
   methods: {
-    ...mapMutations(["SET_LOGGED_USER", "SET_NEW_USER"]),
-    loginUser() {
-      if (this.isUser(this.old_user.email, this.old_user.password)) {
-        if (!this.isLocked(this.old_user.email)) {
-          this.SET_LOGGED_USER(this.old_user.email);
-          this.$router.push({ name: "Home" });
+    ...mapActions(["loginUser", "registerUser"]),
+    async login() {
+      try {
+        let response = await this.loginUser(this.old_user);
+        if (response.success) {
+          this.$swal({
+            title: 'Success',
+            text: 'You are being redirected to the home page',
+            icon: 'success',
+            timer: 1500
+          });
+          setTimeout(() => this.$router.push({ name: "Home" }), 1500);
         } else {
-          this.$swal('Error!', 'Your account has been locked.', 'error');
+          throw new Error(response.msg);
         }
-      } else {
-        this.$swal('Error!', 'The data entered is not in our system.', 'error');
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
       }
     },
-    registerUser() {
-      if (this.isEmailAvailable(this.new_user.email)) {
-        this.new_user.id = this.getNextAvailableUserID;
-        this.new_user.data_registo = new Date();
-        this.SET_NEW_USER(this.new_user);
-        this.$swal('Success!', 'The sign up was successful.', 'success');
-      } else {
-        this.$swal('Error!', 'The e-mail entered is already being used.', 'error');
+    async register() {
+      try {
+        let response = await this.registerUser({
+          first_name: this.new_user.primeiro_nome,
+          last_name: this.new_user.ultimo_nome,
+          dob: this.new_user.data_nascimento,
+          email: this.new_user.email,
+          password: this.new_user.password
+        });
+        if (response.success) {
+          this.$swal({
+            title: 'Success',
+            text: 'Register successfully completed!',
+            icon: 'success',
+            timer: 1500
+          });
+        } else {
+          throw new Error(response.msg);
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
       }
     }
-  },
-  computed: {
-    ...mapGetters(["isEmailAvailable", "isUser", "getNextAvailableUserID", "isLocked"])
   }
-}
+};
 </script>
 
 <style scoped>  

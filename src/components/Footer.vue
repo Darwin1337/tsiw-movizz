@@ -34,7 +34,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "Footer"
+};
 </script>
 
 <style scoped>
@@ -43,6 +45,7 @@ export default {};
     padding: 40px;
     gap: 25px;
     width: 100%;
+    min-height: 137px;
   }
 
   #social {

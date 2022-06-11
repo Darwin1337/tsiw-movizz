@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="!loading.titles" class="container">
     <!-- Banner -->
     <div class="jumbo-wrapper mt-4" style="height: 425px;">
       <div :class="!webpSupported ? '' : 'webp'" class="jumbotron d-flex align-items-end p-5"
@@ -14,22 +14,23 @@
           <br>
           <div class="d-flex" style="gap: 15px;">
             <button class="orange-btn" @click="$router.push({ name: 'Title', params: { imdbid: 'tt6806448'} })">IMDb 6.5</button>
-            <button class="blur-btn" @click="$router.push({ name: 'Title', params: { imdbid: 'tt6806448'} })">Movizz {{ getTitleMovizzRating("tt6806448") }}</button>
+            <button class="blur-btn" @click="$router.push({ name: 'Title', params: { imdbid: 'tt6806448'} })">{{ !loading.titles ? 'Movizz ' + this.data.bannerRating : 'Loading'}}</button>
           </div>
         </div>
       </div>
     </div>
+
     <!-- Seletor filme/serie -->
     <div class="d-flex justify-content-center mt-3" style="gap: 15px;">
-      <div :class="selectedType == 1 ? 'active-type' : 'default-type'" @click="selectedType = 1; mostrar = 12">
+      <div :class="selectedType == 1 ? 'active-type' : 'default-type'" @click="selectedType = 1;">
         <span style="font-size: 1.25em;">Movies</span>
       </div>
-      <div :class="selectedType == 2 ? 'active-type' : 'default-type'" @click="selectedType = 2; mostrar = 12">
+      <div :class="selectedType == 2 ? 'active-type' : 'default-type'" @click="selectedType = 2;">
         <span style="font-size: 1.25em;">Series</span>
       </div>
     </div>
 
-    <div>
+    <div v-if="!loading.topMovies && !loading.topSeries">
       <h4 class="mt-3">{{ selectedType == 1 ? 'Top Movies' : 'Top Series'}}</h4>
       <section :class="selectedType == 1 ? 'top-movies' : 'top-series'">
         <div class="navigation mb-2">
@@ -41,14 +42,14 @@
         <div class="carousel-wrapper" style="position: relative;">
           <div class="row-carousel disable-scrollbars">
             <div class="row__inner p-0">
-              <div class="tile" v-for="i in 10" :key="i" :set="topTitles = shuffleTop" @click="$router.push({ name: 'Title', params: { imdbid: topTitles[i - 1].id_imdb} })">
+              <div class="tile" v-for="i in 10" :key="i" :set="topTitles = (selectedType == 1 ? data.topMovies : data.topSeries)" @click="$router.push({ name: 'Title', params: { imdbid: topTitles[i - 1].imdb_id} })">
                 <div class="tile__media">
-                  <img class="tile__img" :src="webpSupported ? require('../assets/images/content/' + topTitles[i - 1].poster_webp) : topTitles[i - 1].poster"
+                  <img class="tile__img" :src="webpSupported ? (topTitles[i - 1].poster_webp ? require('../assets/images/content/' + topTitles[i - 1].poster_webp) : topTitles[i - 1].poster) : topTitles[i - 1].poster"
                     rel="preload" />
                 </div>
                 <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-                  <p class="quiz-card-title">{{topTitles[i - 1].titulo}}</p>
-                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(topTitles[i - 1].pontuacao_imdb).toFixed(1)}}</button>
+                  <p class="quiz-card-title">{{topTitles[i - 1].title}}</p>
+                  <button class="orange-btn" style="font-size: .85em;">IMDb {{parseFloat(topTitles[i - 1].imdb_rating).toFixed(1)}}</button>
                 </div>
               </div>
             </div>
@@ -100,8 +101,10 @@
           <option value="Alphabetic (Z-A)">Alphabetic (Z-A)</option>
           <option value="Most recent">Most recent</option>
           <option value="Oldest">Oldest</option>
-          <option value="Best rated">Best rated</option>
-          <option value="Worst rated">Worst rated</option>
+          <option value="Best IMDb rated">Best IMDb rated</option>
+          <option value="Worst IMDb rated">Worst IMDb rated</option>
+          <option value="Best Movizz rated">Best Movizz rated</option>
+          <option value="Worst Movizz rated">Worst Movizz rated</option>
           <option value="Most viewed">Most viewed</option>
           <option value="Least viewed">Least viewed</option>
         </select>
@@ -109,142 +112,98 @@
     </div>
 
     <!-- mostrar todos -->
-    <div>
+    <div v-if="!loading.titles">
       <div class="row g-3">
-        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="i in (filteredTitles.length >= mostrar ? mostrar : filteredTitles.length)" :key="i">
-          <router-link :to="{ name: 'Title', params: { imdbid: filteredTitles[i - 1].id_imdb }} ">
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-4 col-6" v-for="title in filteredTitles" :key="title.imdb_id">
+          <router-link :to="{ name: 'Title', params: { imdbid: title.imdb_id }} ">
             <div class="tile-custom">
               <div class="tile__media-custom">
                 <img class="tile__img"
-                  :src="webpSupported ? require('../assets/images/content/' + filteredTitles[i - 1].poster_webp) : filteredTitles[i - 1].poster"
+                  :src="webpSupported ? (title.poster_webp ? require('../assets/images/content/' + title.poster_webp) : title.poster) : title.poster"
                   rel="preload" />
               </div>
               <div class="tile__details p-2 text-center d-flex justify-content-center align-items-center flex-column">
-                <p class="quiz-card-title">{{filteredTitles[i - 1].titulo}}</p>
-                <button class="orange-btn w-100" style="font-size: .85em; max-width: 150px;">IMDb {{parseFloat(filteredTitles[i - 1].pontuacao_imdb).toFixed(1)}}</button>
+                <p class="quiz-card-title">{{ title.title }}</p>
+                <button class="orange-btn w-100 mb-2" style="font-size: .85em; max-width: 150px;">IMDb {{ parseFloat(title.imdb_rating).toFixed(1) }}</button>
+                <button class="blur-btn" style="font-size: .85em; max-width: 150px;">Movizz {{ parseFloat(title.movizz_rating).toFixed(1) }}</button>
               </div>
             </div>
           </router-link>
         </div>
-
         <div v-if="filteredTitles.length == 0">
           <p>No results were found for the filters applied.</p>
         </div>
       </div>
-      <div v-if="mostrar < filteredTitles.length" class="w-100 d-flex justify-content-center mt-4">
-        <button class="rounded-btn" @click="mostrar = mostrar + 12 <= filteredTitles.length ? mostrar + 12 : filteredTitles.length">Load More</button>
+      <div class="d-flex justify-content-center gap-5 mt-4">
+        <div v-for="i in data.totalPages" :key="i" class="page d-flex justify-content-center align-items-center" :class="{ selected: data.currentPage == i }"
+          @click="data.currentPage = i">
+          <p class="m-0">{{ i }}</p>
+        </div>
       </div>
     </div>
+    <div v-else>
+      <p>Loading...</p>
+    </div>
+  </div>
+  <div v-else class="d-flex flex-column justify-content-center align-items-center text-center">
+    <img src="../assets/images/loading.gif" alt="">
+    <h3>We thought this would be faster as well, <span style="color: var(--laranja);">sorry</span>.</h3>
   </div>
 </template>
+
 <script>
- import { mapGetters } from "vuex";
+ import { mapActions } from "vuex";
+ 
   export default {
+    name: "Catalog",
     data() {
       return {
         webpSupported: true,
         selectedType: 1,
-        mostrar: 12,
         anos: [],
         generos: [],
         paises: [],
+        data: {
+          titles: [],
+          movies: [],
+          series: [],
+          topMovies: [],
+          topSeries: [],
+          filterHistory: [],
+          totalPages: 1,
+          currentPage: 1,
+          bannerRating: 0.0,
+        },
+        loading: {
+          titles: true,
+          topMovies: true,
+          topSeries: true,
+          genres: true
+        },
         filters: {
           search: "",
           genre: "Genre",
           year: "Year",
           country: "Country",
           orderby: "Order by"
-        },
-        titles: []
+        }
       }
     },
-    created () {
-      this.titles = this.selectedType == 1 ? this.getAllTitles.filter(title => title.total_temporadas == 0) : this.getAllTitles.filter(title => title.total_temporadas > 0);
-      this.generos = this.getAllGenres.map(genre => genre.descricao);
-      this.getAllTitles.map(title => {
-        // Pré carregar anos para o select
-        if (!this.anos.some(ano => ano == title.ano)) {
-          this.anos.push(title.ano);
-        }
-        // Pré carregar países para o select
-        if (!this.paises.some(pais => pais == title.pais)) {
-          this.paises.push(title.pais);
-        }
-      });
-      this.anos.sort();
-      this.paises.sort();
-
-      // Verificar se o browser suporta WebP
-      const elem = document.createElement('canvas');
-      if (!!(elem.getContext && elem.getContext('2d'))) {
-        this.webpSupported = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
-      } else{
-        this.webpSupported = false;
-      }
-      console.log("WebP supported: " + this.webpSupported);
-    },
-    computed: {
-      ...mapGetters(["getAllTitles", "getAllGenres", "getAllViewsByTitle", "getTitleMovizzRating"]),
-      filteredTitles() {
-        this.resetMostrar();
-        let filterResult = [...this.titles];
-
-        // Barra de pesquisa
-        if (this.filters.search != "") {
-          filterResult = filterResult.filter(title => title.titulo.toLowerCase().includes(this.filters.search.toLowerCase()));
-        }
-
-        // Géneros
-        if (this.filters.genre != "All" && this.filters.genre != "Genre") {
-          filterResult = filterResult.filter(title => title.genero.some(genero => genero == this.filters.genre));
-        }
-
-        // Anos
-        if (this.filters.year != "All" && this.filters.year != "Year") {
-          filterResult = filterResult.filter(title => title.ano == this.filters.year);
-        }
-        
-        // Países
-        if (this.filters.country != "All" && this.filters.country != "Country") {
-          filterResult = filterResult.filter(title => this.filters.country == title.pais);
-        }
-
-        if (this.filters.orderby != "Recently added" && this.filters.orderby != "Order by") {
-          if (this.filters.orderby == "Alphabetic (A-Z)") {
-            filterResult = filterResult.sort((a, b) => (a.titulo < b.titulo) ? -1 : ((a.titulo > b.titulo) ? 1 : 0));
-          } else if (this.filters.orderby == "Alphabetic (Z-A)") {
-            filterResult = filterResult.sort((a, b) => (a.titulo > b.titulo) ? -1 : ((a.titulo < b.titulo) ? 1 : 0));
-          } else if (this.filters.orderby == "Most recent") {
-            filterResult = filterResult.sort((a, b) => (a.ano > b.ano) ? -1 : ((a.ano < b.ano) ? 1 : 0));
-          } else if (this.filters.orderby == "Oldest") {
-            filterResult = filterResult.sort((a, b) => (a.ano < b.ano) ? -1 : ((a.ano > b.ano) ? 1 : 0));
-          } else if (this.filters.orderby == "Best rated") {
-            filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb > b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb < b.pontuacao_imdb) ? 1 : 0));
-          } else if (this.filters.orderby == "Worst rated") {
-            filterResult = filterResult.sort((a, b) => (a.pontuacao_imdb < b.pontuacao_imdb) ? -1 : ((a.pontuacao_imdb > b.pontuacao_imdb) ? 1 : 0));
-          } else if (this.filters.orderby == "Most viewed") {
-            filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
-            filterResult = filterResult.sort((a, b) => (a.visualizacoes > b.visualizacoes) ? -1 : ((a.visualizacoes < b.visualizacoes) ? 1 : 0));
-          } else if (this.filters.orderby == "Least viewed") {
-            filterResult.map(res => res.visualizacoes = [...this.getAllViewsByTitle].find(ttl => ttl.id_imdb == res.id_imdb).visualizacoes);
-            filterResult = filterResult.sort((a, b) => (a.visualizacoes < b.visualizacoes) ? -1 : ((a.visualizacoes > b.visualizacoes) ? 1 : 0));
-          }    
-        }
-        
-        return filterResult;
-      },
-      shuffleTop() {
-        let array = [...this.titles];
-        let currentIndex = array.length,  randomIndex;
-        while (currentIndex != 0) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
-      }
+    mounted () {
+      this.webpSupported = this.isWebpSupported();
+      this.getTitles();
+      this.getTopTitles();
+      this.getGenres();
     },
     methods: {
+      ...mapActions(["getBest10Titles", "getAllTitles", "getAllGenres"]),
+      isWebpSupported() {
+        const elem = document.createElement('canvas');
+        if (!!(elem.getContext && elem.getContext('2d'))) {
+          return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+        }
+        return false;
+      },
       simulateScroll(dir, target) {
         if (dir == "right") {
           document.querySelector(target + " .nav-left").style.color = "white";
@@ -264,13 +223,143 @@
           }
         }
       },
-      resetMostrar() {
-        this.mostrar = 12;
+      async getTitles() {
+        try {
+          this.loading.titles = true;
+          this.data.movies = await this.getAllTitles();
+          if (this.data.movies.success) {
+            this.data.bannerRating = parseFloat(this.data.movies.msg.filter(tt => tt.imdb_id == 'tt6806448')[0].movizz_rating).toFixed(1);
+
+            this.data.movies.msg.map(title => {
+              // Pré carregar anos para o select
+              if (!this.anos.some(ano => ano == title.year)) {
+                this.anos.push(title.year);
+              }
+              // Pré carregar países para o select
+              if (!this.paises.some(pais => pais == title.country)) {
+                this.paises.push(title.country);
+              }
+            });
+            
+            this.anos.sort();
+            this.paises.sort();
+            this.data.series = this.data.movies.msg.filter(t => t.seasons > 0);
+            this.data.movies = this.data.movies.msg.filter(t => t.seasons == 0);
+            this.filterHistory = this.selectedType == 1 ? [...this.data.movies] : [...this.data.series];
+            this.loading.titles = false;
+          } else {
+            this.$router.push({ name: 'Error', params: { '0': 'error' } });
+          }
+        } catch (e) {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      },
+      async getTopTitles() {
+        try {
+          this.loading.topMovies = true;
+          this.data.topMovies = await this.getBest10Titles(true);
+          if (this.data.topMovies.success) {
+            this.data.topMovies = this.data.topMovies.msg;
+            this.loading.topMovies = false;
+          } else {
+            this.$router.push({ name: 'Error', params: { '0': 'error' } });
+          }
+
+          this.loading.topSeries = true;
+          this.data.topSeries = await this.getBest10Titles(false);
+          if (this.data.topSeries.success) {
+            this.data.topSeries = this.data.topSeries.msg;
+            this.loading.topSeries = false;
+          } else {
+            this.$router.push({ name: 'Error', params: { '0': 'error' } });
+          }
+        }catch (e) {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      },
+      async getGenres() {
+        try {
+          this.loading.genres = true;
+          this.generos = await this.getAllGenres();
+          if (this.generos.success) {
+            this.generos = this.generos.msg.map(genre => genre.description);
+            this.loading.genres = false;
+          } else {
+            this.$router.push({ name: 'Error', params: { '0': 'error' } });
+          }
+        }catch (e) {
+          this.$router.push({ name: 'Error', params: { '0': 'error' } });
+        }
+      },
+    },
+    computed: {
+      filteredTitles() {
+        if (!this.loading.titles && !this.loading.quizzes) {
+          let filterResult = this.selectedType == 1 ? [...this.data.movies] : [...this.data.series];
+
+          // Barra de pesquisa
+          if (this.filters.search != "") {
+            console.log("a1");
+            filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filters.search.toLowerCase()));
+          }
+
+          // Géneros
+          if (this.filters.genre != "All" && this.filters.genre != "Genre") {
+            console.log("a2");
+            filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filters.genre));
+          }
+
+          // Anos
+          if (this.filters.year != "All" && this.filters.year != "Year") {
+            console.log("a3");
+            filterResult = filterResult.filter(title => title.year == this.filters.year);
+          }
+          
+          // Países
+          if (this.filters.country != "All" && this.filters.country != "Country") {
+            console.log("a4");
+            filterResult = filterResult.filter(title => this.filters.country == title.country);
+          }
+
+          if (this.filters.orderby != "Recently added" && this.filters.orderby != "Order by") {
+            console.log("a5");
+            if (this.filters.orderby == "Alphabetic (A-Z)") {
+              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
+            } else if (this.filters.orderby == "Alphabetic (Z-A)") {
+              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
+            } else if (this.filters.orderby == "Most recent") {
+              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
+            } else if (this.filters.orderby == "Oldest") {
+              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
+            } else if (this.filters.orderby == "Best IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Worst IMDb rated") {
+              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Best Movizz rated") {
+              filterResult = filterResult.sort((a, b) => (a.movizz_rating > b.movizz_rating) ? -1 : ((a.movizz_rating < b.movizz_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Worst Movizz rated") {
+              filterResult = filterResult.sort((a, b) => (a.movizz_rating < b.movizz_rating) ? -1 : ((a.movizz_rating > b.movizz_rating) ? 1 : 0));
+            } else if (this.filters.orderby == "Most viewed") {
+              filterResult = filterResult.sort((a, b) => (a.times_seen > b.times_seen) ? -1 : ((a.times_seen < b.times_seen) ? 1 : 0));
+            } else if (this.filters.orderby == "Least viewed") {
+              filterResult = filterResult.sort((a, b) => (a.times_seen < b.times_seen) ? -1 : ((a.times_seen > b.times_seen) ? 1 : 0));
+            }    
+          }
+
+          this.data.totalPages = Math.ceil(filterResult.length / 12);
+          if (JSON.stringify(filterResult) != JSON.stringify(this.data.filterHistory)) {
+            // O utilizador mexeu nos filtros portanto forçar a página a ir para a 1
+            this.data.currentPage = 1;
+          }
+          this.data.filterHistory = structuredClone(filterResult);
+          return this.data.totalPages == 1 ? filterResult : filterResult.slice((this.data.currentPage - 1) * 12, ((this.data.currentPage - 1) * 12) + 12);
+        }
+        return null;
       }
     },
     watch: {
       selectedType() {
-        this.titles = this.selectedType == 1 ? this.getAllTitles.filter(title => title.total_temporadas == 0) : this.getAllTitles.filter(title => title.total_temporadas > 0);
+        this.data.currentPage = 1;
       }
     }
   }
@@ -278,6 +367,22 @@
 </script>
 
 <style scoped>
+  .page {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border: 2px solid var(--laranja);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .page.selected {
+    cursor: default;
+    background-color: var(--laranja);
+    color: var(--bg);
+  }
+
   a {
     text-decoration: none;
     color: white;
