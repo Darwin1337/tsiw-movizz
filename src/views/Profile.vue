@@ -330,22 +330,24 @@
             </div>
           </div>
           <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
-            <!-- <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
+            <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredComments" :key="i">
               <div >
-                <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
-                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">{{ title.hasOwnProperty('id_imdb') ? (getTitleInfo(title.id_imdb).total_temporadas == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.hasOwnProperty('id_imdb') ? getTitleInfo(title.id_imdb).titulo : getQuizByID(title.id_quiz).titulo }}</strong></p>
+                
+                <p style="color: var(--cinza-claro);">{{ new Date(title.comment_data.date).getDate() + "/" + (parseInt(new Date(title.comment_data.date).getMonth()) + 1) + "/" + new Date(title.comment_data.date).getFullYear() + " at " + new Date(title.comment_data.date).getHours() + ":" + String(new Date(title.comment_data.date).getMinutes()).padStart(2, '0') + "h" }}</p>
+                <p style="color: var(--laranja);"><span style="color: var(--cinza-claro);">{{ title.imdb_id ? (title.seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ title.imdb_id ? title.title  : title.title }}</strong></p>
               </div>
               <div>
-                <p>{{title.comentario}}</p>
+                <p>{{title.comment_data.comment}}</p>
               </div>
               <div class="d-flex" style="gap: 10px;">
-                <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See comment</button>
-                <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeComment(title.id_comentario, false) : removeComment(title.id_comentario, true)">Delete</button>
+                <button class="edit-btn" @click="title.imdb_id ? $router.push({ name: 'Title', params: { imdbid: title.imdb_id} }) : $router.push({ name: 'Quiz', params: { id: title.quiz_id} })">See comment</button>
+                <!-- FALTA CRIAR A FUNÇÃO REMOVER -->
+                <!-- <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeComment(title.id_comentario, false) : removeComment(title.id_comentario, true)">Delete</button> -->
               </div>
-            </div> -->
-            <!-- <div v-if="getAllUserComments($route.params.id).length == 0">
-              <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't commented on any title nor quiz." : "This user hasn't commented on any title nor quiz." }}</p> 
-            </div> -->
+            </div>
+            <div v-if="filteredComments.length == 0">
+              <p>{{ !parseInt(this.data.user.id) ? "You have't commented on any title nor quiz." : "This user hasn't commented on any title nor quiz." }}</p> 
+            </div>
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
@@ -379,23 +381,22 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column col-8">
-
-                  <!--  -->
                   <p style="color: var(--laranja);" class="m-0"><span style="color: var(--cinza-claro);">{{ filteredRatings[i].title_id ? (filteredRatings[i].title_id.seasons == 0 ? 'Movie' : 'Series') : 'Quiz' }}</span>&nbsp;&nbsp;<strong>{{ filteredRatings[i].title_id ? filteredRatings[i].title_id.title : filteredRatings[i].quiz_id.title }}</strong></p>
                   <div class="stars d-flex" style="gap: 5px; cursor: pointer; color: var(--laranja);">
                     <i class="fas fa-star" v-for="i in filteredRatings[i].rating" :key="i"></i>
                   </div>
-                  <!-- FIQUEI AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII -->
-                  <!-- <div class="d-flex mt-auto" style="gap: 10px;">
-                    <button class="edit-btn" @click="title.hasOwnProperty('id_imdb') ? $router.push({ name: 'Title', params: { imdbid: title.id_imdb} }) : $router.push({ name: 'Quiz', params: { id: title.id_quiz} })">See Rating</button>
-                    <button class="custom-logout-btn" @click="title.hasOwnProperty('id_imdb') ? removeRate(title.id_imdb, false) : removeRate(title.id_quiz, true)">Delete</button>
-                  </div> -->
+                  <div class="d-flex mt-auto" style="gap: 10px;">
+                    <button class="edit-btn" @click="filteredRatings[i].title_id ? $router.push({ name: 'Title', params: { imdbid: filteredRatings[i].title_id.imdb_id} }) : $router.push({ name: 'Quiz', params: { id: filteredRatings[i].quiz_id.quiz_id} })">See Rating</button>
+                    <!-- Fazer função remover!!!! -->
+                    <button class="custom-logout-btn" @click="filteredRatings[i].title_id ? removeRate(1,filteredRatings[i].title_id.imdb_id,filteredRatings[i].title_id._id, false) : removeRate(2,filteredRatings[i].quiz_id.quiz_id,filteredRatings[i].quiz_id._id, true)">Delete</button>
+                  </div>
                 </div>
               </div>
             </div>
-            <!-- <div v-if="getAllUserRatings($route.params.id).length == 0">
-              <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't rated any titles nor quizzes." : "This user hasn't rated any titles nor quizzes." }}</p> 
-            </div> -->
+            
+            <div v-if="filteredRatings.length==0">
+              <p>{{ !parseInt(this.data.user.id) ? "You have't rated any titles nor quizzes." : "This user hasn't rated any titles nor quizzes." }}</p> 
+            </div>
           </div>
         </div>
         <div class="col-md-12 col-lg-6 col-xl-4">
@@ -422,73 +423,74 @@
               </div>
             </div>
           </div>
-          <!-- <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
+          <div class="leaderboardBar mt-2" style="max-height: 500px; overflow-y: auto;">
             <div class="card-comment p-2 me-1 mb-2" style="background-color: var(--azul-escuro); border-radius: 5px;" v-for="(title,i) in filteredPrizes" :key="i">
               <div class="d-flex flex-wrap w-100" style="gap: 15px;">
                 <div>
                   <div style="width: 125px; height: 125px; min-width: 125px; min-height: 125px;">
-                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="getPrizeInfo(title.id_premio).img">
+                    <img class="w-100 h-100" style="object-fit: cover; object-position: center top; border-radius: 5px;" :src="filteredPrizes[i].prize_id.image">
                   </div>
                 </div>
                 <div class="d-flex flex-column">
-                  <p style="color: var(--laranja);" class="m-0"><strong>{{getPrizeInfo(title.id_premio).nome}}</strong></p>
-                  <p style="color: var(--cinza-claro);">{{ new Date(title.data).getDate() + "/" + (parseInt(new Date(title.data).getMonth()) + 1) + "/" + new Date(title.data).getFullYear() + " at " + new Date(title.data).getHours() + ":" + String(new Date(title.data).getMinutes()).padStart(2, '0') + "h" }}</p>
-                  <p style="color: var(--cinza-claro);"><strong>{{getPrizeInfo(title.id_premio).valor}}</strong> points</p>
+                  <p style="color: var(--laranja);" class="m-0"><strong>{{filteredPrizes[i].prize_id.name}}</strong></p>
+                  <p style="color: var(--cinza-claro);">{{ new Date(filteredPrizes[i].date).getDate() + "/" + (parseInt(new Date(filteredPrizes[i].date).getMonth()) + 1) + "/" + new Date(filteredPrizes[i].date).getFullYear() + " at " + new Date(filteredPrizes[i].date).getHours() + ":" + String(new Date(filteredPrizes[i].date).getMinutes()).padStart(2, '0') + "h" }}</p>
+                  <p style="color: var(--cinza-claro);"><strong>{{filteredPrizes[i].prize_id.price}}</strong> points</p>
                 </div>
               </div>
             </div>
-            <div v-if="getAllUserPrizes($route.params.id).length == 0">
-              <p>{{ parseInt(this.getLoggedUser.id) == parseInt(this.$route.params.id) ? "You have't claimed any prizes yet." : "This user hasn't claimed any prizes yet." }}</p> 
+            <div v-if="filteredPrizes.length == 0">
+              <p>{{ !parseInt(this.data.user.id)  ? "You have't claimed any prizes yet." : "This user hasn't claimed any prizes yet." }}</p> 
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
+    <div v-if="selectedTab == 'statistics'" class="w-100 d-flex flex-column align-items-center">
       <div class="card-profile p-3 w-100" style="max-width: 600px;">
         <div class="img-profile row g-3">
           <div class="col-md-2 col-lg-3 d-flex flex-column align-items-center justify-content-center">
             <div class="d-flex align-items-center position-relative">
-              <img :src="getAllUsers.find(user => user.id == $route.params.id).avatar"
+              <img :src="data.user.avatar"
                 style="border-radius: 50%; min-width: 50px; min-height: 50px; object-fit: cover; object-position: center top;" alt="Avatar" width="80px"
                 height="80px" />
             </div>
           </div>
           <div class="col-md-10 col-lg-9">
             <div class="p-info d-flex align-items-center flex-wrap" style="gap: 5px;">
-              <img :src="this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].icon" alt="Badge" width="15px"
+              <img :src="require('../assets/images/badges/' + data.user.badge_id.icon)" alt="Badge" width="15px"
                 height="15px" />
               <p class="m-0">
-                {{ getAllUsers.find(user => user.id == $route.params.id).primeiro_nome + ' ' + getAllUsers.find(user => user.id == $route.params.id).ultimo_nome }}
+                {{ data.user.first_name + ' ' + data.user.last_name }}
               </p>
               <p class="m-0" style="color: var(--cinza-claro); font-size: .85em;">
-                {{ this.getBadges[getAllUsers.find(user => user.id == $route.params.id).id_badge].name }}</p>
+                {{ data.user.badge_id.name }}</p>
             </div>
             <p style="color: var(--cinza-claro)" class="m-0"><strong>Member since:</strong>
-              {{ new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getDate() + "/" + (parseInt(new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getMonth()) + 1) + "/" + new Date(getAllUsers.find(user => user.id == $route.params.id).data_registo).getFullYear() }}
+              {{ new Date().getDate(data.user.register_date) + "/" + (parseInt(new Date(data.user.register_date).getMonth()) + 1) + "/" + new Date(data.user.register_date).getFullYear() }}
             </p>
             <div class="level-info d-flex align-items-center mt-4" style="gap: 15px;">
               <p class="m-0 d-flex justify-content-center align-items-center"
                 style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) }}</p>
+                {{ Math.floor(data.user.xp / 150) }}</p>
               <div class="d-flex flex-column w-100" style="gap: 10px;">
                 <div
                   style="min-width: 100px; width: 100%; height: 10px; background-color: var(--cinza-claro); border-radius: 30px;">
                   <div
-                    :style="{ width: parseFloat((getAllUsers.find(user => user.id == $route.params.id).xp - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)) * 100) / (((Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150) - (getAllUsers.find(user => user.id == $route.params.id).nivel * 150)).toFixed(2) + '%' }"
+                    :style="{ width: parseFloat((data.user.xp - (data.user.stats.level * 150)) * 100) / (((Math.floor(data.user.xp / 150) + 1) * 150) - (data.user.stats.level * 150)).toFixed(2) + '%' }"
                     style="background-color: white; height: 100%; border-top-left-radius: 30px; border-bottom-left-radius: 30px;">
                   </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <p class="m-0">Current XP <strong>{{ getAllUsers.find(user => user.id == $route.params.id).xp }}</strong></p>
+                  <p class="m-0">Current XP <strong>{{ data.user.xp }}</strong></p>
                   <p class="m-0">Next level
-                    <strong>{{ (Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1) * 150 }}</strong></p>
+                    <strong>{{ (Math.floor(data.user.xp / 150) + 1 )*150 }}</strong></p>
                 </div>
               </div>
               <p class="m-0 d-flex justify-content-center align-items-center"
                 style="width: 25px; height: 25px; min-width: 25px; min-height: 25px; background-color: var(--azul-claro); border-radius: 50%; font-size: .9em; color: var(--bg); font-weight: bold;">
-                {{ Math.floor(getAllUsers.find(user => user.id == $route.params.id).xp / 150) + 1 }}</p>
+                {{ Math.floor(data.user.xp / 150) + 1 }}
+              </p>
             </div>
           </div>
         </div>
@@ -497,26 +499,23 @@
       <div class="stats w-100 mt-5" style="max-width: 600px;">
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-globe" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Quizzes completed</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).length }}</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ data.user.stats.quizzes_completed }}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-question-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Questions answered</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.num_perguntas, 0) }}</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{data.user.stats.questions_wrong + data.user.stats.questions_right}}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-check-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Correct answers</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.perguntas_certas, 0) }}</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ data.user.stats.questions_right }}</p>
         </div>
         <div class="card-stats d-flex w-100 p-2 mb-3" style="background-color: var(--azul-escuro); border-radius: 5px;">
           <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-times-circle" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Incorrect answers</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.perguntas_erradas, 0) }}</p>
+          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ data.user.stats.questions_wrong }}</p>
         </div>
-        <div class="card-stats d-flex w-100 p-2" style="background-color: var(--azul-escuro); border-radius: 5px;">
-          <p class="m-0" style="font-weight: 500; color: var(--cinza-claro);"><i class="fas fa-hands-helping" style="color: var(--azul-claro);"></i>&nbsp;&nbsp;&nbsp;Times help was needed</p>
-          <p class="m-0 ms-auto" style="color: var(--laranja); font-weight: bold;">{{ getAllUsers[$route.params.id].played.filter(quiz => quiz.completo).reduce((acc, curr) => acc + curr.ajudas_utilizadas, 0) }}</p>
-        </div>
+       
       </div>
-    </div> -->
+    </div>
 
     <div class="modal fade backgroundBlur" id="modal-change-picture" ref="modal-change-picture" tabindex="-1"
       aria-hidden="true">
@@ -566,6 +565,7 @@ export default {
       },
       data: {
         user: {},
+        titleComments:{},
         badges: {},
         genresFav:{},
         genresSeen:{},
@@ -592,23 +592,14 @@ export default {
       },
       filters_comments:{
         search: "",
-        genre: "Genre",
-        year: "Year",
-        country: "Country",
         orderby: "Order by"
       },
       filters_ratings:{
         search: "",
-        genre: "Genre",
-        year: "Year",
-        country: "Country",
         orderby: "Order by"
       },
       filters_prizes:{
         search: "",
-        genre: "Genre",
-        year: "Year",
-        country: "Country",
         orderby: "Order by"
       }
     }
@@ -621,7 +612,7 @@ export default {
     this.getGenresSeen();
   },
   methods: {
-    ...mapActions(["getAllBadges", "getUser", "changeUserBadge", "editUser", "changeUserAvatar","getAllGenres","removeFavourite","removeSeen"]),
+    ...mapActions(["getAllBadges", "getUser", "changeUserBadge", "editUser", "changeUserAvatar","getAllGenres","removeFavourite","removeSeen","deleteRatings","removeQuizRating", "getCommentsFromUser"]),
     ...mapMutations(["LOGOUT_USER"]),
     async getUserInfo() {
       this.loading.user = true;
@@ -662,7 +653,7 @@ export default {
             avatar: this.data.user.avatar,
             is_admin: this.data.user.is_admin
           };
-          
+          console.log(this.data.user);
           
           this.loading.user = false;
         } else {
@@ -852,7 +843,50 @@ export default {
             throw new Error(response.msg);
           }
 
-    }
+    },
+    async removeRate(type,imdb_id,id){
+      if (type==1) {
+        let response = await this.deleteRatings({
+            id_user: this.data.user._id,
+            imdb_id: imdb_id,
+            id_title: id,
+            rating:0
+        });
+        if (response.success) {
+          this.data.user.title_ratings.splice(this.data.user.title_ratings.findIndex(title => title.title_id._id.toString() == id.toString()), 1);
+          this.$store.state.loggedUserData.data.title_ratings = this.$store.state.loggedUserData.data.title_ratings.filter((title) => title.title_id._id != id);
+          localStorage.loggedUserData = JSON.stringify({
+            loading: false,
+            data: this.$store.state.loggedUserData.data,
+          });
+          
+
+        } else {
+          throw new Error(response.msg);
+        }
+      }
+      else if(type==2){
+        let response = await this.removeQuizRating({
+            id: this.data.user.id,
+            quiz_id: imdb_id,
+        });
+        if (response.success) {
+          this.data.user.quiz_ratings.splice(this.data.user.quiz_ratings.findIndex(title => title.quiz_id._id.toString() == id.toString()), 1);
+          this.$store.state.loggedUserData.data.quiz_ratings = this.$store.state.loggedUserData.data.quiz_ratings.filter((title) => title.quiz_id._id != id);
+          localStorage.loggedUserData = JSON.stringify({
+            loading: false,
+            data: this.$store.state.loggedUserData.data,
+          });
+          
+
+        } else {
+          throw new Error(response.msg);
+        }
+      }
+      
+
+    },
+
   },
   computed: {
     ...mapGetters(["getLoggedUserID", "getLoggedUserData"]),
@@ -958,30 +992,64 @@ export default {
     filteredRatings(){
       //this.resetMostrar('liked');
       let filterResult = [...this.data.user.title_ratings].concat([...this.data.user.quiz_ratings]);
-
-    console.log(filterResult);
       // Barra de pesquisa
       if (this.filters_ratings.search != "") {
         filterResult = filterResult.filter(rating => rating[rating.title_id ? 'title_id' : 'quiz_id'].title.toLowerCase().includes(this.filters_ratings.search.toLowerCase()));
       }
-      if (this.filters_ratings.orderby != "Recently added" && this.filters_ratings.orderby != "Order by") {
-            if (this.filters_ratings.orderby == "Alphabetic (A-Z)") {
-              filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Alphabetic (Z-A)") {
-              filterResult = filterResult.sort((a, b) => (a.title > b.title) ? -1 : ((a.title < b.title) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Most recent") {
-              filterResult = filterResult.sort((a, b) => (a.year > b.year) ? -1 : ((a.year < b.year) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Oldest") {
-              filterResult = filterResult.sort((a, b) => (a.year < b.year) ? -1 : ((a.year > b.year) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Best IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating > b.imdb_rating) ? -1 : ((a.imdb_rating < b.imdb_rating) ? 1 : 0));
-            } else if (this.filters_ratings.orderby == "Worst IMDb rated") {
-              filterResult = filterResult.sort((a, b) => (a.imdb_rating < b.imdb_rating) ? -1 : ((a.imdb_rating > b.imdb_rating) ? 1 : 0));
+      if (this.filters_ratings.orderby != "Order by") {
+            if (this.filters_ratings.orderby == "Best") {
+              filterResult = filterResult.sort((a, b) => (a.rating > b.rating) ? -1 : ((a.rating < b.rating) ? 1 : 0));
+            } else if (this.filters_ratings.orderby == "Worst") {
+              filterResult = filterResult.sort((a, b) => (a.rating < b.rating) ? -1 : ((a.rating > b.rating) ? 1 : 0));
             }    
           }
       
       return filterResult;
-    }
+    },
+    filteredPrizes() {
+      //this.resetMostrar('liked');
+      let filterResult = [...this.data.user.prizes_reedemed];
+      // Barra de pesquisa
+      if (this.filters_prizes.search != "") {
+        filterResult = filterResult.filter(title => title.prize_id.name.toLowerCase().includes(this.filters_prizes.search.toLowerCase()));
+      }
+      if (this.filters_prizes.orderby != "Order by") {
+        if (this.filters_prizes.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.date > b.date) ? -1 : ((a.date < b.date) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Oldest") {
+           filterResult = filterResult.sort((a, b) => (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Most expensive") {
+          filterResult = filterResult.sort((a, b) => (a.prize_id.price > b.prize_id.price) ? -1 : ((a.prize_id.price < b.prize_id.price) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Cheapest") {
+          filterResult = filterResult.sort((a, b) => (a.prize_id.price < b.prize_id.price) ? -1 : ((a.prize_id.price > b.prize_id.price) ? 1 : 0));
+        }    
+      }
+      
+      return filterResult;
+    },
+    filteredComments() {
+      //this.resetMostrar('liked');
+      let filterResult = [...this.data.user.all_comments];
+      console.log(filterResult);
+      // Barra de pesquisa
+      if (this.filters_prizes.search != "") {
+        filterResult = filterResult.filter(title => title.prize_id.name.toLowerCase().includes(this.filters_prizes.search.toLowerCase()));
+      }
+      if (this.filters_prizes.orderby != "Order by") {
+        if (this.filters_prizes.orderby == "Most recent") {
+          filterResult = filterResult.sort((a, b) => (a.date > b.date) ? -1 : ((a.date < b.date) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Oldest") {
+           filterResult = filterResult.sort((a, b) => (a.date < b.date) ? -1 : ((a.date > b.date) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Most expensive") {
+          filterResult = filterResult.sort((a, b) => (a.prize_id.price > b.prize_id.price) ? -1 : ((a.prize_id.price < b.prize_id.price) ? 1 : 0));
+        } else if (this.filters_prizes.orderby == "Cheapest") {
+          filterResult = filterResult.sort((a, b) => (a.prize_id.price < b.prize_id.price) ? -1 : ((a.prize_id.price > b.prize_id.price) ? 1 : 0));
+        }    
+      }
+      
+      return filterResult;
+    },
+    
   },
   watch: {
     '$route.params.id'() {
