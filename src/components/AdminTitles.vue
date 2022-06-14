@@ -369,6 +369,7 @@ export default {
             newData.push({ platform_id: a._id });
           });
           try {
+            console.log(JSON.stringify(newData));
             const res = await this.changePlatforms({ imdb_id: this.editID, platforms: newData });
             if (res.success) {
               this.data.titles[this.data.titles.findIndex(tt => tt.imdb_id == this.editID)].platforms = res.data.platforms;

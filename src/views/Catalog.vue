@@ -299,30 +299,25 @@
 
           // Barra de pesquisa
           if (this.filters.search != "") {
-            console.log("a1");
             filterResult = filterResult.filter(title => title.title.toLowerCase().includes(this.filters.search.toLowerCase()));
           }
 
           // Géneros
           if (this.filters.genre != "All" && this.filters.genre != "Genre") {
-            console.log("a2");
             filterResult = filterResult.filter(title => title.genres.some(genero => genero.genre_id.description == this.filters.genre));
           }
 
           // Anos
           if (this.filters.year != "All" && this.filters.year != "Year") {
-            console.log("a3");
             filterResult = filterResult.filter(title => title.year == this.filters.year);
           }
           
           // Países
           if (this.filters.country != "All" && this.filters.country != "Country") {
-            console.log("a4");
             filterResult = filterResult.filter(title => this.filters.country == title.country);
           }
 
           if (this.filters.orderby != "Recently added" && this.filters.orderby != "Order by") {
-            console.log("a5");
             if (this.filters.orderby == "Alphabetic (A-Z)") {
               filterResult = filterResult.sort((a, b) => (a.title < b.title) ? -1 : ((a.title > b.title) ? 1 : 0));
             } else if (this.filters.orderby == "Alphabetic (Z-A)") {

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 
@@ -18,10 +19,43 @@ export default {
   },
   mounted () {
     document.title = this.$route.name + " | Movizz";
+    this.checkToken();
+  },
+  methods: {
+    ...mapMutations(["LOGOUT_USER"]),
+    checkToken() {
+      // Verificar se auth_key já expirou ou não
+      try {
+        if (this.$store.state.loggedUser) {
+          if (new Date(this.$store.state.loggedUser.exp_date) < new Date()) {
+            this.$swal({
+              title: 'Error',
+              text: 'Your authentication has expired, please login again.',
+              icon: 'error',
+              allowOutsideClick: false
+            }).then(() => {
+              this.LOGOUT_USER();
+              this.$router.push({ name: "Authentication" })
+            });
+          }
+        }
+      } catch (e) {
+        this.$swal({
+          title: 'Error',
+          text: 'Your authentication has expired, please login again.',
+          icon: 'error',
+          allowOutsideClick: false
+        }).then(() => {
+          this.LOGOUT_USER();
+          this.$router.push({ name: "Authentication" })
+        });
+      }
+    }
   },
   watch: {
     '$route.name'() {
       document.title = this.$route.name + " | Movizz";
+      this.checkToken();
     }
   },
 };

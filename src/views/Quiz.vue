@@ -283,7 +283,7 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
     verifyRating() {
-      const ratIdx = this.getLoggedUserData.data.quiz_ratings.findIndex(rating => rating.quiz_id.toString() == this.data.quiz._id.toString());
+      const ratIdx = this.getLoggedUserData.data.quiz_ratings.findIndex(rating => rating.quiz_id._id.toString() == this.data.quiz._id.toString());
       const curRating = ratIdx != -1 ? this.getLoggedUserData.data.quiz_ratings[ratIdx].rating : 0.0;
       for (let i = 0; i < curRating; i++) {
         this.fillStars(i + 1, 'a');
@@ -311,7 +311,7 @@ export default {
       if (this.getLoggedUserData.data.played.some(attempt => (attempt.quiz_id.quiz_id.toString() == this.$route.params.id.toString()) && (attempt.was_completed))) {
         this.fillStars(n, event_type);
         if (this.savedStars > 0) {
-          const ratIdx = this.getLoggedUserData.data.quiz_ratings.findIndex(rating => rating.quiz_id.toString() == this.data.quiz._id.toString())
+          const ratIdx = this.getLoggedUserData.data.quiz_ratings.findIndex(rating => rating.quiz_id._id.toString() == this.data.quiz._id.toString())
           if (ratIdx != -1) {
             try {
               const updateRating = await this.changeQuizRating({ quiz_id: this.$route.params.id, rating: this.savedStars });
@@ -343,7 +343,7 @@ export default {
           try {
             const removeRating = await this.removeQuizRating({ quiz_id: this.$route.params.id });
             if (removeRating.success) {
-              this.$store.state.loggedUserData.data.quiz_ratings = this.$store.state.loggedUserData.data.quiz_ratings.filter(rating => rating.quiz_id.toString() != this.data.quiz._id.toString());
+              this.$store.state.loggedUserData.data.quiz_ratings = this.$store.state.loggedUserData.data.quiz_ratings.filter(rating => rating.quiz_id._id.toString() != this.data.quiz._id.toString());
               localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
               this.data.quiz.quizz_rating = removeRating.average;
             } else {

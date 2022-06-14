@@ -11,7 +11,7 @@
           <div class="main-info col-lg-8">
             <div class="d-flex align-items-center" style="gap: 20px">
               <p id="title-name">{{ data.title.title }}</p>
-              <p id="title-content-rating" class="d-flex align-items-center justify-content-center">
+              <p id="title-content-rating" class="d-flex align-items-center justify-content-center text-center">
                 {{ data.title.content_rating }}
               </p>
             </div>
@@ -423,6 +423,9 @@ export default {
             });
             if (!response.success) {
               throw new Error(response.msg);
+            } else {
+              this.$store.state.loggedUserData.data.title_ratings = response.data.title_ratings;
+              localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
             }
           } else {
             let response = await this.changeRatings({
@@ -433,6 +436,9 @@ export default {
             });
             if (!response.success) {
               throw new Error(response.msg);
+            } else {
+              this.$store.state.loggedUserData.data.title_ratings = response.data.title_ratings;
+              localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
             }
           }
         } else {
@@ -447,6 +453,9 @@ export default {
 
           if (!response.success) {
             throw new Error(response.msg);
+          } else {
+            this.$store.state.loggedUserData.data.title_ratings = response.data.title_ratings;
+            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
           }
         }
         let res = await this.getTitle({ id: this.$route.params.imdbid });
@@ -654,7 +663,7 @@ export default {
       const doc = document.querySelectorAll(".comment-message")[id];
       doc.innerHTML = comentario;
       doc.style.color = "#ffffff";
-    },
+    }
   },
   watch: {
     "loading.title"() {

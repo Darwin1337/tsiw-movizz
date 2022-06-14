@@ -25,106 +25,108 @@
       </div>
 
       <!-- New quiz: main modal -->
-      <!-- <div class="modal fade backgroundBlur" id="addQuizModal" ref="addQuizModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal fade backgroundBlur" id="addQuizModal" ref="addQuizModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
           <div class="modal-content modalrewards">
             <div class="modal-body row m-0 gy-3">
                 <div class="d-flex h-100 flex-column justify-content-between">
                   <h5>New quiz</h5>
-                  <form @submit.prevent="">
+                  <form @submit.prevent="addQuizInfo()">
                     <div class="row g-2">
                       <div class="col-lg-6">
                         <p class="m-0 colorOrange">General</p> 
                         <div class="mt-2">
-                          <input type="text" class="w-100" placeholder="Title" v-model="addInfo.titulo" required>
+                          <input type="text" class="w-100" placeholder="Title" v-model="add.data.title" required>
                         </div>
                         <div class="mt-2">
-                          <textarea type="text" class="w-100" placeholder="Description" v-model.lazy="addInfo.descricao" required></textarea>
+                          <textarea type="text" class="w-100" placeholder="Description" v-model.lazy="add.data.description" required></textarea>
                         </div>
                         <div class="mt-2 d-flex" style="gap: 10px;">
-                          <select id="quizType" style="height: 44px;" required v-model="addInfo.tipo.descricao">
+                          <select id="quizType" style="height: 44px;" required v-model="add.data.type.description">
                             <option disabled>Type</option>
-                            <option value="curto">Normal</option>
-                            <option value="longo">Long</option>
+                            <option value="short">Short</option>
+                            <option value="long">Long</option>
                           </select>
-                          <select id="quizDifficulty" style="height: 44px;" required v-model="addInfo.dificuldade.descricao">
+                          <select id="quizDifficulty" style="height: 44px;" required v-model="add.data.difficulty.description">
                             <option disabled>Difficulty</option>
                             <option value="normal">Normal</option>
-                            <option value="dificil">Hard</option>
+                            <option value="hard">Hard</option>
                           </select>
                         </div>
                         <div class="mt-2">
-                          <select id="quizTheme" style="height: 44px;" required v-model="addInfo.tema">
+                          <select id="quizTheme" style="height: 44px;" required v-model="add.data.theme_id._id">
                             <option disabled>Theme</option>
-                            <option :value=theme v-for="(theme, index) in themes" :key="index">{{ theme }}</option>
+                            <option :value="theme._id" v-for="(theme, index) in themes" :key="index">{{ theme.description }}</option>
                           </select>
                         </div>
                         <div class="mt-3">
                           <label class="cbox">Is this quiz specific to a series/movie?
-                            <input v-model="addInfo.especifico" type="checkbox">
+                            <input v-model="add.data.is_specific" type="checkbox">
                             <span class="checkmark"></span>
                           </label>
                         </div>
-                        <div class="row mt-4 g-2">
+                        <div class="row mt-2 g-2">
                           <div class="col-md-4 flex-column">
                             <span>Image</span>
-                            <img class="mt-2" style="width: 100%; max-height: 100px; min-height: 100px; object-fit: cover;object-position: top; border-radius: 5px;" :src="addInfo.poster">
+                            <img class="mt-2" style="width: 100%; max-height: 100px; min-height: 100px; object-fit: cover;object-position: top; border-radius: 5px;" :src="add.data.poster">
                             <div style="position: relative;">
-                              <span style="cursor: pointer"><i v-if="addInfo.poster != 'https://i.ibb.co/8PmJCqD/image-New-Quiz.png'" style="right: 10px;" class="fas fa-trash removeIcon" @click="addInfo.poster='https://i.ibb.co/8PmJCqD/image-New-Quiz.png'"></i></span>
+                              <span style="cursor: pointer"><i v-if="add.data.poster != 'https://i.ibb.co/8PmJCqD/image-New-Quiz.png'" style="right: 10px;" class="fas fa-trash removeIcon" @click="add.data.poster='https://i.ibb.co/8PmJCqD/image-New-Quiz.png'"></i></span>
                             </div>
-                            <button class="mt-2 uploadButton" type="button" data-bs-target="#addPosterModal" data-bs-toggle="modal" @click="addControl.tempPoster = addInfo.poster.slice()">Upload</button>
+                            <button class="mt-2 uploadButton" type="button" data-bs-target="#addPosterModal" data-bs-toggle="modal" @click="addControl.tempPoster = add.data.poster.slice()">Upload</button>
                           </div>
                           <div class="col-md-8 flex-column">
                             <span>Banner</span>
-                            <img class="mt-2" style="width: 100%; max-height: 100px; min-height: 100px; object-fit: cover; object-position: top; border-radius: 5px; display: block;" :src="addInfo.banner">
+                            <img class="mt-2" style="width: 100%; max-height: 100px; min-height: 100px; object-fit: cover; object-position: top; border-radius: 5px; display: block;" :src="add.data.banner">
                             <div style="position: relative;">
-                              <span style="cursor: pointer"><i v-if="addInfo.banner != 'https://i.ibb.co/6gkMXdZ/banner-New-Quiz.png'" style="right: 10px;" class="fas fa-trash removeIcon" @click="addInfo.banner='https://i.ibb.co/6gkMXdZ/banner-New-Quiz.png'"></i></span>
+                              <span style="cursor: pointer"><i v-if="add.data.banner != 'https://i.ibb.co/6gkMXdZ/banner-New-Quiz.png'" style="right: 10px;" class="fas fa-trash removeIcon" @click="add.data.banner='https://i.ibb.co/6gkMXdZ/banner-New-Quiz.png'"></i></span>
                             </div>
-                            <button class="mt-2 uploadButton" type="button" data-bs-target="#addBannerModal" data-bs-toggle="modal" @click="addControl.tempBanner = addInfo.banner.slice()">Upload</button>
+                            <button class="mt-2 uploadButton" type="button" data-bs-target="#addBannerModal" data-bs-toggle="modal" @click="addControl.tempBanner = add.data.banner.slice()">Upload</button>
                           </div>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <p class="m-0 colorOrange">Questions</p>
                         <div class="leaderboardBar" style="max-height: 500px; overflow-y: scroll;">
-                          <div class="mt-2 me-1 d-flex justify-content-between align-items-center backgroundQuestions" v-for="i in addInfo.perguntas.length" :key="i">
-                            <p class="m-0 padding-10">{{ addInfo.perguntas[i - 1].texto }}</p>
+                          <div class="mt-2 me-1 d-flex justify-content-between align-items-center backgroundQuestions" v-for="i in add.data.questions.length" :key="i">
+                            <p class="m-0 padding-10">{{ add.data.questions[i - 1].content }}</p>
                             <div class="d-flex" style="gap: 10px;">
-                              <span data-bs-toggle="modal" @click="addEditQuestion = JSON.parse(JSON.stringify(addInfo.perguntas[i - 1]))" data-bs-target="#newQuizEditQuestion"><i class="fas fa-pencil editQuestion"></i></span>
-                              <span class="me-2" @click="addRemoveQuestion(addInfo.perguntas[i - 1].id_pergunta)"><i class="fas fa-trash removeQuestion"></i></span>
+                              <span data-bs-toggle="modal" @click="add.question = JSON.parse(JSON.stringify(add.data.questions[i - 1])); add.editQuestion_selected = add.data.questions[i - 1].options.findIndex(opt => opt.correct)" data-bs-target="#newQuizEditQuestion"><i class="fas fa-pencil editQuestion"></i></span>
+                              <span class="me-2" @click="addRemoveQuestion(add.data.questions[i - 1].question_id)"><i class="fas fa-trash removeQuestion"></i></span>
                             </div>
                           </div>
-                          <div class="mt-2 me-1 d-flex justify-content-between align-items-center backgroundQuestions" v-if="addInfo.perguntas.length == 0">
-                            <p class="m-0 padding-10">This quiz doesn't have any questions, please add at least {{ addInfo.tipo.num_perguntas }}.</p>
+                          <div class="mt-2 me-1 d-flex justify-content-between align-items-center backgroundQuestions" v-if="add.data.questions.length == 0">
+                            <p class="m-0 padding-10">This quiz doesn't have any questions, please add at least {{ add.data.type.questions }}.</p>
                           </div>
                         </div>
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#newQuestionNewQuiz" class="uploadButton mt-2">Add question</button>
+                        <div class="mt-2 me-1">
+                          <button data-bs-toggle="modal" type="button" data-bs-target="#newQuestionNewQuiz" class="uploadButton">Add question</button>
+                        </div>        
                       </div>
                     </div>
                     <div class="d-flex mt-3" style="gap: 15px;">
-                      <input class="addQuestionButton" type="submit" @click="addQuiz()" value="Add quiz"/>
-                      <input class="close-btn" type="button" id="add-quiz-back" data-bs-dismiss="modal" value="Close"/>
+                      <input class="addQuestionButton" type="submit" value="Add quiz"/>
+                      <input class="close-btn" @click="resetNewQuizInfo()" type="button" id="add-quiz-back" data-bs-dismiss="modal" value="Close"/>
                     </div>
                   </form>
                 </div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <!-- New quiz: new question modal -->
-      <!-- <div class="modal fade backgroundBlur" id="newQuestionNewQuiz" ref="newQuestionNewQuiz" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal fade backgroundBlur" id="newQuestionNewQuiz" ref="newQuestionNewQuiz" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
           <div class="modal-content modalrewards">
             <div class="modal-body row m-0 gy-3">
                 <div class="d-flex h-100 flex-column justify-content-between">
                   <h5>New question</h5>
-                  <form @submit.prevent="">
+                  <form @submit.prevent="newAddQuestion()">
                     <div class="row">
                       <div class="col-lg-6">
                         <p class="m-0 colorOrange" >General</p> 
                         <div class="mt-2">
-                          <input type="text" class="w-100" placeholder="Question" v-model="addAddQuestion.texto" required>
+                          <input type="text" class="w-100" placeholder="Question" v-model="add.newQuestion.content" required>
                         </div>
                         <div class="mt-0 row g-2">
                           <div class="col-md-6">
@@ -134,34 +136,35 @@
                             </select>
                           </div>
                           <div class="col-md-6">
-                            <input class="w-100" type="text" placeholder="IMDb ID" v-model="addAddQuestion.id_imdb" required>
+                            <input class="w-100" type="text" placeholder="IMDb ID" v-model="add.newQuestion.imdb_id" required>
                           </div>
                         </div>
                         <div class="mt-2 ">
-                          <input type="text" class="w-100" placeholder="Content URL" v-model="addAddQuestion.url_conteudo" required>
+                          <input type="text" class="w-100" placeholder="Content URL" v-model="add.newQuestion.image" required>
                         </div>                      
                       </div>
                       <div class="col-lg-6">
                         <p class="m-0 colorOrange">Possible answers</p> 
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" placeholder="Answer #1" v-model="addAddQuestion.opcao_1" required>
+                          <input class="w-100" type="text" v-model="add.newQuestion.options[0].content" placeholder="Option #1" required>
+                          <input class="me-2" type="radio" name="correct" value="0" v-model="add.addQuestion_selected">
                         </div>
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" placeholder="Answer #2" v-model="addAddQuestion.opcao_2" required>
+                          <input class="w-100" type="text" v-model="add.newQuestion.options[1].content" placeholder="Option #2" required>
+                          <input class="me-2" type="radio" name="correct" value="1" v-model="add.addQuestion_selected">
                         </div>
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" placeholder="Answer #3" v-model="addAddQuestion.opcao_3" required>
+                          <input class="w-100" type="text" v-model="add.newQuestion.options[2].content" placeholder="Option #3" required>
+                          <input class="me-2" type="radio" name="correct" value="2" v-model="add.addQuestion_selected">
                         </div>
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" placeholder="Answer #4" v-model="addAddQuestion.opcao_4" required>
-                        </div>
-                        <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="number" placeholder="Correct answer" v-model="addAddQuestion.opcao_correta" required>
+                          <input class="w-100" type="text" v-model="add.newQuestion.options[3].content" placeholder="Option #4" required>
+                          <input class="me-2" type="radio" name="correct" value="3" v-model="add.addQuestion_selected">
                         </div>
                       </div>
                     </div>
                     <div class="d-flex mt-3" style="gap: 15px;">
-                      <input class="addQuestionButton" type="submit" @click="newAddQuestion()" value="Edit question">
+                      <input class="addQuestionButton" type="submit" value="Add question">
                       <input class="close-btn" type="button" id="add-add-question-back" data-bs-target="#addQuizModal" data-bs-toggle="modal" data-bs-dismiss="modal" value="Back"/>
                     </div>
                   </form>
@@ -169,62 +172,59 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <!-- New quiz: edit question modal -->
-      <!-- <div class="modal fade backgroundBlur" id="newQuizEditQuestion" ref="newQuizEditQuestion" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal fade backgroundBlur" id="newQuizEditQuestion" ref="newQuizEditQuestion" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
           <div class="modal-content modalrewards">
             <div class="modal-body row m-0 gy-3">
                 <div class="d-flex h-100 flex-column justify-content-between">
                   <h5>Edit question</h5>
-                  <form @submit.prevent="">
+                  <form @submit.prevent="newEditQuestion(edit.question.question_id)">
                     <div class="row">
                       <div class="col-lg-6">
                         <p class="m-0 colorOrange">General</p> 
                         <div class="mt-2">
-                          <input type="text" class="w-100" v-model="edit.question.content" required>
+                          <input type="text" class="w-100" v-model="add.question.content" required>
                         </div>
                         <div class="mt-0 row g-2">
                           <div class="col-md-6">
                             <select id="questionType" style="height: 44px;" required>
-                              <option disabled >Type</option>
+                              <option disabled>Type</option>
                               <option selected value="texto">Text</option>
                             </select>
                           </div>
                           <div class="col-md-6">
-                            <input class="w-100" type="text" v-model="edit.question.imdb_id" required>
+                            <input class="w-100" type="text" v-model="add.question.imdb_id" required>
                           </div>
                         </div>
                         <div class="mt-2 ">
-                          <input type="text" class="w-100" placeholder="Content URL" v-model="edit.question.image" required>
+                          <input type="text" class="w-100" placeholder="Content URL" v-model="add.question.image" required>
                         </div>                     
                       </div>
                       <div class="col-lg-6">
                         <p class="m-0 colorOrange">Possible answers</p> 
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" v-model="edit.question.options[0].content" required>
-                          <input type="radio" name="correct" value="Is the correct answer" v-model="edit.question.options[0].correct">
+                          <input class="w-100" type="text" v-model="add.question.options[0].content" required>
+                          <input class="me-2" type="radio" name="correct" value="0" v-model="add.editQuestion_selected">
                         </div>
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" v-model="edit.question.options[1].content" required>
-                          <input type="radio" name="correct" value="Is the correct answer" v-model="edit.question.options[1].correct">
+                          <input class="w-100" type="text" v-model="add.question.options[1].content" required>
+                          <input class="me-2" type="radio" name="correct" value="1" v-model="add.editQuestion_selected">
                         </div>
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" v-model="edit.question.options[2].content" required>
-                          <input type="radio" name="correct" value="Is the correct answer" v-model="edit.question.options[2].correct">
+                          <input class="w-100" type="text" v-model="add.question.options[2].content" required>
+                          <input class="me-2" type="radio" name="correct" value="2" v-model="add.editQuestion_selected">
                         </div>
                         <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="text" v-model="edit.question.options[3].content" required>
-                          <input type="radio" name="correct" value="Is the correct answer" v-model="edit.question.options[3].correct">
-                        </div>
-                        <div class="mt-2 d-flex justify-content-between align-items-center backgroundQuestions">
-                          <input class="w-100" type="number" placeholder="Correct answer" v-model="edit.questions.options.find(qs => qs.correct)" required>
+                          <input class="w-100" type="text" v-model="add.question.options[3].content" required>
+                          <input class="me-2" type="radio" name="correct" value="3" v-model="add.editQuestion_selected">
                         </div>
                       </div>
                     </div>
                     <div class="d-flex mt-3" style="gap: 15px;">
-                      <input class="addQuestionButton" type="submit" @click="newEditQuestion(edit.question.question_id)" value="Edit question">
+                      <input class="addQuestionButton" type="submit" value="Edit question">
                       <input class="close-btn" type="button" id="edit-add-question-back" data-bs-target="#addQuizModal" data-bs-toggle="modal" data-bs-dismiss="modal" value="Back"/>
                     </div>
                   </form>
@@ -232,49 +232,49 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <!-- New quiz: add poster -->
-      <!-- <div class="modal fade backgroundBlur" id="addPosterModal" ref="addPosterModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal fade backgroundBlur" id="addPosterModal" ref="addPosterModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
           <div class="modal-content modalrewards">
             <div>
-              <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
+              <form @submit.prevent="addChangePoster()" class="modal-body d-flex flex-column" style="gap: 20px;">
                 <label for="url-pic">URL for the poster:</label>
                 <div class="input-group">
                   <input type="text" class="form-control bg-inputs" aria-label="URL" required placeholder="URL" v-model="addControl.tempPoster">
                   <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
                 </div>
                 <div class="d-flex" style="gap: 15px;">
-                  <button type="submit" class="orange-btn" @click="addChangePoster()">Change poster</button>
+                  <button type="submit" class="orange-btn">Change poster</button>
                   <button class="red-btn" type="button" id="add-change-poster-back" data-bs-target="#addQuizModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <!-- New quiz: add banner -->
-      <!-- <div class="modal fade backgroundBlur" id="addBannerModal" ref="addBannerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal fade backgroundBlur" id="addBannerModal" ref="addBannerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
           <div class="modal-content modalrewards">
             <div>
-              <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
+              <form @submit.prevent="addChangeBanner()" class="modal-body d-flex flex-column" style="gap: 20px;">
                 <label for="url-pic">URL for the banner:</label>
                 <div class="input-group">
                   <input type="text" class="form-control bg-inputs" aria-label="URL" required placeholder="URL" v-model="addControl.tempBanner">
                   <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
                 </div>
                 <div class="d-flex" style="gap: 15px;">
-                  <button type="submit" class="orange-btn" @click="addChangeBanner()">Change banner</button>
+                  <button type="submit" class="orange-btn">Change banner</button>
                   <button class="red-btn" type="button" id="add-change-banner-back" data-bs-target="#addQuizModal" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <!-- Edit quiz: main modal -->
       <div class="modal fade backgroundBlur" id="editQuiz" ref="editQuiz" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
@@ -350,7 +350,9 @@
                             <p class="m-0 padding-10">This quiz doesn't have any questions, please add at least {{ edit.data.type.questions }}.</p>
                           </div>
                         </div>
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#newQuestionEditQuiz" class="uploadButton mt-2">Add question</button>
+                        <div class="mt-2 me-1">
+                          <button data-bs-toggle="modal" type="button" data-bs-target="#newQuestionEditQuiz" class="uploadButton">Add question</button>
+                        </div>
                       </div>
                     </div>
                     <div class="d-flex mt-3" style="gap: 15px;">
@@ -489,14 +491,14 @@
         <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
           <div class="modal-content modalrewards">
             <div>
-              <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
+              <form @submit.prevent="editChangePoster()" class="modal-body d-flex flex-column" style="gap: 20px;">
                 <label for="url-pic">URL for the poster:</label>
                 <div class="input-group">
                   <input type="text" class="form-control bg-inputs" placeholder="URL" aria-label="URL" required v-model="editControl.tempPoster">
                   <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
                 </div>
                 <div class="d-flex" style="gap: 15px;">
-                  <button type="submit" class="orange-btn" @click="editChangePoster()">Change poster</button>
+                  <button type="submit" class="orange-btn">Change poster</button>
                   <button class="red-btn" type="button" id="edit-change-poster-back" data-bs-target="#editQuiz" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                 </div>
               </form>
@@ -510,14 +512,14 @@
         <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
           <div class="modal-content modalrewards">
             <div>
-              <form @submit.prevent="" class="modal-body d-flex flex-column" style="gap: 20px;">
+              <form @submit.prevent="editChangeBanner()" class="modal-body d-flex flex-column" style="gap: 20px;">
                 <label for="url-pic">URL for the banner:</label>
                 <div class="input-group">
                   <input type="text" class="form-control bg-inputs" aria-label="URL" required v-model="editControl.tempBanner">
                   <span class="input-group-text"><i class="fas fa-quote-right"></i></span>
                 </div>
                 <div class="d-flex" style="gap: 15px;">
-                  <button type="submit" class="orange-btn" @click="editChangeBanner()">Change banner</button>
+                  <button type="submit" class="orange-btn">Change banner</button>
                   <button class="red-btn" type="button" id="edit-change-banner-back" data-bs-target="#editQuiz" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
                 </div>
               </form>
@@ -554,7 +556,18 @@ export default {
         editQuestion_selected: "0",
         addQuestion_selected: "0",
       },
+      add: {
+        data: {"type":{"description":"short","questions":5},"difficulty":{"description":"normal","question_points":10},"is_specific":false,"title":"","description":"","theme_id":{"_id":"627e98c15340d894c90f2c62","theme_id":0,"description":"Movies"},"poster":"https://i.ibb.co/8PmJCqD/image-New-Quiz.png","banner":"https://i.ibb.co/6gkMXdZ/banner-New-Quiz.png","questions":[]},
+        question: {"imdb_id":"","content":"","type":"texto","image":"","options":[{"content":"","correct":true},{"content":"","correct":false},{"content":"","correct":false},{"content":"","correct":false}]},
+        newQuestion: {"imdb_id":"","content":"","type":"texto","image":"","options":[{"content":"","correct":true},{"content":"","correct":false},{"content":"","correct":false},{"content":"","correct":false}]},
+        editQuestion_selected: "0",
+        addQuestion_selected: "0",
+      },
       editControl: {
+        tempPoster: "",
+        tempBanner: ""
+      },
+      addControl: {
         tempPoster: "",
         tempBanner: ""
       },
@@ -568,7 +581,7 @@ export default {
     this.webpSupported = this.isWebpSupported();
   },
   methods: {
-    ...mapActions(["getAllQuizzes", "getAllThemes", "editQuiz"]),
+    ...mapActions(["getAllQuizzes", "getAllThemes", "addQuiz", "editQuiz", "deleteQuiz"]),
     isWebpSupported() {
       const elem = document.createElement("canvas");
       if (elem.getContext && elem.getContext("2d")) {
@@ -615,13 +628,13 @@ export default {
         this.edit.data.questions[QUESTION_IDX].imdb_id = this.edit.question.imdb_id.trim();
         this.edit.data.questions[QUESTION_IDX].content = this.edit.question.content.trim();
         this.edit.data.questions[QUESTION_IDX].image = this.edit.question.image.trim();
-        this.edit.data.questions[QUESTION_IDX].options[0].content = this.edit.question.options[0].content.trim()
+        this.edit.data.questions[QUESTION_IDX].options[0].content = this.edit.question.options[0].content.trim();
         this.edit.data.questions[QUESTION_IDX].options[0].correct = this.edit.question.options[0].correct;
-        this.edit.data.questions[QUESTION_IDX].options[1].content = this.edit.question.options[1].content.trim()
+        this.edit.data.questions[QUESTION_IDX].options[1].content = this.edit.question.options[1].content.trim();
         this.edit.data.questions[QUESTION_IDX].options[1].correct = this.edit.question.options[1].correct;
-        this.edit.data.questions[QUESTION_IDX].options[2].content = this.edit.question.options[2].content.trim()
+        this.edit.data.questions[QUESTION_IDX].options[2].content = this.edit.question.options[2].content.trim();
         this.edit.data.questions[QUESTION_IDX].options[2].correct = this.edit.question.options[2].correct;
-        this.edit.data.questions[QUESTION_IDX].options[3].content = this.edit.question.options[3].content.trim()
+        this.edit.data.questions[QUESTION_IDX].options[3].content = this.edit.question.options[3].content.trim();
         this.edit.data.questions[QUESTION_IDX].options[3].correct = this.edit.question.options[3].correct;
         this.performClick("#edit-edit-question-back");
       } else {
@@ -706,6 +719,133 @@ export default {
       } else {
         this.$swal.fire({ icon: 'error', title: 'Error!', text: 'Please add at least ' + this.edit.data.type.questions + ' questions!' });
       }
+    },
+    // Add quiz
+    newAddQuestion() {
+      if (this.add.newQuestion.imdb_id.trim() && this.add.newQuestion.content.trim() && this.add.newQuestion.image.trim() && this.add.newQuestion.options[0].content.trim() && this.add.newQuestion.options[1].content.trim() && this.add.newQuestion.options[2].content.trim() && this.add.newQuestion.options[3].content.trim()) {
+        this.add.newQuestion.options.forEach((opt, i) => { i == parseInt(this.add.addQuestion_selected) ? this.add.newQuestion.options[i].correct = true : this.add.newQuestion.options[i].correct = false; });
+        this.add.newQuestion.question_id = this.add.data.questions.length > 0 ? Math.max.apply(null, this.add.data.questions.map(pergunta => pergunta.question_id)) + 1 : 0;
+        this.add.data.questions.push(this.add.newQuestion);
+        this.add.newQuestion = {"imdb_id":"","content":"","type":"texto","image":"","options":[{"content":"","correct":true},{"content":"","correct":false},{"content":"","correct":false},{"content":"","correct":false}]};
+        this.performClick("#add-add-question-back");
+      } else {
+        this.$swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Some fields were left empty or have invalid data!'
+        });
+      }
+    },
+    addRemoveQuestion(id) {
+      this.$swal({
+        title: 'Warning!',
+        text: "Are you sure you want to remove this question?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.add.data.questions = this.add.data.questions.filter(pergunta => pergunta.question_id != id);
+        }
+      });
+    },
+    newEditQuestion(id) {
+      if (this.add.question.imdb_id.trim() && this.add.question.content.trim() && this.add.question.image.trim() && this.add.question.options[0].content.trim() && this.add.question.options[1].content.trim() && this.add.question.options[2].content.trim() && this.add.question.options[3].content.trim()) {
+        const QUESTION_IDX = this.add.data.questions.findIndex(pergunta => pergunta.question_id == id);
+        this.add.question.options.forEach((opt, i) => { i == parseInt(this.add.editQuestion_selected) ? this.add.question.options[i].correct = true : this.add.question.options[i].correct = false; });
+        this.add.data.questions[QUESTION_IDX].imdb_id = this.add.question.imdb_id.trim();
+        this.add.data.questions[QUESTION_IDX].content = this.add.question.content.trim();
+        this.add.data.questions[QUESTION_IDX].image = this.add.question.image.trim();
+        this.add.data.questions[QUESTION_IDX].options[0].content = this.add.question.options[0].content.trim();
+        this.add.data.questions[QUESTION_IDX].options[0].correct = this.add.question.options[0].correct;
+        this.add.data.questions[QUESTION_IDX].options[1].content = this.add.question.options[1].content.trim();
+        this.add.data.questions[QUESTION_IDX].options[1].correct = this.add.question.options[1].correct;
+        this.add.data.questions[QUESTION_IDX].options[2].content = this.add.question.options[2].content.trim();
+        this.add.data.questions[QUESTION_IDX].options[2].correct = this.add.question.options[2].correct;
+        this.add.data.questions[QUESTION_IDX].options[3].content = this.add.question.options[3].content.trim();
+        this.add.data.questions[QUESTION_IDX].options[3].correct = this.add.question.options[3].correct;
+        this.performClick("#edit-add-question-back");
+      } else {
+        this.$swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Some fields were left empty or have invalid data!'
+        });
+      }
+    },
+    addChangePoster() {
+      if (this.addControl.tempPoster.trim()) {
+        this.add.data.poster = this.addControl.tempPoster.slice();
+        this.performClick("#add-change-poster-back");
+      }
+    },
+    addChangeBanner() {
+      if (this.addControl.tempBanner.trim()) {
+        this.add.data.banner = this.addControl.tempBanner.slice();
+        this.performClick("#add-change-banner-back");
+      }
+    },
+    resetNewQuizInfo() {
+      this.add.data = {"type":{"description":"short","questions":5},"difficulty":{"description":"normal","question_points":10},"is_specific":false,"title":"","description":"","theme_id":{"_id":"627e98c15340d894c90f2c62","theme_id":0,"description":"Movies"},"poster":"https://i.ibb.co/8PmJCqD/image-New-Quiz.png","banner":"https://i.ibb.co/6gkMXdZ/banner-New-Quiz.png","questions":[]};
+      this.add.question = {"imdb_id":"","content":"","type":"texto","image":"","options":[{"content":"","correct":true},{"content":"","correct":false},{"content":"","correct":false},{"content":"","correct":false}]};
+      this.add.newQuestion = {"imdb_id":"","content":"","type":"texto","image":"","options":[{"content":"","correct":true},{"content":"","correct":false},{"content":"","correct":false},{"content":"","correct":false}]};
+      this.add.editQuestion_selected = "0";
+      this.add.addQuestion_selected = "0";
+    },
+    async addQuizInfo() {
+      if (this.add.data.questions.length >= this.add.data.type.questions) {
+        if (this.add.data.title.trim() && this.add.data.description.trim() && this.add.data.poster.trim() && this.add.data.banner.trim()) {
+          this.add.data.theme_id = this.add.data.theme_id._id;
+
+          try {
+            const res = await this.addQuiz(this.add.data);
+            if (res.success) {
+              this.data.quizzes.unshift(res.data);
+              this.performClick("#add-quiz-back");
+              this.$swal({ title: 'Success!', text: "The quiz has been successfully added!", icon: 'success' });
+            } else {
+              throw new Error(res.msg);
+            } 
+          } catch (e) {
+            this.performClick("#add-quiz-back");
+            this.$swal('Error!', e.message, 'error');
+          }
+
+        } else {
+          this.$swal.fire({ icon: 'error', title: 'Error!', text: 'Some fields were left empty or have invalid data!' });
+        }
+      } else {
+        this.$swal.fire({ icon: 'error', title: 'Error!', text: 'Please add at least ' + this.add.data.type.questions + ' questions!' });
+      }
+    },
+    // Remove quiz
+    async removeQuiz(id) {
+      try {
+        const check = await this.$swal({
+          title: 'Warning!',
+          text: "Are you sure you want to remove this quiz?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'No, cancel!',
+        });
+
+        if (check.isConfirmed) {
+          const res = await this.deleteQuiz(id);
+          if (res.success) {
+            this.data.quizzes = this.data.quizzes.filter(title => title.quiz_id.toString() != id);
+            this.$store.state.loggedUserData.data.played = this.$store.state.loggedUserData.data.played.filter(game => game.quiz_id.quiz_id.toString() != id);
+            this.$store.state.loggedUserData.data.quiz_ratings = this.$store.state.loggedUserData.data.quiz_ratings.filter(rat => rat.quiz_id.quiz_id.toString() != id);
+            localStorage.loggedUserData = JSON.stringify({ loading: false, data: this.$store.state.loggedUserData.data });
+            this.$swal({ title: 'Success!', text: "The quiz has been successfully removed!", icon: 'success'});
+          } else {
+            throw new Error(res.msg);
+          }
+        }
+      } catch (e) {
+        this.$swal('Error!', e.message, 'error');
+      }
     }
   },
   watch: {
@@ -716,11 +856,11 @@ export default {
     'edit.data.type.description'(newValue) {
       this.edit.data.type.questions = newValue == "short" ? 5 : 10;
     },
-    'addInfo.dificuldade.descricao'(newValue) {
-      this.addInfo.dificuldade.pontos_pergunta = newValue == "normal" ? 10 : 15;
+    'add.data.difficulty.description'(newValue) {
+      this.add.data.difficulty.question_points = newValue == "normal" ? 10 : 15;
     },
-    'addInfo.tipo.descricao'(newValue) {
-      this.addInfo.tipo.num_perguntas = newValue == "curto" ? 5 : 10;
+    'add.data.type.description'(newValue) {
+      this.add.data.type.questions = newValue == "short" ? 5 : 10;
     }
   }
 };

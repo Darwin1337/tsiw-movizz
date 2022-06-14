@@ -526,6 +526,28 @@ export default new Vuex.Store({
         throw Error(e.message);
       }
     },
+    async addQuiz({context, state}, quiz) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/quizzes", {
+          method: "POST",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          },
+          body: JSON.stringify(quiz)
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
     async editQuiz({context, state}, quiz) {
       try {
         const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + quiz.quiz_id, {
@@ -536,6 +558,27 @@ export default new Vuex.Store({
             'Authorization': 'Bearer ' + state.loggedUser.auth_key
           },
           body: JSON.stringify(quiz.data)
+        });
+  
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const data = await response.json();
+          throw Error(data.msg);
+        }
+      } catch (e) {
+        throw Error(e.message);
+      }
+    },
+    async deleteQuiz({context, state}, quiz) {
+      try {
+        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + quiz, {
+          method: "DELETE",
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.loggedUser.auth_key
+          }
         });
   
         if (response.ok) {

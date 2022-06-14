@@ -246,7 +246,7 @@ export default {
       } catch (e) {
         this.$router.push({ name: 'Error', params: { '0': 'error' } });
       }
-    },
+    }
   },
   computed: {
     filteredQuizzes() {
