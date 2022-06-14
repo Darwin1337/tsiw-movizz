@@ -10,7 +10,8 @@ export default new Vuex.Store({
     api_keys: ["k_bxe02t9j", "k_82n08589", "k_z0rw7im2", "k_ysbktlgy", "k_z0rw7im2", "k_n116qcbn", "k_h21sbegj", "k_utdlvs0n", "k_14iolt3q", "k_p9fk9brd", "k_3gpl3mmq", "k_23fa7215", "k_08fh2pq9", "k_8luslxgk", "k_zhzvooqo", "k_o6h8ohp8"],
     cur_api: 0,
     tries_main: 0,
-    tries_eps: 0
+    tries_eps: 0,
+    urlApi:"https://movizz-api.herokuapp.com"
   },
   getters: {
     getLoggedUserID: (state) => (state.loggedUser) ? JSON.parse(atob(state.loggedUser.auth_key.split('.')[1])).id : null,
@@ -28,7 +29,7 @@ export default new Vuex.Store({
     async loginUser({context, state}, user) {
       try {
         state.loggedUserData = { data: {}, loading: true };
-        const response = await fetch("http://127.0.0.1:3000/api/auth", {
+        const response = await fetch(state.urlApi+"/api/auth", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -55,7 +56,7 @@ export default new Vuex.Store({
     },
     async registerUser({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users", {
+        const response = await fetch(state.urlApi+"/api/users", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -76,7 +77,7 @@ export default new Vuex.Store({
     },
     async getAllUsers({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users", {
+        const response = await fetch(state.urlApi+"/api/users", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -97,7 +98,7 @@ export default new Vuex.Store({
     },
     async getAllTitles({context, state}, origin) {
       try {
-        const response = await fetch(origin ? "http://127.0.0.1:3000/api/titles?navbar=true" : "http://127.0.0.1:3000/api/titles", {
+        const response = await fetch(origin ? state.urlApi+"/api/titles?navbar=true" : state.urlApi+"/api/titles", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -118,7 +119,7 @@ export default new Vuex.Store({
     },
     async getAllQuizzes({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes", {
+        const response = await fetch(state.urlApi+"/api/quizzes", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -139,7 +140,7 @@ export default new Vuex.Store({
     },
     async getAllBadges({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/badges", {
+        const response = await fetch(state.urlApi+"/api/badges", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -161,7 +162,7 @@ export default new Vuex.Store({
     },
     async getAllGenres({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/genres", {
+        const response = await fetch(state.urlApi+"/api/genres", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -183,7 +184,7 @@ export default new Vuex.Store({
     },
     async getAllThemes({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/themes", {
+        const response = await fetch(state.urlApi+"/api/themes", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -204,7 +205,7 @@ export default new Vuex.Store({
     },
     async getAllPrizes({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/prizes", {
+        const response = await fetch(state.urlApi+"/api/prizes", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -225,7 +226,7 @@ export default new Vuex.Store({
     },
     async getAllPlatforms({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/platforms", {
+        const response = await fetch(state.urlApi+"/api/platforms", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -246,7 +247,7 @@ export default new Vuex.Store({
     },
     async getUser({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id, {
+        const response = await fetch(state.urlApi+"/api/users/" + user.id, {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -267,7 +268,7 @@ export default new Vuex.Store({
     },
     async getTitle({context, state}, title) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles/"+title.id, {
+        const response = await fetch(state.urlApi+"/api/titles/"+title.id, {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -288,7 +289,7 @@ export default new Vuex.Store({
     },
     async getQuiz({context, state}, quiz) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes/"+quiz.id, {
+        const response = await fetch(state.urlApi+"/api/quizzes/"+quiz.id, {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -309,7 +310,7 @@ export default new Vuex.Store({
     },
     async getBest10Titles({context, state}, isMovie) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles?top10=true&movie=" + isMovie, {
+        const response = await fetch(state.urlApi+"/api/titles?top10=true&movie=" + isMovie, {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -330,7 +331,7 @@ export default new Vuex.Store({
     },
     async getBest10Quizzes({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes?top10=true", {
+        const response = await fetch(state.urlApi+"/api/quizzes?top10=true", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -351,7 +352,7 @@ export default new Vuex.Store({
     },
     async getTop5Users({context, state}) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users?top5=true", {
+        const response = await fetch(state.urlApi+"/api/users?top5=true", {
           method: "GET",
           headers: {
             'Accept': '*/*',
@@ -398,7 +399,7 @@ export default new Vuex.Store({
     },
     async registerTitle({context, state}, title) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles", {
+        const response = await fetch(state.urlApi+"/api/titles", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -420,7 +421,7 @@ export default new Vuex.Store({
     },
     async removeTitle({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles/" + data, {
+        const response = await fetch(state.urlApi+"/api/titles/" + data, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -441,7 +442,7 @@ export default new Vuex.Store({
     },
     async changePlatforms({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles/" + data.imdb_id + "/platforms", {
+        const response = await fetch(state.urlApi+"/api/titles/" + data.imdb_id + "/platforms", {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -463,7 +464,7 @@ export default new Vuex.Store({
     },
     async addPrize({context, state}, prize) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/prizes", {
+        const response = await fetch(state.urlApi+"/api/prizes", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -485,7 +486,7 @@ export default new Vuex.Store({
     },
     async editPrize({context, state}, prize) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/prizes/" + prize.prize_id, {
+        const response = await fetch(state.urlApi+"/api/prizes/" + prize.prize_id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -507,7 +508,7 @@ export default new Vuex.Store({
     },
     async deletePrize({context, state}, prize) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/prizes/" + prize, {
+        const response = await fetch(state.urlApi+"/api/prizes/" + prize, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -528,7 +529,7 @@ export default new Vuex.Store({
     },
     async addQuiz({context, state}, quiz) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes", {
+        const response = await fetch(state.urlApi+"/api/quizzes", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -550,7 +551,7 @@ export default new Vuex.Store({
     },
     async editQuiz({context, state}, quiz) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + quiz.quiz_id, {
+        const response = await fetch(state.urlApi+"/api/quizzes/" + quiz.quiz_id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -572,7 +573,7 @@ export default new Vuex.Store({
     },
     async deleteQuiz({context, state}, quiz) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + quiz, {
+        const response = await fetch(state.urlApi+"/api/quizzes/" + quiz, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -594,7 +595,7 @@ export default new Vuex.Store({
     // User related stuff
     async changeUserBadge({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id + "/badges", {
+        const response = await fetch(state.urlApi+"/api/users/" + user.id + "/badges", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -616,7 +617,7 @@ export default new Vuex.Store({
     },
     async editUser({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id, {
+        const response = await fetch(state.urlApi+"/api/users/" + user.id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -646,7 +647,7 @@ export default new Vuex.Store({
     },
     async changeUserAvatar({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id + "/avatar", {
+        const response = await fetch(state.urlApi+"/api/users/" + user.id + "/avatar", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -669,7 +670,7 @@ export default new Vuex.Store({
     async addComment({context, state}, comment) {
       try {
         
-        const response = await fetch("http://127.0.0.1:3000/api/titles/"+comment.imdb_id+"/comments", {
+        const response = await fetch(state.urlApi+"/api/titles/"+comment.imdb_id+"/comments", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -691,7 +692,7 @@ export default new Vuex.Store({
     },
     async removeCommentById({context, state}, title) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/titles/" + title.imdb_id + "/comments", {
+        const response = await fetch(state.urlApi+"/api/titles/" + title.imdb_id + "/comments", {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -716,7 +717,7 @@ export default new Vuex.Store({
     },
     async addFavourite({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/favourites", {
+        const response = await fetch(state.urlApi+"/api/users/"+user.id+"/favourites", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -738,7 +739,7 @@ export default new Vuex.Store({
     },
     async removeFavourite({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/favourites", {
+        const response = await fetch(state.urlApi+"/api/users/"+user.id+"/favourites", {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -760,7 +761,7 @@ export default new Vuex.Store({
     },
     async addSeen({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + user.id + "/seen", {
+        const response = await fetch(state.urlApi+"/api/users/" + user.id + "/seen", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -782,7 +783,7 @@ export default new Vuex.Store({
     },
     async removeSeen({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+user.id+"/seen", {
+        const response = await fetch(state.urlApi+"/api/users/"+user.id+"/seen", {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -804,7 +805,7 @@ export default new Vuex.Store({
     },
     async getRating({context, state}, user) {
     try {
-      const response = await fetch("http://127.0.0.1:3000/api/users/"+user.user_id+"/title_ratings/"+user.imdb_id, {
+      const response = await fetch(state.urlApi+"/api/users/"+user.user_id+"/title_ratings/"+user.imdb_id, {
         method: "GET",
         headers: {
           'Accept': '*/*',
@@ -825,7 +826,7 @@ export default new Vuex.Store({
     },
     async addRatings({context, state}, rating) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
+        const response = await fetch(state.urlApi+"/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -847,7 +848,7 @@ export default new Vuex.Store({
     },
     async changeRatings({context, state}, rating) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
+        const response = await fetch(state.urlApi+"/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -869,7 +870,7 @@ export default new Vuex.Store({
     },
     async deleteRatings({context, state}, rating) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
+        const response = await fetch(state.urlApi+"/api/users/"+rating.id_user+"/title_ratings/"+rating.imdb_id, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -891,7 +892,7 @@ export default new Vuex.Store({
     },
     async changeLockedStatus({context, state}, id) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + id + "/is_locked", {
+        const response = await fetch(state.urlApi+"/api/users/" + id + "/is_locked", {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -912,7 +913,7 @@ export default new Vuex.Store({
     },
     async addQuizAttempt({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/played", {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/played", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -940,7 +941,7 @@ export default new Vuex.Store({
     },
     async updateQuizAttempt({context, state}, user) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/played/" + user.played_id, {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/played/" + user.played_id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -967,7 +968,7 @@ export default new Vuex.Store({
     },
     async addPoints({context, state}, points) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/points", {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/points", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -991,7 +992,7 @@ export default new Vuex.Store({
     },
     async addXP({context, state}, xp) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/xp", {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/xp", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -1015,7 +1016,7 @@ export default new Vuex.Store({
     },
     async redeemPrize({context, state}, prize) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/prizes_reedemed", {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/prizes_reedemed", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -1037,7 +1038,7 @@ export default new Vuex.Store({
     },
     async addQuizComment({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + data.quiz_id + "/comments", {
+        const response = await fetch(state.urlApi+"/api/quizzes/" + data.quiz_id + "/comments", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -1059,7 +1060,7 @@ export default new Vuex.Store({
     },
     async removeQuizComment({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/quizzes/" + data.quiz_id + "/comments/" + data.comment_id, {
+        const response = await fetch(state.urlApi+"/api/quizzes/" + data.quiz_id + "/comments/" + data.comment_id, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
@@ -1080,7 +1081,7 @@ export default new Vuex.Store({
     },
     async addQuizRating({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings", {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/quiz_ratings", {
           method: "POST",
           headers: {
             'Accept': '*/*',
@@ -1105,7 +1106,7 @@ export default new Vuex.Store({
     },
     async changeQuizRating({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings/" + data.quiz_id, {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/quiz_ratings/" + data.quiz_id, {
           method: "PATCH",
           headers: {
             'Accept': '*/*',
@@ -1127,7 +1128,7 @@ export default new Vuex.Store({
     },
     async removeQuizRating({context, state}, data) {
       try {
-        const response = await fetch("http://127.0.0.1:3000/api/users/" + state.loggedUserData.data.id + "/quiz_ratings/" + data.quiz_id, {
+        const response = await fetch(state.urlApi+"/api/users/" + state.loggedUserData.data.id + "/quiz_ratings/" + data.quiz_id, {
           method: "DELETE",
           headers: {
             'Accept': '*/*',
