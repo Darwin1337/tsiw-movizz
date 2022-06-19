@@ -114,19 +114,28 @@ export default {
     ...mapActions(["loginUser", "registerUser"]),
     async login() {
       try {
+        this.$swal({
+          title: 'Checking your information...',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false
+        });
+        this.$swal.showLoading();
         let response = await this.loginUser(this.old_user);
         if (response.success) {
+          this.$swal.close();
           this.$swal({
             title: 'Success',
             text: 'You are being redirected to the home page',
             icon: 'success',
-            timer: 1500
+            timer: 1500,
           });
           setTimeout(() => this.$router.push({ name: "Home" }), 1500);
         } else {
           throw new Error(response.msg);
         }
       } catch (e) {
+        this.$swal.close();
         this.$swal('Error!', e.message, 'error');
       }
     },
