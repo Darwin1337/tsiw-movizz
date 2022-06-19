@@ -6,6 +6,5 @@ module.exports = {
 			navigateFallback: 'index.html'
 		}
 	},
-	lintOnSave: false,
-	publicPath: '/tsiw-movizz/'
+	lintOnSave: false
 }
