@@ -107,11 +107,27 @@ export default {
         email: '',
         password: '',
         data_nascimento: ''
-      }
+      },
+      aux:""
     }
   },
   methods: {
     ...mapActions(["loginUser", "registerUser"]),
+    verifyFields(email,password){
+      var validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!email.match(validRegex)) {
+        this.aux="Wrong Email";
+        return false;
+      }
+      else if(password.length < 8) {
+        this.aux="Wrong Password";
+        return false;
+      }
+      else
+      {
+        return true;
+      }
+    },
     async login() {
       try {
         this.$swal({
@@ -141,23 +157,34 @@ export default {
     },
     async register() {
       try {
-        let response = await this.registerUser({
-          first_name: this.new_user.primeiro_nome,
-          last_name: this.new_user.ultimo_nome,
-          dob: this.new_user.data_nascimento,
-          email: this.new_user.email,
-          password: this.new_user.password
-        });
-        if (response.success) {
+        if(this.verifyFields(this.new_user.email, this.new_user.password)) {
+          let response = await this.registerUser({
+            first_name: this.new_user.primeiro_nome,
+            last_name: this.new_user.ultimo_nome,
+            dob: this.new_user.data_nascimento,
+            email: this.new_user.email,
+            password: this.new_user.password
+          });
+          if (response.success) {
           this.$swal({
             title: 'Success',
             text: 'Register successfully completed!',
             icon: 'success',
             timer: 1500
           });
-        } else {
-          throw new Error(response.msg);
+          } else {
+            throw new Error(response.msg);
+          }
         }
+        else{
+            this.$swal({
+              title: 'Error',
+              text: this.aux,
+              icon: 'error',
+              timer: 1500
+            });
+          }   
+        
       } catch (e) {
         this.$swal('Error!', e.message, 'error');
       }
