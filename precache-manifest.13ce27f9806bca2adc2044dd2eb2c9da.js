@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2e598d28c89561598ac8",
+    "revision": "0572d1a7f14782c4d2a8",
     "url": "/tsiw-movizz/css/app.63cd448b.css"
   },
   {
@@ -14480,12 +14480,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tsiw-movizz/img/zoRWvvZEoYvnESG30ubQ9fWhrdk.905ff977.webp"
   },
   {
-    "revision": "b865499a7ea8d1224093d3490121abe7",
+    "revision": "efafc87c84898591d26a11b7f2d11203",
     "url": "/tsiw-movizz/index.html"
   },
   {
-    "revision": "2e598d28c89561598ac8",
-    "url": "/tsiw-movizz/js/app.9cea47d7.js"
+    "revision": "0572d1a7f14782c4d2a8",
+    "url": "/tsiw-movizz/js/app.7fa09613.js"
   },
   {
     "revision": "f6ea3dab4044fe5213f8",
