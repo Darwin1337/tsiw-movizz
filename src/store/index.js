@@ -11,7 +11,7 @@ export default new Vuex.Store({
     cur_api: 0,
     tries_main: 0,
     tries_eps: 0,
-    urlApi:"https://movizz-api.herokuapp.com"
+    urlApi:"https://movizz-api.onrender.com"
   },
   getters: {
     getLoggedUserID: (state) => (state.loggedUser) ? JSON.parse(atob(state.loggedUser.auth_key.split('.')[1])).id : null,
