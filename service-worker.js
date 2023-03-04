@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.bbcd35fb9d1c1f058a348c43ba44f2e0.js"
+  "/tsiw-movizz/precache-manifest.eb705cfed5d86391b12aa37a9b0f8a29.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "tsiw-movizz-rewritten"});
